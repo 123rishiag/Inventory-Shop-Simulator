@@ -1845,7 +1845,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2295310723518318749}
   m_HandleRect: {fileID: 8676048658477068877}
   m_Direction: 0
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -2495,7 +2495,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.000009655952, y: -0.000579834}
+  m_AnchoredPosition: {x: -0.00003194809, y: -0.00045776367}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &7034777515620251625
@@ -3349,7 +3349,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.000009775162, y: -0.000579834}
+  m_AnchoredPosition: {x: 0.00000500679, y: -0.00045776367}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1650863275343736045
@@ -4878,7 +4878,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inventoryPanel: {fileID: 841984578218086930}
   shopPanel: {fileID: 2997965855556523982}
-  itemPrefab: {fileID: 7103220825560255194, guid: e746c57d1d6071f49a8b322ecd71a158, type: 3}
   currencyText: {fileID: 4527908277453703418}
   itemManager: {fileID: 0}
 --- !u!1 &9107040225819220976

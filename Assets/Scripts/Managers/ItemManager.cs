@@ -10,6 +10,9 @@ public class ItemManager : MonoBehaviour
     [SerializeField] private ItemDatabase inventoryItemDatabase;
     [SerializeField] private ItemDatabase shopItemDatabase;
 
+    [Header("Prefabs")]
+    [SerializeField] private GameObject itemPrefab;
+
     [Header("Inventory Config")]
     [SerializeField] private InventoryConfigScriptableObject inventoryConfig;
 
@@ -17,6 +20,11 @@ public class ItemManager : MonoBehaviour
     {
         inventoryItems = LoadItemsFromDatabase(inventoryItemDatabase, "Inventory");
         shopItems = LoadItemsFromDatabase(shopItemDatabase, "Shop");
+    }
+    private void Start()
+    {
+        if (!ValidateItemPrefab()) 
+            return;
     }
 
     private List<ItemScriptableObject> LoadItemsFromDatabase(ItemDatabase database, string type)
@@ -32,13 +40,29 @@ public class ItemManager : MonoBehaviour
         }
     }
 
-    public IReadOnlyList<ItemScriptableObject> GetInventoryItems()
+    public void PopulateInventory(Transform _parentPanel)
     {
-        return inventoryItems.AsReadOnly();
+        foreach (var item in inventoryItems)
+        {
+            new ItemController(item, _parentPanel, itemPrefab);
+        }
     }
 
-    public IReadOnlyList<ItemScriptableObject> GetShopItems()
+    public void PopulateShop(Transform _parentPanel)
     {
-        return shopItems.AsReadOnly();
+        foreach (var item in shopItems)
+        {
+            new ItemController(item, _parentPanel, itemPrefab);
+        }
+    }
+
+    private bool ValidateItemPrefab()
+    {
+        if (itemPrefab == null)
+        {
+            Debug.LogError("ItemPrefab is not assigned in the inspector!");
+            return false;
+        }
+        return true;
     }
 }
