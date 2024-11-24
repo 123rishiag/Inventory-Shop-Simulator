@@ -15,15 +15,16 @@ public class GameScreenUIManager : MonoBehaviour
     [Header("Currency")]
     public TMP_Text currencyText;
 
-    [Header("Item Icons")]
-    public List<Sprite> itemIcons;
+    [Header("Managers")]
+    public ItemManager itemManager;
 
     private void Start()
     {
-        if (!ValidateItemPrefab()) return;
+        if (!ValidateItemPrefab() || !ValidateItemManager()) return;
 
         UpdateCurrency(0);
-        PopulateDummy();
+        PopulateShop();
+        PopulateInventory();
 
     }
 
@@ -41,25 +42,20 @@ public class GameScreenUIManager : MonoBehaviour
         item.GetComponentInChildren<TMP_Text>().text = labelText;
     }
 
-    private void PopulateDummy()
+    private void PopulateShop()
     {
-        for (int i = 0; i < 20; i++)
+        foreach (var item in itemManager.shopItems)
         {
-            AddItem(inventoryPanel, GetRandomIcon(), Random.Range(1, 100).ToString());
-            AddItem(shopPanel, GetRandomIcon(), Random.Range(10, 500).ToString());
+            AddItem(shopPanel, item.icon, $"{item.quantity}x");
         }
     }
 
-    private Sprite GetRandomIcon()
+    private void PopulateInventory()
     {
-        if (itemIcons == null || itemIcons.Count == 0)
+        foreach (var item in itemManager.inventoryItems)
         {
-            Debug.LogWarning("ItemIcons list is empty! Add some sprites in the inspector.");
-            return null; // Placeholder or default sprite
+            AddItem(inventoryPanel, item.icon, $"{item.quantity}x");
         }
-
-        int randomIndex = Random.Range(0, itemIcons.Count);
-        return itemIcons[randomIndex];
     }
 
     private bool ValidateItemPrefab()
@@ -67,6 +63,16 @@ public class GameScreenUIManager : MonoBehaviour
         if (itemPrefab == null)
         {
             Debug.LogError("ItemPrefab is not assigned in the inspector!");
+            return false;
+        }
+        return true;
+    }
+
+    private bool ValidateItemManager()
+    {
+        if (itemManager == null)
+        {
+            Debug.LogError("ItemManager is not assigned in the inspector!");
             return false;
         }
         return true;
