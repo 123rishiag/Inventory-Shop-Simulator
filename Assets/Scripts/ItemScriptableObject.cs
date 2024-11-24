@@ -3,14 +3,14 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "NewItem", menuName = "Items/Item")]
 public class ItemScriptableObject : ScriptableObject
 {
-    public Sprite icon; // Item's icon
-    [TextArea] public string description; // Detailed description
-    public int buyingPrice; // Cost to buy
-    public int sellingPrice; // Price when sold
-    public float weight; // Item weight
-    public ItemType itemType; // Type of the item
-    public Rarity rarity; // Rarity of the item
-    public int quantity; // Initial quantity
+    public Sprite icon;
+    [TextArea] public string description;
+    public int buyingPrice;
+    public int sellingPrice;
+    public float weight;
+    public ItemType itemType;
+    public Rarity rarity;
+    public int quantity;
 }
 
 public enum ItemType

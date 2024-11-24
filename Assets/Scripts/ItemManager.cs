@@ -3,17 +3,17 @@ using UnityEngine;
 
 public class ItemManager : MonoBehaviour
 {
-    private List<ItemScriptableObject> inventoryItems = new List<ItemScriptableObject>();
-    private List<ItemScriptableObject> shopItems = new List<ItemScriptableObject>();
+    private List<ItemScriptableObject> inventoryItems;
+    private List<ItemScriptableObject> shopItems;
 
     [Header("Database")]
-    public ItemDatabase inventoryItemDatabase;
-    public ItemDatabase shopItemDatabase;
+    [SerializeField] private ItemDatabase inventoryItemDatabase;
+    [SerializeField] private ItemDatabase shopItemDatabase;
 
     [Header("Inventory Config")]
-    public InventoryConfigScriptableObject inventoryConfig;
+    [SerializeField] private InventoryConfigScriptableObject inventoryConfig;
 
-    private void Start()
+    private void Awake()
     {
         inventoryItems = LoadItemsFromDatabase(inventoryItemDatabase, "Inventory");
         shopItems = LoadItemsFromDatabase(shopItemDatabase, "Shop");
@@ -23,7 +23,6 @@ public class ItemManager : MonoBehaviour
     {
         if (database != null)
         {
-            Debug.Log($"{type} items loaded successfully.");
             return new List<ItemScriptableObject>(database.allItems);
         }
         else

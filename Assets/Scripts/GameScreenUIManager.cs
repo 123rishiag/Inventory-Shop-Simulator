@@ -7,16 +7,17 @@ using UnityEngine.UI;
 public class GameScreenUIManager : MonoBehaviour
 {
     [Header("Panels")]
-    public Transform inventoryPanel;
-    public Transform shopPanel;
+    [SerializeField] private Transform inventoryPanel;
+    [SerializeField] private Transform shopPanel;
 
-    public GameObject itemPrefab;
+    [Header("Prefabs")]
+    [SerializeField] private GameObject itemPrefab;
 
-    [Header("Currency")]
-    public TMP_Text currencyText;
+    [Header("Text Fields")]
+    [SerializeField] private TMP_Text currencyText;
 
     [Header("Managers")]
-    public ItemManager itemManager;
+    [SerializeField] private ItemManager itemManager;
 
     private void Start()
     {
@@ -25,7 +26,6 @@ public class GameScreenUIManager : MonoBehaviour
         UpdateCurrency(0);
         PopulateInventory();
         PopulateShop();
-
     }
 
     public void UpdateCurrency(int currency)
