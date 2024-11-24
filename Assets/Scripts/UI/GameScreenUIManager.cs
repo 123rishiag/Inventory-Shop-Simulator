@@ -10,9 +10,6 @@ public class GameScreenUIManager : MonoBehaviour
     [SerializeField] private Transform inventoryPanel;
     [SerializeField] private Transform shopPanel;
 
-    [Header("Prefabs")]
-    [SerializeField] private GameObject itemPrefab;
-
     [Header("Text Fields")]
     [SerializeField] private TMP_Text currencyText;
 
@@ -21,42 +18,17 @@ public class GameScreenUIManager : MonoBehaviour
 
     private void Start()
     {
-        if (!ValidateItemPrefab() || !ValidateItemManager()) return;
+        if (!ValidateItemManager()) 
+            return;
 
         UpdateCurrency(0);
-        PopulateInventory();
-        PopulateShop();
+        itemManager.PopulateInventory(inventoryPanel);
+        itemManager.PopulateShop(shopPanel);
     }
 
     public void UpdateCurrency(int currency)
     {
         currencyText.text = $"Currency: {currency}";
-    }
-
-    private void PopulateInventory()
-    {
-        foreach (var item in itemManager.GetInventoryItems())
-        {
-            new ItemController(item, inventoryPanel, itemPrefab);
-        }
-    }
-
-    private void PopulateShop()
-    {
-        foreach (var item in itemManager.GetShopItems())
-        {
-            new ItemController(item, shopPanel, itemPrefab);
-        }
-    }
-
-    private bool ValidateItemPrefab()
-    {
-        if (itemPrefab == null)
-        {
-            Debug.LogError("ItemPrefab is not assigned in the inspector!");
-            return false;
-        }
-        return true;
     }
 
     private bool ValidateItemManager()

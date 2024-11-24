@@ -5,8 +5,9 @@ using UnityEngine.UI;
 
 public class ItemView : MonoBehaviour
 {
+    private Image iconImage;
+
     [Header("UI Components")]
-    [SerializeField] private Image iconImage;
     [SerializeField] private TMP_Text quantityText;
 
     private ItemController itemController;
@@ -35,6 +36,13 @@ public class ItemView : MonoBehaviour
     private void SetController(ItemController _itemController)
     {
         itemController = _itemController;
+
+        iconImage = GetComponent<Image>();
+        if (iconImage == null)
+        {
+            Debug.LogError("ItemView: No Image component found on this GameObject!");
+            return;
+        }
 
         iconImage.sprite = itemController.GetModel().Icon;
         quantityText.text = $"{itemController.GetModel().Quantity}x";
