@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,34 +15,60 @@ public class GameScreenUIManager : MonoBehaviour
     [Header("Currency")]
     public TMP_Text currencyText;
 
+    [Header("Item Icons")]
+    public List<Sprite> itemIcons;
+
     private void Start()
     {
-        UpdateCurrency(0);
-        
-        for (int i = 0; i < 20; i++)
-        {
-            AddInventoryItem(itemPrefab);
-        }
+        if (!ValidateItemPrefab()) return;
 
-        for (int i = 0; i < 20; i++)
-        {
-            AddShopItem(itemPrefab);
-        }
+        UpdateCurrency(0);
+        PopulateDummy();
 
     }
 
     public void UpdateCurrency(int currency)
     {
-        currencyText.text = $"Gold: {currency}";
+        currencyText.text = $"Currency: {currency}";
     }
 
-    public void AddInventoryItem(GameObject item)
+    public void AddItem(Transform parentPanel, Sprite icon, string labelText)
     {
-        Instantiate(item, inventoryPanel);
+        if (!ValidateItemPrefab()) return;
+
+        GameObject item = Instantiate(itemPrefab, parentPanel);
+        item.GetComponentInChildren<Image>().sprite = icon;
+        item.GetComponentInChildren<TMP_Text>().text = labelText;
     }
 
-    public void AddShopItem(GameObject item)
+    private void PopulateDummy()
     {
-        Instantiate(item, shopPanel);
+        for (int i = 0; i < 20; i++)
+        {
+            AddItem(inventoryPanel, GetRandomIcon(), Random.Range(1, 100).ToString());
+            AddItem(shopPanel, GetRandomIcon(), Random.Range(10, 500).ToString());
+        }
+    }
+
+    private Sprite GetRandomIcon()
+    {
+        if (itemIcons == null || itemIcons.Count == 0)
+        {
+            Debug.LogWarning("ItemIcons list is empty! Add some sprites in the inspector.");
+            return null; // Placeholder or default sprite
+        }
+
+        int randomIndex = Random.Range(0, itemIcons.Count);
+        return itemIcons[randomIndex];
+    }
+
+    private bool ValidateItemPrefab()
+    {
+        if (itemPrefab == null)
+        {
+            Debug.LogError("ItemPrefab is not assigned in the inspector!");
+            return false;
+        }
+        return true;
     }
 }
