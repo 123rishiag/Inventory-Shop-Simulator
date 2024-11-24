@@ -23,8 +23,8 @@ public class GameScreenUIManager : MonoBehaviour
         if (!ValidateItemPrefab() || !ValidateItemManager()) return;
 
         UpdateCurrency(0);
-        PopulateShop();
         PopulateInventory();
+        PopulateShop();
 
     }
 
@@ -42,19 +42,19 @@ public class GameScreenUIManager : MonoBehaviour
         item.GetComponentInChildren<TMP_Text>().text = labelText;
     }
 
-    private void PopulateShop()
+    private void PopulateInventory()
     {
-        foreach (var item in itemManager.shopItems)
+        foreach (var item in itemManager.GetInventoryItems())
         {
-            AddItem(shopPanel, item.icon, $"{item.quantity}x");
+            AddItem(inventoryPanel, item.icon, $"{item.quantity}x");
         }
     }
 
-    private void PopulateInventory()
+    private void PopulateShop()
     {
-        foreach (var item in itemManager.inventoryItems)
+        foreach (var item in itemManager.GetShopItems())
         {
-            AddItem(inventoryPanel, item.icon, $"{item.quantity}x");
+            AddItem(shopPanel, item.icon, $"{item.quantity}x");
         }
     }
 
