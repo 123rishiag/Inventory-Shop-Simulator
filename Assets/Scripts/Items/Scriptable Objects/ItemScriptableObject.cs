@@ -8,7 +8,7 @@ public class ItemScriptableObject : ScriptableObject
     public int buyingPrice;
     public int sellingPrice;
     public float weight;
-    public ItemType itemType;
+    public ItemType type;
     public Rarity rarity;
     public int quantity;
 }

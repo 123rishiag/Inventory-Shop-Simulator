@@ -33,20 +33,11 @@ public class GameScreenUIManager : MonoBehaviour
         currencyText.text = $"Currency: {currency}";
     }
 
-    public void AddItem(Transform parentPanel, Sprite icon, string labelText)
-    {
-        if (!ValidateItemPrefab()) return;
-
-        GameObject item = Instantiate(itemPrefab, parentPanel);
-        item.GetComponentInChildren<Image>().sprite = icon;
-        item.GetComponentInChildren<TMP_Text>().text = labelText;
-    }
-
     private void PopulateInventory()
     {
         foreach (var item in itemManager.GetInventoryItems())
         {
-            AddItem(inventoryPanel, item.icon, $"{item.quantity}x");
+            new ItemController(item, inventoryPanel, itemPrefab);
         }
     }
 
@@ -54,7 +45,7 @@ public class GameScreenUIManager : MonoBehaviour
     {
         foreach (var item in itemManager.GetShopItems())
         {
-            AddItem(shopPanel, item.icon, $"{item.quantity}x");
+            new ItemController(item, shopPanel, itemPrefab);
         }
     }
 
