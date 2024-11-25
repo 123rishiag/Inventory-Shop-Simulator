@@ -12,7 +12,8 @@ public class ItemManager : MonoBehaviour
     [SerializeField] private ItemDatabase shopItemDatabase;
 
     [Header("Panels")]
-    [SerializeField] private Transform inventoryGrid; // Assign Inventory Content Game Object inside Inventory Panel 
+    [SerializeField] private Transform inventoryGrid; // Assign Inventory Content Game Object inside Inventory Panel
+    [SerializeField] private Transform inventoryMenuButtonPanel;
 
     [Header("UI Elements")]
     [SerializeField] private TMP_Text inventoryEmptyText;
@@ -20,6 +21,7 @@ public class ItemManager : MonoBehaviour
     [SerializeField] private TMP_Text inventoryWeightText;
 
     [Header("Prefabs")]
+    [SerializeField] private GameObject menuButtonPrefab;
     [SerializeField] private GameObject itemPrefab;
 
     [Header("Inventory Config")]
@@ -41,9 +43,12 @@ public class ItemManager : MonoBehaviour
         if (!ValidateReferences(inventoryItemDatabase, inventoryGrid, "Inventory"))
             return;
 
-        // Initialize InventoryController
+        // Initializing InventoryController
         inventoryController = new InventoryController(inventoryGrid, inventoryEmptyText, 
             inventoryCurrencyText, inventoryWeightText, inventoryConfigData.maxWeight);
+
+        // Adding buttons dynamically
+        inventoryController.AddButtonToPanel(menuButtonPrefab, inventoryMenuButtonPanel, "Gather Resources");
 
         // Populate Inventory
         foreach (var itemData in inventoryItemDatabase.allItems)
