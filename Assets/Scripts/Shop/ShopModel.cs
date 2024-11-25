@@ -21,5 +21,4 @@ public class ShopModel
 
     // Getters
     public List<ItemModel> Items => items;
-    public int ItemsCount => items.Count;
 }

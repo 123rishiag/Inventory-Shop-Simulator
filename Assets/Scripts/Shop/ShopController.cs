@@ -8,6 +8,9 @@ public class ShopController
     private ShopModel shopModel;
     private ShopView shopView;
     private List<ItemController> itemControllers;
+    private List<ItemController> filteredItemControllers;
+
+    private ItemType selectedItemType;
 
     public ShopController(Transform _shopGrid, TMP_Text _shopEmptyText, TMP_Text _shopItemCountText)
     {
@@ -17,8 +20,15 @@ public class ShopController
         // Instantiating View
         shopView = new ShopView(_shopGrid, _shopEmptyText, _shopItemCountText);
 
-        // Controller List
+        // Controllers List
         itemControllers = new List<ItemController>();
+        filteredItemControllers = new List<ItemController>();
+
+        // Selected Item Type Filter
+        selectedItemType = ItemType.None;
+
+        // Show Filtered Items
+        ShowFilteredItems();
 
         // Initial UI values
         UpdateShopTexts();
@@ -34,7 +44,7 @@ public class ShopController
         Button button = newButton.GetComponent<Button>();
         if (button != null)
         {
-            button.onClick.AddListener(() => OnButtonClicked(_shopMenuButtonText));
+            button.onClick.AddListener(() => OnButtonClicked(_shopMenuButtonText, _itemType));
         }
         else
         {
@@ -42,10 +52,34 @@ public class ShopController
         }
     }
 
-    private void OnButtonClicked(string _shopMenuButtonText)
+    private void OnButtonClicked(string _shopMenuButtonText, ItemType _selectedItemType)
     {
-        Debug.Log($"Button '{_shopMenuButtonText}' clicked!");
-        // Handle button-specific actions here
+        selectedItemType = _selectedItemType;
+        ShowFilteredItems();
+    }
+
+    private void ShowFilteredItems()
+    {
+        // Clear filtered list
+        filteredItemControllers.Clear();
+
+        // Filter items and update visibility
+        foreach (var itemController in itemControllers)
+        {
+            if (selectedItemType == ItemType.None || itemController.GetModel().Type == selectedItemType)
+            {
+                itemController.ShowView();
+                filteredItemControllers.Add(itemController);
+            }
+            else
+            {
+                itemController.HideView();
+            }
+        }
+
+        // Update UI texts based on filtered items
+        shopView.UpdateShopEmptyText(filteredItemControllers.Count == 0);
+        shopView.UpdateShopItemCount(filteredItemControllers.Count);
     }
 
     public void AddItem(ItemScriptableObject _itemData, GameObject _itemPrefab)
@@ -56,6 +90,9 @@ public class ShopController
 
         // Add to Model
         shopModel.AddItem(itemController.GetModel());
+
+        // Show New Filtered Items
+        ShowFilteredItems();
 
         // Update UI Metrics
         UpdateShopTexts();
@@ -74,6 +111,9 @@ public class ShopController
             // Destroy the Item View
             _itemController.DestroyView();
 
+            // Show New Filtered Items
+            ShowFilteredItems();
+
             // Update UI Metrics
             UpdateShopTexts();
         }
@@ -82,6 +122,6 @@ public class ShopController
     private void UpdateShopTexts()
     {
         shopView.UpdateShopEmptyText(itemControllers.Count == 0);
-        shopView.UpdateShopItemCount(shopModel.ItemsCount);
+        shopView.UpdateShopItemCount(itemControllers.Count);
     }
 }
