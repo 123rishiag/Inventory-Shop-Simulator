@@ -715,8 +715,8 @@ PlayerSettings:
   apiCompatibilityLevelPerPlatform: {}
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
-  metroPackageName: Inventory-Shop-Simulator_Back
-  metroPackageVersion: 
+  metroPackageName: Inventory-Shop-SimulatorBack
+  metroPackageVersion: 1.0.0.0
   metroCertificatePath: 
   metroCertificatePassword: 
   metroCertificateSubject: 
@@ -724,7 +724,7 @@ PlayerSettings:
   metroCertificateNotAfter: 0000000000000000
   metroApplicationDescription: Inventory-Shop-Simulator_Back
   wsaImages: {}
-  metroTileShortName: 
+  metroTileShortName: Inventory-Shop-Simulator_Back
   metroTileShowName: 0
   metroMediumTileShowName: 0
   metroLargeTileShowName: 0

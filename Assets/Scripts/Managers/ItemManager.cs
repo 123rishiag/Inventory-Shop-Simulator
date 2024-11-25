@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class ItemManager : MonoBehaviour
 {
-    private List<ItemScriptableObject> inventoryItems;
+    private InventoryController inventoryController;
     private List<ItemScriptableObject> shopItems;
 
     [Header("Database")]
@@ -16,15 +16,32 @@ public class ItemManager : MonoBehaviour
     [Header("Inventory Config")]
     [SerializeField] private InventoryConfigScriptableObject inventoryConfig;
 
+    [Header("Panels")]
+    [SerializeField] private Transform inventoryGrid; // Assign Inventory Content Game Object inside Inventory Panel 
+
     private void Awake()
     {
-        inventoryItems = LoadItemsFromDatabase(inventoryItemDatabase, "Inventory");
         shopItems = LoadItemsFromDatabase(shopItemDatabase, "Shop");
     }
+
     private void Start()
     {
-        if (!ValidateItemPrefab()) 
+        PopulateInventory();
+    }
+
+    public void PopulateInventory()
+    {
+        if (!ValidateReferences(inventoryItemDatabase, inventoryGrid, "Inventory"))
             return;
+
+        // Initialize InventoryController
+        inventoryController = new InventoryController(inventoryGrid);
+
+        // Populate Inventory
+        foreach (var itemData in inventoryItemDatabase.allItems)
+        {
+            inventoryController.AddItem(itemData, itemPrefab);
+        }
     }
 
     private List<ItemScriptableObject> LoadItemsFromDatabase(ItemDatabase database, string type)
@@ -40,14 +57,6 @@ public class ItemManager : MonoBehaviour
         }
     }
 
-    public void PopulateInventory(Transform _parentPanel)
-    {
-        foreach (var item in inventoryItems)
-        {
-            new ItemController(item, _parentPanel, itemPrefab);
-        }
-    }
-
     public void PopulateShop(Transform _parentPanel)
     {
         foreach (var item in shopItems)
@@ -56,13 +65,26 @@ public class ItemManager : MonoBehaviour
         }
     }
 
-    private bool ValidateItemPrefab()
+    private bool ValidateReferences(ItemDatabase _database, Transform _parentPanel, string type)
     {
-        if (itemPrefab == null)
+        if (_database == null)
         {
-            Debug.LogError("ItemPrefab is not assigned in the inspector!");
+            Debug.LogError($"{type} Item Database is not assigned!");
             return false;
         }
+
+        if (itemPrefab == null)
+        {
+            Debug.LogError("Item Prefab is not assigned!");
+            return false;
+        }
+
+        if (_parentPanel == null)
+        {
+            Debug.LogError($"{type} Panel is not assigned!");
+            return false;
+        }
+
         return true;
     }
 }
