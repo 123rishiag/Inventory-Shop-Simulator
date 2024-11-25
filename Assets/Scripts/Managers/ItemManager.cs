@@ -7,7 +7,7 @@ public class ItemManager : MonoBehaviour
     private InventoryController inventoryController;
     private List<ItemScriptableObject> shopItems;
 
-    [Header("Database")]
+    [Header("Databases")]
     [SerializeField] private ItemDatabase inventoryItemDatabase;
     [SerializeField] private ItemDatabase shopItemDatabase;
 
@@ -16,12 +16,15 @@ public class ItemManager : MonoBehaviour
 
     [Header("UI Elements")]
     [SerializeField] private TMP_Text inventoryEmptyText;
+    [SerializeField] private TMP_Text inventoryCurrencyText;
+    [SerializeField] private TMP_Text inventoryWeightText;
 
     [Header("Prefabs")]
     [SerializeField] private GameObject itemPrefab;
 
     [Header("Inventory Config")]
-    [SerializeField] private InventoryConfigScriptableObject inventoryConfig;
+    [SerializeField] private InventoryConfigScriptableObject inventoryConfigData;
+
 
     private void Awake()
     {
@@ -39,7 +42,8 @@ public class ItemManager : MonoBehaviour
             return;
 
         // Initialize InventoryController
-        inventoryController = new InventoryController(inventoryGrid, inventoryEmptyText);
+        inventoryController = new InventoryController(inventoryGrid, inventoryEmptyText, 
+            inventoryCurrencyText, inventoryWeightText, inventoryConfigData.maxWeight);
 
         // Populate Inventory
         foreach (var itemData in inventoryItemDatabase.allItems)
