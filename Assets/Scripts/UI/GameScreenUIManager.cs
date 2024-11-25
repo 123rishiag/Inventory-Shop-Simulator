@@ -7,7 +7,6 @@ using UnityEngine.UI;
 public class GameScreenUIManager : MonoBehaviour
 {
     [Header("Panels")]
-    [SerializeField] private Transform inventoryPanel;
     [SerializeField] private Transform shopPanel;
 
     [Header("Text Fields")]
@@ -22,7 +21,6 @@ public class GameScreenUIManager : MonoBehaviour
             return;
 
         UpdateCurrency(0);
-        itemManager.PopulateInventory(inventoryPanel);
         itemManager.PopulateShop(shopPanel);
     }
 

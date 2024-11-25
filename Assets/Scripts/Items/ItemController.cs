@@ -26,4 +26,13 @@ public class ItemController
         itemModel.UpdateQuantity(_delta);
         itemView.UpdateQuantity(itemModel.Quantity);
     }
+
+    // Destructor
+    public void DestroyView()
+    {
+        if (itemView != null)
+        {
+            Object.Destroy(itemView.gameObject);
+        }
+    }
 }
