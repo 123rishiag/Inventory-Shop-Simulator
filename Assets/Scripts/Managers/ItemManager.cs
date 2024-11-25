@@ -66,10 +66,10 @@ public class ItemManager : MonoBehaviour
         shopController = new ShopController(shopGrid, shopEmptyText, shopItemsCountText);
 
         // Adding buttons dynamically
-        shopController.AddButtonToPanel(menuButtonPrefab, shopMenuButtonPanel, "Materials");
-        shopController.AddButtonToPanel(menuButtonPrefab, shopMenuButtonPanel, "Weapons");
-        shopController.AddButtonToPanel(menuButtonPrefab, shopMenuButtonPanel, "Consumables");
-        shopController.AddButtonToPanel(menuButtonPrefab, shopMenuButtonPanel, "Treasure");
+        shopController.AddButtonToPanel(menuButtonPrefab, shopMenuButtonPanel, "Materials", ItemType.Materials);
+        shopController.AddButtonToPanel(menuButtonPrefab, shopMenuButtonPanel, "Weapons", ItemType.Weapons);
+        shopController.AddButtonToPanel(menuButtonPrefab, shopMenuButtonPanel, "Consumables", ItemType.Consumables);
+        shopController.AddButtonToPanel(menuButtonPrefab, shopMenuButtonPanel, "Treasure", ItemType.Treasure);
 
         // Populating Shop
         foreach (var itemData in shopItemDatabase.allItems)

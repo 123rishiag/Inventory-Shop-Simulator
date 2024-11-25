@@ -29,28 +29,12 @@ public class InventoryController
         UpdateInventoryTexts();
     }
 
-    public void AddButtonToPanel(GameObject _inventoryMenuButtonPrefab, Transform _inventoryMenuButtonPanel, string _inventoryMenuButtonText)
+    public void AddButtonToPanel(GameObject _inventoryMenuButtonPrefab, Transform _inventoryMenuButtonPanel, 
+        string _inventoryMenuButtonText)
     {
-        // Checking if prefab and panel are valid
-        if (_inventoryMenuButtonPrefab == null || _inventoryMenuButtonPanel == null)
-        {
-            Debug.LogError("Menu Button prefab or panel is null!");
-            return;
-        }
-
         // Instantiating the button
-        GameObject newButton = Object.Instantiate(_inventoryMenuButtonPrefab, _inventoryMenuButtonPanel);
-
-        // Fetching TMP_Text component in the button and setting its text
-        TMP_Text buttonText = newButton.GetComponentInChildren<TMP_Text>();
-        if (buttonText != null)
-        {
-            buttonText.text = _inventoryMenuButtonText;
-        }
-        else
-        {
-            Debug.LogWarning("Text component not found in button prefab.");
-        }
+        GameObject newButton = inventoryView.CreateButton(_inventoryMenuButtonPrefab, _inventoryMenuButtonPanel, 
+            _inventoryMenuButtonText);
 
         // Setting up button logic (e.g., click events)
         Button button = newButton.GetComponent<Button>();

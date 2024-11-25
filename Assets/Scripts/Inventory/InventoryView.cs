@@ -17,6 +17,33 @@ public class InventoryView
         inventoryWeightText = _inventoryWeightText;
     }
 
+    public GameObject CreateButton(GameObject _inventoryMenuButtonPrefab, Transform _inventoryMenuButtonPanel, 
+        string _inventoryMenuButtonText)
+    {
+        // Checking if prefab and panel are valid
+        if (_inventoryMenuButtonPrefab == null || _inventoryMenuButtonPanel == null)
+        {
+            Debug.LogError("Menu Button prefab or panel is null!");
+            return null;
+        }
+
+        // Instantiating the button
+        GameObject newButton = Object.Instantiate(_inventoryMenuButtonPrefab, _inventoryMenuButtonPanel);
+
+        // Fetching TMP_Text component in the button and setting its text
+        TMP_Text buttonText = newButton.GetComponentInChildren<TMP_Text>();
+        if (buttonText != null)
+        {
+            buttonText.text = _inventoryMenuButtonText;
+        }
+        else
+        {
+            Debug.LogWarning("Text component not found in button prefab.");
+        }
+
+        return newButton;
+    }
+
     public Transform GetInventoryGrid()
     {
         return inventoryGrid;
