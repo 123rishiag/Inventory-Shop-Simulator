@@ -22,7 +22,7 @@ public class InventoryController
         itemControllers = new List<ItemController>();
 
         // Test Values Initialization
-        inventoryModel.Currency = 0;
+        inventoryModel.Currency = 10;
         inventoryModel.CurrentWeight = 1;
 
         // Initial UI values
