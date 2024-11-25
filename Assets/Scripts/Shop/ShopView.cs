@@ -5,16 +5,18 @@ public class ShopView
 {
     private Transform shopGrid;
     private TMP_Text shopEmptyText;
+    private TMP_Text shopItemTypeText;
     private TMP_Text shopItemCountText;
 
-    public ShopView(Transform _shopGrid, TMP_Text _shopEmptyText, TMP_Text _shopItemCountText)
+    public ShopView(Transform _shopGrid, TMP_Text _shopEmptyText, TMP_Text _shopItemTypeText, TMP_Text _shopItemCountText)
     {
         shopGrid = _shopGrid;
         shopEmptyText = _shopEmptyText;
+        shopItemTypeText = _shopItemTypeText;
         shopItemCountText = _shopItemCountText;
     }
 
-    public GameObject CreateButton(GameObject _shopMenuButtonPrefab, Transform _shopMenuButtonPanel, string _shopMenuButtonText)
+    public GameObject CreateButton(GameObject _shopMenuButtonPrefab, Transform _shopMenuButtonPanel, ItemType _itemType)
     {
         // Checking if prefab and panel are valid
         if (_shopMenuButtonPrefab == null || _shopMenuButtonPanel == null)
@@ -30,7 +32,7 @@ public class ShopView
         TMP_Text buttonText = newButton.GetComponentInChildren<TMP_Text>();
         if (buttonText != null)
         {
-            buttonText.text = _shopMenuButtonText;
+            buttonText.text = _itemType.ToString();
         }
         else
         {
@@ -51,6 +53,10 @@ public class ShopView
         {
             shopEmptyText.gameObject.SetActive(_isEmpty);
         }
+    }
+    public void UpdateShopItemTypeText(string _text)
+    {
+        shopItemTypeText.text = $"Item Type: {_text}";
     }
 
     public void UpdateShopItemCount(int _itemCount)

@@ -10,41 +10,35 @@ public class ShopController
     private List<ItemController> itemControllers;
     private List<ItemController> filteredItemControllers;
 
-    private ItemType selectedItemType;
-
-    public ShopController(Transform _shopGrid, TMP_Text _shopEmptyText, TMP_Text _shopItemCountText)
+    public ShopController(Transform _shopGrid, TMP_Text _shopEmptyText, TMP_Text _shopItemTypeText, TMP_Text _shopItemCountText)
     {
         // Instantiating Model
         shopModel = new ShopModel();
 
         // Instantiating View
-        shopView = new ShopView(_shopGrid, _shopEmptyText, _shopItemCountText);
+        shopView = new ShopView(_shopGrid, _shopEmptyText, _shopItemTypeText, _shopItemCountText);
 
         // Controllers List
         itemControllers = new List<ItemController>();
         filteredItemControllers = new List<ItemController>();
 
         // Selected Item Type Filter
-        selectedItemType = ItemType.None;
+        shopModel.SelectedItemType = ItemType.All;
 
         // Show Filtered Items
         ShowFilteredItems();
-
-        // Initial UI values
-        UpdateShopTexts();
     }
 
-    public void AddButtonToPanel(GameObject _shopMenuButtonPrefab, Transform _shopMenuButtonPanel, string _shopMenuButtonText, 
-        ItemType _itemType)
+    public void AddButtonToPanel(GameObject _shopMenuButtonPrefab, Transform _shopMenuButtonPanel, ItemType _itemType)
     {
         // Instantiating the button
-        GameObject newButton = shopView.CreateButton(_shopMenuButtonPrefab, _shopMenuButtonPanel, _shopMenuButtonText);
+        GameObject newButton = shopView.CreateButton(_shopMenuButtonPrefab, _shopMenuButtonPanel, _itemType);
 
         // Setting up button logic (e.g., click events)
         Button button = newButton.GetComponent<Button>();
         if (button != null)
         {
-            button.onClick.AddListener(() => OnButtonClicked(_shopMenuButtonText, _itemType));
+            button.onClick.AddListener(() => OnButtonClicked(_itemType));
         }
         else
         {
@@ -52,9 +46,9 @@ public class ShopController
         }
     }
 
-    private void OnButtonClicked(string _shopMenuButtonText, ItemType _selectedItemType)
+    private void OnButtonClicked(ItemType _selectedItemType)
     {
-        selectedItemType = _selectedItemType;
+        shopModel.SelectedItemType = _selectedItemType;
         ShowFilteredItems();
     }
 
@@ -66,7 +60,7 @@ public class ShopController
         // Filter items and update visibility
         foreach (var itemController in itemControllers)
         {
-            if (selectedItemType == ItemType.None || itemController.GetModel().Type == selectedItemType)
+            if (shopModel.SelectedItemType == ItemType.All || itemController.GetModel().Type == shopModel.SelectedItemType)
             {
                 itemController.ShowView();
                 filteredItemControllers.Add(itemController);
@@ -77,9 +71,7 @@ public class ShopController
             }
         }
 
-        // Update UI texts based on filtered items
-        shopView.UpdateShopEmptyText(filteredItemControllers.Count == 0);
-        shopView.UpdateShopItemCount(filteredItemControllers.Count);
+        UpdateShopTexts();
     }
 
     public void AddItem(ItemScriptableObject _itemData, GameObject _itemPrefab)
@@ -93,9 +85,6 @@ public class ShopController
 
         // Show New Filtered Items
         ShowFilteredItems();
-
-        // Update UI Metrics
-        UpdateShopTexts();
     }
 
     public void RemoveItem(ItemController _itemController)
@@ -113,15 +102,14 @@ public class ShopController
 
             // Show New Filtered Items
             ShowFilteredItems();
-
-            // Update UI Metrics
-            UpdateShopTexts();
         }
     }
 
     private void UpdateShopTexts()
     {
-        shopView.UpdateShopEmptyText(itemControllers.Count == 0);
-        shopView.UpdateShopItemCount(itemControllers.Count);
+        // Update UI texts based on filtered items
+        shopView.UpdateShopEmptyText(filteredItemControllers.Count == 0);
+        shopView.UpdateShopItemTypeText(shopModel.SelectedItemType.ToString());
+        shopView.UpdateShopItemCount(filteredItemControllers.Count);
     }
 }

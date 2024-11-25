@@ -23,6 +23,7 @@ public class ItemManager : MonoBehaviour
     [SerializeField] private TMP_Text inventoryCurrencyText;
     [SerializeField] private TMP_Text inventoryWeightText;
     [SerializeField] private TMP_Text shopEmptyText;
+    [SerializeField] private TMP_Text shopItemTypeText;
     [SerializeField] private TMP_Text shopItemsCountText;
 
     [Header("Prefabs")]
@@ -63,14 +64,14 @@ public class ItemManager : MonoBehaviour
             return;
 
         // Initializing ShopController
-        shopController = new ShopController(shopGrid, shopEmptyText, shopItemsCountText);
+        shopController = new ShopController(shopGrid, shopEmptyText, shopItemTypeText, shopItemsCountText);
 
         // Adding buttons dynamically
-        shopController.AddButtonToPanel(menuButtonPrefab, shopMenuButtonPanel, "All", ItemType.None);
-        shopController.AddButtonToPanel(menuButtonPrefab, shopMenuButtonPanel, "Materials", ItemType.Materials);
-        shopController.AddButtonToPanel(menuButtonPrefab, shopMenuButtonPanel, "Weapons", ItemType.Weapons);
-        shopController.AddButtonToPanel(menuButtonPrefab, shopMenuButtonPanel, "Consumables", ItemType.Consumables);
-        shopController.AddButtonToPanel(menuButtonPrefab, shopMenuButtonPanel, "Treasure", ItemType.Treasure);
+        shopController.AddButtonToPanel(menuButtonPrefab, shopMenuButtonPanel, ItemType.All);
+        shopController.AddButtonToPanel(menuButtonPrefab, shopMenuButtonPanel, ItemType.Materials);
+        shopController.AddButtonToPanel(menuButtonPrefab, shopMenuButtonPanel, ItemType.Weapons);
+        shopController.AddButtonToPanel(menuButtonPrefab, shopMenuButtonPanel, ItemType.Consumables);
+        shopController.AddButtonToPanel(menuButtonPrefab, shopMenuButtonPanel, ItemType.Treasure);
 
         // Populating Shop
         foreach (var itemData in shopItemDatabase.allItems)
