@@ -66,6 +66,7 @@ public class ItemManager : MonoBehaviour
         shopController = new ShopController(shopGrid, shopEmptyText, shopItemsCountText);
 
         // Adding buttons dynamically
+        shopController.AddButtonToPanel(menuButtonPrefab, shopMenuButtonPanel, "All", ItemType.None);
         shopController.AddButtonToPanel(menuButtonPrefab, shopMenuButtonPanel, "Materials", ItemType.Materials);
         shopController.AddButtonToPanel(menuButtonPrefab, shopMenuButtonPanel, "Weapons", ItemType.Weapons);
         shopController.AddButtonToPanel(menuButtonPrefab, shopMenuButtonPanel, "Consumables", ItemType.Consumables);

@@ -27,6 +27,22 @@ public class ItemController
         itemView.UpdateQuantity(itemModel.Quantity);
     }
 
+    public void ShowView()
+    {
+        if (itemView != null)
+        {
+            itemView.gameObject.SetActive(true);
+        }
+    }
+
+    public void HideView()
+    {
+        if (itemView != null)
+        {
+            itemView.gameObject.SetActive(false);
+        }
+    }
+
     // Destructor
     public void DestroyView()
     {
