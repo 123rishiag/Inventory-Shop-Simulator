@@ -8,19 +8,24 @@ public class InventoryController
     private InventoryView inventoryView;
     private List<ItemController> itemControllers;
 
-    public InventoryController(Transform _inventoryGrid, TMP_Text _inventoryEmptyText)
+    public InventoryController(Transform _inventoryGrid, TMP_Text _inventoryEmptyText,
+        TMP_Text _inventoryCurrencyText, TMP_Text _inventoryWeightText, float _maxWeight)
     {
         // Instantiating Model
-        inventoryModel = new InventoryModel();
+        inventoryModel = new InventoryModel(_maxWeight);
 
         // Instantiating View
-        inventoryView = new InventoryView(_inventoryGrid, _inventoryEmptyText);
+        inventoryView = new InventoryView(_inventoryGrid, _inventoryEmptyText, _inventoryCurrencyText, _inventoryWeightText);
 
         // Controller List
         itemControllers = new List<ItemController>();
 
-        // Initially check if the inventory is empty
-        UpdateInventoryEmptyText();
+        // Test Values Initialization
+        inventoryModel.Currency = 0;
+        inventoryModel.CurrentWeight = 1;
+
+        // Initially UI values
+        UpdateInventoryTexts();
     }
 
     public void AddItem(ItemScriptableObject _itemData, GameObject _itemPrefab)
@@ -32,8 +37,8 @@ public class InventoryController
         // Add to Model
         inventoryModel.AddItem(itemController.GetModel());
 
-        // Update empty text
-        UpdateInventoryEmptyText();
+        // Update UI Metrics
+        UpdateInventoryTexts();
     }
 
     public void RemoveItem(ItemController _itemController)
@@ -49,13 +54,15 @@ public class InventoryController
             // Destroy the Item View
             _itemController.DestroyView();
 
-            // Update empty text
-            UpdateInventoryEmptyText();
+            // Update UI Metrics
+            UpdateInventoryTexts();
         }
     }
 
-    private void UpdateInventoryEmptyText()
+    private void UpdateInventoryTexts()
     {
         inventoryView.UpdateInventoryEmptyText(itemControllers.Count == 0);
+        inventoryView.UpdateInventoryCurrency(inventoryModel.Currency);
+        inventoryView.UpdateInventoryWeight(inventoryModel.CurrentWeight, inventoryModel.MaxWeight);
     }
 }
