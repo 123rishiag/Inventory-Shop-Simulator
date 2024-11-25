@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class ItemManager : MonoBehaviour
@@ -10,14 +11,17 @@ public class ItemManager : MonoBehaviour
     [SerializeField] private ItemDatabase inventoryItemDatabase;
     [SerializeField] private ItemDatabase shopItemDatabase;
 
+    [Header("Panels")]
+    [SerializeField] private Transform inventoryGrid; // Assign Inventory Content Game Object inside Inventory Panel 
+
+    [Header("UI Elements")]
+    [SerializeField] private TMP_Text inventoryEmptyText;
+
     [Header("Prefabs")]
     [SerializeField] private GameObject itemPrefab;
 
     [Header("Inventory Config")]
     [SerializeField] private InventoryConfigScriptableObject inventoryConfig;
-
-    [Header("Panels")]
-    [SerializeField] private Transform inventoryGrid; // Assign Inventory Content Game Object inside Inventory Panel 
 
     private void Awake()
     {
@@ -35,7 +39,7 @@ public class ItemManager : MonoBehaviour
             return;
 
         // Initialize InventoryController
-        inventoryController = new InventoryController(inventoryGrid);
+        inventoryController = new InventoryController(inventoryGrid, inventoryEmptyText);
 
         // Populate Inventory
         foreach (var itemData in inventoryItemDatabase.allItems)
