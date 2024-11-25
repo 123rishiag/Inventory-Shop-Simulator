@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class InventoryController
 {
@@ -24,8 +25,49 @@ public class InventoryController
         inventoryModel.Currency = 0;
         inventoryModel.CurrentWeight = 1;
 
-        // Initially UI values
+        // Initial UI values
         UpdateInventoryTexts();
+    }
+
+    public void AddButtonToPanel(GameObject _inventoryMenuButtonPrefab, Transform _inventoryMenuButtonPanel, string _inventoryMenuButtonText)
+    {
+        // Checking if prefab and panel are valid
+        if (_inventoryMenuButtonPrefab == null || _inventoryMenuButtonPanel == null)
+        {
+            Debug.LogError("Menu Button prefab or panel is null!");
+            return;
+        }
+
+        // Instantiating the button
+        GameObject newButton = Object.Instantiate(_inventoryMenuButtonPrefab, _inventoryMenuButtonPanel);
+
+        // Fetching TMP_Text component in the button and setting its text
+        TMP_Text buttonText = newButton.GetComponentInChildren<TMP_Text>();
+        if (buttonText != null)
+        {
+            buttonText.text = _inventoryMenuButtonText;
+        }
+        else
+        {
+            Debug.LogWarning("Text component not found in button prefab.");
+        }
+
+        // Setting up button logic (e.g., click events)
+        Button button = newButton.GetComponent<Button>();
+        if (button != null)
+        {
+            button.onClick.AddListener(() => OnButtonClicked(_inventoryMenuButtonText));
+        }
+        else
+        {
+            Debug.LogWarning("Button component not found in button prefab.");
+        }
+    }
+
+    private void OnButtonClicked(string _inventoryMenuButtonText)
+    {
+        Debug.Log($"Button '{_inventoryMenuButtonText}' clicked!");
+        // Handle button-specific actions here
     }
 
     public void AddItem(ItemScriptableObject _itemData, GameObject _itemPrefab)
