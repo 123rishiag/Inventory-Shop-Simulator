@@ -21,4 +21,6 @@ public class ShopModel
 
     // Getters
     public List<ItemModel> Items => items;
+
+    public ItemType SelectedItemType { get; set; }
 }

@@ -19,7 +19,7 @@ public enum ItemType
     Weapons,
     Consumables,
     Treasure,
-    None
+    All
 }
 
 public enum Rarity
