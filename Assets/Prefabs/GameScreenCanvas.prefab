@@ -1331,7 +1331,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2295310723518318749}
   m_HandleRect: {fileID: 8676048658477068877}
   m_Direction: 0
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -1981,7 +1981,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.00002169609, y: -0.00033569336}
+  m_AnchoredPosition: {x: -0.000020384789, y: -0.0010070801}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &7034777515620251625
@@ -2712,7 +2712,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.000022172928, y: -0.00033569336}
+  m_AnchoredPosition: {x: -0.000020503998, y: -0.0010070801}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1650863275343736045
@@ -3728,7 +3728,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inventoryItemDatabase: {fileID: 11400000, guid: b553c2baf88cf094385e752cdd78520b, type: 2}
-  shopItemDatabase: {fileID: 11400000, guid: 794e339817f05ad4c8c3900ddffe34fd, type: 2}
   inventoryGrid: {fileID: 841984578218086930}
   inventoryMenuButtonPanel: {fileID: 4094606298245074502}
   shopGrid: {fileID: 2997965855556523982}
@@ -3740,9 +3739,7 @@ MonoBehaviour:
   shopItemTypeText: {fileID: 7916834376770417566}
   shopItemsCountText: {fileID: 5136728025902997986}
   inventoryMenuButtonPrefab: {fileID: 1412723424052507799, guid: 713818958f47a504da7963c027461d84, type: 3}
-  shopMenuButtonPrefab: {fileID: 1412723424052507799, guid: 713818958f47a504da7963c027461d84, type: 3}
   inventoryItemPrefab: {fileID: 7103220825560255194, guid: e746c57d1d6071f49a8b322ecd71a158, type: 3}
-  shopItemPrefab: {fileID: 7103220825560255194, guid: e746c57d1d6071f49a8b322ecd71a158, type: 3}
   inventoryConfigData: {fileID: 11400000, guid: a7c06fab3982f7345bb4e81e02ede825, type: 2}
 --- !u!1 &9107040225819220976
 GameObject:

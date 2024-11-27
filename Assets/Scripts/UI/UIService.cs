@@ -11,11 +11,9 @@ namespace ServiceLocator.UI
     {
         // Controllers
         private InventoryController inventoryController;
-        private ShopController shopController;
 
         [Header("Databases")]
         [SerializeField] private ItemDatabase inventoryItemDatabase;
-        [SerializeField] private ItemDatabase shopItemDatabase;
 
         [Header("Panels")]
         [SerializeField] private Transform inventoryGrid; // Assign Inventory Content Game Object inside Inventory Panel
@@ -33,9 +31,7 @@ namespace ServiceLocator.UI
 
         [Header("Prefabs")]
         [SerializeField] private GameObject inventoryMenuButtonPrefab;
-        [SerializeField] private GameObject shopMenuButtonPrefab;
         [SerializeField] private GameObject inventoryItemPrefab;
-        [SerializeField] private GameObject shopItemPrefab;
 
         [Header("Inventory Config")]
         [SerializeField] private InventoryConfigScriptableObject inventoryConfigData;
@@ -43,7 +39,6 @@ namespace ServiceLocator.UI
         public void Init()
         {
             PopulateInventory();
-            PopulateShop();
         }
 
         public void PopulateInventory()
@@ -62,27 +57,6 @@ namespace ServiceLocator.UI
             foreach (var itemData in inventoryItemDatabase.allItems)
             {
                 inventoryController.AddItem(itemData, inventoryItemPrefab);
-            }
-        }
-
-        public void PopulateShop()
-        {
-            if (!ValidateReferences(shopItemDatabase, shopItemPrefab, shopGrid, "Shop"))
-                return;
-
-            // Initializing ShopController
-            shopController = new ShopController(shopGrid, shopEmptyText, shopItemTypeText, shopItemsCountText);
-
-            // Adding buttons dynamically
-            foreach (ItemType itemType in Enum.GetValues(typeof(ItemType)))
-            {
-                shopController.AddButtonToPanel(shopMenuButtonPrefab, shopMenuButtonPanel, itemType);
-            }
-
-            // Populating Shop
-            foreach (var itemData in shopItemDatabase.allItems)
-            {
-                shopController.AddItem(itemData, shopItemPrefab);
             }
         }
 
@@ -107,6 +81,27 @@ namespace ServiceLocator.UI
             }
 
             return true;
+        }
+
+        public Transform GetShopGrid() => shopGrid;
+
+        public Transform GetShopButtonPanel() => shopMenuButtonPanel;
+
+        public void UpdateShopEmptyText(bool _isEmpty)
+        {
+            if (shopEmptyText != null)
+            {
+                shopEmptyText.gameObject.SetActive(_isEmpty);
+            }
+        }
+        public void UpdateShopItemTypeText(string _text)
+        {
+            shopItemTypeText.text = $"Item Type: {_text}";
+        }
+
+        public void UpdateShopItemCount(int _itemCount)
+        {
+            shopItemsCountText.text = $"Items Count: {_itemCount}";
         }
     }
 }

@@ -1,6 +1,6 @@
 using ServiceLocator.Item;
+using ServiceLocator.UI;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,18 +8,22 @@ namespace ServiceLocator.Shop
 {
     public class ShopController
     {
+        private UIService uiService;
+
         private ShopModel shopModel;
         private ShopView shopView;
         private List<ItemController> itemControllers;
         private List<ItemController> filteredItemControllers;
 
-        public ShopController(Transform _shopGrid, TMP_Text _shopEmptyText, TMP_Text _shopItemTypeText, TMP_Text _shopItemCountText)
+        public ShopController(UIService _uiService)
         {
+            uiService = _uiService;
+
             // Instantiating Model
             shopModel = new ShopModel();
 
             // Instantiating View
-            shopView = new ShopView(_shopGrid, _shopEmptyText, _shopItemTypeText, _shopItemCountText);
+            shopView = new ShopView(this);
 
             // Controllers List
             itemControllers = new List<ItemController>();
@@ -32,10 +36,10 @@ namespace ServiceLocator.Shop
             ShowFilteredItems();
         }
 
-        public void AddButtonToPanel(GameObject _shopMenuButtonPrefab, Transform _shopMenuButtonPanel, ItemType _itemType)
+        public void AddButtonToPanel(GameObject _menuButtonPrefab, Transform _menuButtonPanel, ItemType _itemType)
         {
             // Instantiating the button
-            GameObject newButton = shopView.CreateButton(_shopMenuButtonPrefab, _shopMenuButtonPanel, _itemType);
+            GameObject newButton = shopView.CreateButton(_menuButtonPrefab, _menuButtonPanel, _itemType);
 
             // Setting up button logic (e.g., click events)
             Button button = newButton.GetComponent<Button>();
@@ -55,32 +59,10 @@ namespace ServiceLocator.Shop
             ShowFilteredItems();
         }
 
-        private void ShowFilteredItems()
-        {
-            // Clear filtered list
-            filteredItemControllers.Clear();
-
-            // Filter items and update visibility
-            foreach (var itemController in itemControllers)
-            {
-                if (shopModel.SelectedItemType == ItemType.All || itemController.GetModel().Type == shopModel.SelectedItemType)
-                {
-                    itemController.ShowView();
-                    filteredItemControllers.Add(itemController);
-                }
-                else
-                {
-                    itemController.HideView();
-                }
-            }
-
-            UpdateShopTexts();
-        }
-
         public void AddItem(ItemScriptableObject _itemData, GameObject _itemPrefab)
         {
             // Create ItemController
-            var itemController = new ItemController(_itemData, shopView.GetShopGrid(), _itemPrefab);
+            var itemController = new ItemController(_itemData, uiService.GetShopGrid(), _itemPrefab);
             itemControllers.Add(itemController);
 
             // Add to Model
@@ -108,12 +90,21 @@ namespace ServiceLocator.Shop
             }
         }
 
-        private void UpdateShopTexts()
+        private void ShowFilteredItems()
         {
-            // Update UI texts based on filtered items
-            shopView.UpdateShopEmptyText(filteredItemControllers.Count == 0);
-            shopView.UpdateShopItemTypeText(shopModel.SelectedItemType.ToString());
-            shopView.UpdateShopItemCount(filteredItemControllers.Count);
+            // Clear filtered list
+            filteredItemControllers.Clear();
+
+            // Show Filtered Items
+            shopView.ShowFilteredItems();
+
+            // Update UI
+            shopView.UpdateUI(uiService);
         }
+
+        // Getters
+        public List<ItemController> GetItems() => itemControllers;
+        public List<ItemController> GetFilteredItems() => filteredItemControllers;
+        public ShopModel GetShopModel() => shopModel;
     }
 }

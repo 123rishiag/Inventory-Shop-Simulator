@@ -1,4 +1,5 @@
 using ServiceLocator.Item;
+using ServiceLocator.UI;
 using TMPro;
 using UnityEngine;
 
@@ -6,30 +7,23 @@ namespace ServiceLocator.Shop
 {
     public class ShopView
     {
-        private Transform shopGrid;
-        private TMP_Text shopEmptyText;
-        private TMP_Text shopItemTypeText;
-        private TMP_Text shopItemCountText;
-
-        public ShopView(Transform _shopGrid, TMP_Text _shopEmptyText, TMP_Text _shopItemTypeText, TMP_Text _shopItemCountText)
-        {
-            shopGrid = _shopGrid;
-            shopEmptyText = _shopEmptyText;
-            shopItemTypeText = _shopItemTypeText;
-            shopItemCountText = _shopItemCountText;
+        private ShopController shopController;
+        public ShopView(ShopController _shopController) 
+        { 
+            shopController = _shopController;
         }
 
-        public GameObject CreateButton(GameObject _shopMenuButtonPrefab, Transform _shopMenuButtonPanel, ItemType _itemType)
+        public GameObject CreateButton(GameObject _menuButtonPrefab, Transform _menuButtonPanel, ItemType _itemType)
         {
             // Checking if prefab and panel are valid
-            if (_shopMenuButtonPrefab == null || _shopMenuButtonPanel == null)
+            if (_menuButtonPrefab == null || _menuButtonPanel == null)
             {
                 Debug.LogError("Menu Button prefab or panel is null!");
                 return null;
             }
 
             // Instantiating the button
-            GameObject newButton = Object.Instantiate(_shopMenuButtonPrefab, _shopMenuButtonPanel);
+            GameObject newButton = Object.Instantiate(_menuButtonPrefab, _menuButtonPanel);
 
             // Fetching TMP_Text component in the button and setting its text
             TMP_Text buttonText = newButton.GetComponentInChildren<TMP_Text>();
@@ -45,26 +39,30 @@ namespace ServiceLocator.Shop
             return newButton;
         }
 
-        public Transform GetShopGrid()
+        public void ShowFilteredItems()
         {
-            return shopGrid;
-        }
-
-        public void UpdateShopEmptyText(bool _isEmpty)
-        {
-            if (shopEmptyText != null)
+            // Filter items and update visibility
+            foreach (var itemController in shopController.GetItems())
             {
-                shopEmptyText.gameObject.SetActive(_isEmpty);
+                if (shopController.GetShopModel().SelectedItemType == ItemType.All || 
+                    itemController.GetModel().Type == shopController.GetShopModel().SelectedItemType)
+                {
+                    itemController.ShowView();
+                    shopController.GetFilteredItems().Add(itemController);
+                }
+                else
+                {
+                    itemController.HideView();
+                }
             }
         }
-        public void UpdateShopItemTypeText(string _text)
-        {
-            shopItemTypeText.text = $"Item Type: {_text}";
-        }
 
-        public void UpdateShopItemCount(int _itemCount)
+        public void UpdateUI(UIService _uiService)
         {
-            shopItemCountText.text = $"Items Count: {_itemCount}";
+            // Update UI texts based on filtered items
+            _uiService.UpdateShopEmptyText(shopController.GetFilteredItems().Count == 0);
+            _uiService.UpdateShopItemTypeText(shopController.GetShopModel().SelectedItemType.ToString());
+            _uiService.UpdateShopItemCount(shopController.GetFilteredItems().Count);
         }
     }
 }
