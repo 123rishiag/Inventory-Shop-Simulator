@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using ServiceLocator.Item;
+using System.Collections.Generic;
 
 namespace ServiceLocator.Shop
 {

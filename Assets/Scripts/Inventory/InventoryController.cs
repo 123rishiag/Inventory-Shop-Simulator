@@ -1,8 +1,8 @@
+using ServiceLocator.Item;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using ServiceLocator.Item;
 
 namespace ServiceLocator.Inventory
 {

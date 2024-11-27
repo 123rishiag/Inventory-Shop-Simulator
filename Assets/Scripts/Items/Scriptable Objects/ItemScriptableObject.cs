@@ -17,11 +17,11 @@ namespace ServiceLocator.Item
 
     public enum ItemType
     {
+        All,
         Materials,
         Weapons,
         Consumables,
-        Treasure,
-        All
+        Treasure
     }
 
     public enum Rarity
