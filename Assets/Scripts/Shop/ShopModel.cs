@@ -10,6 +10,9 @@ namespace ServiceLocator.Shop
         public ShopModel()
         {
             items = new List<ItemModel>();
+
+            // Initial Values
+            SelectedItemType = ItemType.All;
         }
 
         public void AddItem(ItemModel _item)

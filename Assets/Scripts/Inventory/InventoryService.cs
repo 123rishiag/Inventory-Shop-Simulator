@@ -1,22 +1,21 @@
 using ServiceLocator.Item;
 using ServiceLocator.UI;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace ServiceLocator.Shop
+namespace ServiceLocator.Inventory
 {
-    public class ShopService
+    public class InventoryService
     {
-        private ShopScriptableObject shopScriptableObject;
+        private InventoryScriptableObject inventoryScriptableObject;
 
         private UIService uiService;
 
-        private ShopController shopController;
+        private InventoryController inventoryController;
 
-        public ShopService(ShopScriptableObject _scriptableObject)
+        public InventoryService(InventoryScriptableObject _scriptableObject)
         {
-            shopScriptableObject = _scriptableObject;
+            inventoryScriptableObject = _scriptableObject;
         }
 
         public void Init(UIService _uiService)
@@ -27,23 +26,21 @@ namespace ServiceLocator.Shop
 
         private void InitializeVariables()
         {
-            if (!ValidateReferences(shopScriptableObject.allItems, shopScriptableObject.itemPrefab, uiService.GetShopButtonPanel(),
-                "Shop"))
+            if (!ValidateReferences(inventoryScriptableObject.allItems, inventoryScriptableObject.itemPrefab,
+                uiService.GetInventoryButtonPanel(), "Inventory"))
                 return;
 
-            // Initializing ShopController
-            shopController = new ShopController(uiService);
+            // Initializing InventoryController
+            inventoryController = new InventoryController(uiService, inventoryScriptableObject);
 
             // Adding buttons dynamically
-            foreach (ItemType itemType in Enum.GetValues(typeof(ItemType)))
-            {
-                shopController.AddButtonToPanel(shopScriptableObject.menuButtonPrefab, uiService.GetShopButtonPanel(), itemType);
-            }
+            inventoryController.AddButtonToPanel(inventoryScriptableObject.menuButtonPrefab, uiService.GetInventoryButtonPanel(),
+                "Gather Resources");
 
-            // Populating Shop
-            foreach (var itemData in shopScriptableObject.allItems)
+            // Populating Inventory
+            foreach (var itemData in inventoryScriptableObject.allItems)
             {
-                shopController.AddItem(itemData, shopScriptableObject.itemPrefab);
+                inventoryController.AddItem(itemData, inventoryScriptableObject.itemPrefab);
             }
         }
 

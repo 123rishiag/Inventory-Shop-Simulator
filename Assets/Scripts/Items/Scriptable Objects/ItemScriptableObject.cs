@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace ServiceLocator.Item
 {
-    [CreateAssetMenu(fileName = "NewItem", menuName = "Items/Item")]
+    [CreateAssetMenu(fileName = "ItemScriptableObject", menuName = "ScriptableObjects/ItemScriptableObject")]
     public class ItemScriptableObject : ScriptableObject
     {
         public Sprite icon;

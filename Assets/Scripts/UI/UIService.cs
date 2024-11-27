@@ -1,7 +1,3 @@
-using ServiceLocator.Inventory;
-using ServiceLocator.Item;
-using ServiceLocator.Shop;
-using System;
 using TMPro;
 using UnityEngine;
 
@@ -9,12 +5,6 @@ namespace ServiceLocator.UI
 {
     public class UIService : MonoBehaviour
     {
-        // Controllers
-        private InventoryController inventoryController;
-
-        [Header("Databases")]
-        [SerializeField] private ItemDatabase inventoryItemDatabase;
-
         [Header("Panels")]
         [SerializeField] private Transform inventoryGrid; // Assign Inventory Content Game Object inside Inventory Panel
         [SerializeField] private Transform inventoryMenuButtonPanel;
@@ -29,64 +19,30 @@ namespace ServiceLocator.UI
         [SerializeField] private TMP_Text shopItemTypeText;
         [SerializeField] private TMP_Text shopItemsCountText;
 
-        [Header("Prefabs")]
-        [SerializeField] private GameObject inventoryMenuButtonPrefab;
-        [SerializeField] private GameObject inventoryItemPrefab;
+        public void Init() { }
 
-        [Header("Inventory Config")]
-        [SerializeField] private InventoryConfigScriptableObject inventoryConfigData;
-
-        public void Init()
-        {
-            PopulateInventory();
-        }
-
-        public void PopulateInventory()
-        {
-            if (!ValidateReferences(inventoryItemDatabase, inventoryItemPrefab, inventoryGrid, "Inventory"))
-                return;
-
-            // Initializing InventoryController
-            inventoryController = new InventoryController(inventoryGrid, inventoryEmptyText,
-                inventoryCurrencyText, inventoryWeightText, inventoryConfigData.maxWeight);
-
-            // Adding buttons dynamically
-            inventoryController.AddButtonToPanel(inventoryMenuButtonPrefab, inventoryMenuButtonPanel, "Gather Resources");
-
-            // Populating Inventory
-            foreach (var itemData in inventoryItemDatabase.allItems)
-            {
-                inventoryController.AddItem(itemData, inventoryItemPrefab);
-            }
-        }
-
-        private bool ValidateReferences(ItemDatabase _database, GameObject _itemPrefab, Transform _parentPanel, string type)
-        {
-            if (_database == null)
-            {
-                Debug.LogError($"{type} Item Database is not assigned!");
-                return false;
-            }
-
-            if (_itemPrefab == null)
-            {
-                Debug.LogError("Item Prefab is not assigned!");
-                return false;
-            }
-
-            if (_parentPanel == null)
-            {
-                Debug.LogError($"{type} Panel is not assigned!");
-                return false;
-            }
-
-            return true;
-        }
-
+        // Getters
+        public Transform GetInventoryGrid() => inventoryGrid;
+        public Transform GetInventoryButtonPanel() => inventoryMenuButtonPanel;
         public Transform GetShopGrid() => shopGrid;
-
         public Transform GetShopButtonPanel() => shopMenuButtonPanel;
 
+        // Setters
+        public void UpdateInventoryEmptyText(bool _isEmpty)
+        {
+            if (inventoryEmptyText != null)
+            {
+                inventoryEmptyText.gameObject.SetActive(_isEmpty);
+            }
+        }
+        public void UpdateInventoryCurrency(int _currency)
+        {
+            inventoryCurrencyText.text = $"Currency: {_currency}";
+        }
+        public void UpdateInventoryWeight(float _currentWeight, float _maxWeight)
+        {
+            inventoryWeightText.text = $"Weight: {_currentWeight}/{_maxWeight}";
+        }
         public void UpdateShopEmptyText(bool _isEmpty)
         {
             if (shopEmptyText != null)
@@ -98,7 +54,6 @@ namespace ServiceLocator.UI
         {
             shopItemTypeText.text = $"Item Type: {_text}";
         }
-
         public void UpdateShopItemCount(int _itemCount)
         {
             shopItemsCountText.text = $"Items Count: {_itemCount}";
