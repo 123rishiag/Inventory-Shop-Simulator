@@ -3,53 +3,56 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ItemView : MonoBehaviour
+namespace ServiceLocator.Item
 {
-    private Image iconImage;
-
-    [Header("UI Components")]
-    [SerializeField] private TMP_Text quantityText;
-
-    private ItemController itemController;
-
-    public static ItemView CreateView(Transform _parentPanel, ItemController _itemController, GameObject _itemPrefab)
+    public class ItemView : MonoBehaviour
     {
-        if (_itemPrefab == null || _parentPanel == null)
+        private Image iconImage;
+
+        [Header("UI Components")]
+        [SerializeField] private TMP_Text quantityText;
+
+        private ItemController itemController;
+
+        public static ItemView CreateView(Transform _parentPanel, ItemController _itemController, GameObject _itemPrefab)
         {
-            Debug.LogError("ItemView: Prefab or Parent Panel is null!");
-            return null;
+            if (_itemPrefab == null || _parentPanel == null)
+            {
+                Debug.LogError("ItemView: Prefab or Parent Panel is null!");
+                return null;
+            }
+
+            GameObject itemObject = Object.Instantiate(_itemPrefab, _parentPanel);
+            ItemView itemView = itemObject.GetComponent<ItemView>();
+            if (itemView == null)
+            {
+                Debug.LogError("ItemView: Prefab does not have an ItemView component!");
+                return null;
+            }
+
+            itemView.SetController(_itemController);
+            return itemView;
         }
 
-        GameObject itemObject = Object.Instantiate(_itemPrefab, _parentPanel);
-        ItemView itemView = itemObject.GetComponent<ItemView>();
-        if (itemView == null)
+        // Sets the controller and initializes the view
+        private void SetController(ItemController _itemController)
         {
-            Debug.LogError("ItemView: Prefab does not have an ItemView component!");
-            return null;
+            itemController = _itemController;
+
+            iconImage = GetComponent<Image>();
+            if (iconImage == null)
+            {
+                Debug.LogError("ItemView: No Image component found on this GameObject!");
+                return;
+            }
+
+            iconImage.sprite = itemController.GetModel().Icon;
+            quantityText.text = $"{itemController.GetModel().Quantity}x";
         }
 
-        itemView.SetController(_itemController);
-        return itemView;
-    }
-
-    // Sets the controller and initializes the view
-    private void SetController(ItemController _itemController)
-    {
-        itemController = _itemController;
-
-        iconImage = GetComponent<Image>();
-        if (iconImage == null)
+        public void UpdateQuantity(int _newQuantity)
         {
-            Debug.LogError("ItemView: No Image component found on this GameObject!");
-            return;
+            quantityText.text = $"{_newQuantity}x";
         }
-
-        iconImage.sprite = itemController.GetModel().Icon;
-        quantityText.text = $"{itemController.GetModel().Quantity}x";
-    }
-
-    public void UpdateQuantity(int _newQuantity)
-    {
-        quantityText.text = $"{_newQuantity}x";
     }
 }
