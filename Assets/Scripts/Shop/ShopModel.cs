@@ -1,26 +1,30 @@
 using System.Collections.Generic;
+using ServiceLocator.Item;
 
-public class ShopModel
+namespace ServiceLocator.Shop
 {
-    private List<ItemModel> items;
-
-    public ShopModel()
+    public class ShopModel
     {
-        items = new List<ItemModel>();
+        private List<ItemModel> items;
+
+        public ShopModel()
+        {
+            items = new List<ItemModel>();
+        }
+
+        public void AddItem(ItemModel _item)
+        {
+            items.Add(_item);
+        }
+
+        public void RemoveItem(ItemModel _item)
+        {
+            items.Remove(_item);
+        }
+
+        // Getters
+        public List<ItemModel> Items => items;
+
+        public ItemType SelectedItemType { get; set; }
     }
-
-    public void AddItem(ItemModel _item)
-    {
-        items.Add(_item);
-    }
-
-    public void RemoveItem(ItemModel _item)
-    {
-        items.Remove(_item);
-    }
-
-    // Getters
-    public List<ItemModel> Items => items;
-
-    public ItemType SelectedItemType { get; set; }
 }

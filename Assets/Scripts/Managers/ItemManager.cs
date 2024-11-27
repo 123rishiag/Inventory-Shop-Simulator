@@ -1,105 +1,110 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using ServiceLocator.Inventory;
+using ServiceLocator.Shop;
 
-public class ItemManager : MonoBehaviour
+namespace ServiceLocator.Item
 {
-    // Controllers
-    private InventoryController inventoryController;
-    private ShopController shopController;
-
-    [Header("Databases")]
-    [SerializeField] private ItemDatabase inventoryItemDatabase;
-    [SerializeField] private ItemDatabase shopItemDatabase;
-
-    [Header("Panels")]
-    [SerializeField] private Transform inventoryGrid; // Assign Inventory Content Game Object inside Inventory Panel
-    [SerializeField] private Transform inventoryMenuButtonPanel;
-    [SerializeField] private Transform shopGrid; // Assign Shop Content Game Object inside Shop Panel
-    [SerializeField] private Transform shopMenuButtonPanel;
-
-    [Header("UI Elements")]
-    [SerializeField] private TMP_Text inventoryEmptyText;
-    [SerializeField] private TMP_Text inventoryCurrencyText;
-    [SerializeField] private TMP_Text inventoryWeightText;
-    [SerializeField] private TMP_Text shopEmptyText;
-    [SerializeField] private TMP_Text shopItemTypeText;
-    [SerializeField] private TMP_Text shopItemsCountText;
-
-    [Header("Prefabs")]
-    [SerializeField] private GameObject menuButtonPrefab;
-    [SerializeField] private GameObject itemPrefab;
-
-    [Header("Inventory Config")]
-    [SerializeField] private InventoryConfigScriptableObject inventoryConfigData;
-
-    private void Start()
+    public class ItemManager : MonoBehaviour
     {
-        PopulateInventory();
-        PopulateShop();
-    }
+        // Controllers
+        private InventoryController inventoryController;
+        private ShopController shopController;
 
-    public void PopulateInventory()
-    {
-        if (!ValidateReferences(inventoryItemDatabase, inventoryGrid, "Inventory"))
-            return;
+        [Header("Databases")]
+        [SerializeField] private ItemDatabase inventoryItemDatabase;
+        [SerializeField] private ItemDatabase shopItemDatabase;
 
-        // Initializing InventoryController
-        inventoryController = new InventoryController(inventoryGrid, inventoryEmptyText, 
-            inventoryCurrencyText, inventoryWeightText, inventoryConfigData.maxWeight);
+        [Header("Panels")]
+        [SerializeField] private Transform inventoryGrid; // Assign Inventory Content Game Object inside Inventory Panel
+        [SerializeField] private Transform inventoryMenuButtonPanel;
+        [SerializeField] private Transform shopGrid; // Assign Shop Content Game Object inside Shop Panel
+        [SerializeField] private Transform shopMenuButtonPanel;
 
-        // Adding buttons dynamically
-        inventoryController.AddButtonToPanel(menuButtonPrefab, inventoryMenuButtonPanel, "Gather Resources");
+        [Header("UI Elements")]
+        [SerializeField] private TMP_Text inventoryEmptyText;
+        [SerializeField] private TMP_Text inventoryCurrencyText;
+        [SerializeField] private TMP_Text inventoryWeightText;
+        [SerializeField] private TMP_Text shopEmptyText;
+        [SerializeField] private TMP_Text shopItemTypeText;
+        [SerializeField] private TMP_Text shopItemsCountText;
 
-        // Populating Inventory
-        foreach (var itemData in inventoryItemDatabase.allItems)
+        [Header("Prefabs")]
+        [SerializeField] private GameObject menuButtonPrefab;
+        [SerializeField] private GameObject itemPrefab;
+
+        [Header("Inventory Config")]
+        [SerializeField] private InventoryConfigScriptableObject inventoryConfigData;
+
+        private void Start()
         {
-            inventoryController.AddItem(itemData, itemPrefab);
-        }
-    }
-
-    public void PopulateShop()
-    {
-        if (!ValidateReferences(shopItemDatabase, shopGrid, "Shop"))
-            return;
-
-        // Initializing ShopController
-        shopController = new ShopController(shopGrid, shopEmptyText, shopItemTypeText, shopItemsCountText);
-
-        // Adding buttons dynamically
-        shopController.AddButtonToPanel(menuButtonPrefab, shopMenuButtonPanel, ItemType.All);
-        shopController.AddButtonToPanel(menuButtonPrefab, shopMenuButtonPanel, ItemType.Materials);
-        shopController.AddButtonToPanel(menuButtonPrefab, shopMenuButtonPanel, ItemType.Weapons);
-        shopController.AddButtonToPanel(menuButtonPrefab, shopMenuButtonPanel, ItemType.Consumables);
-        shopController.AddButtonToPanel(menuButtonPrefab, shopMenuButtonPanel, ItemType.Treasure);
-
-        // Populating Shop
-        foreach (var itemData in shopItemDatabase.allItems)
-        {
-            shopController.AddItem(itemData, itemPrefab);
-        }
-    }
-
-    private bool ValidateReferences(ItemDatabase _database, Transform _parentPanel, string type)
-    {
-        if (_database == null)
-        {
-            Debug.LogError($"{type} Item Database is not assigned!");
-            return false;
+            PopulateInventory();
+            PopulateShop();
         }
 
-        if (itemPrefab == null)
+        public void PopulateInventory()
         {
-            Debug.LogError("Item Prefab is not assigned!");
-            return false;
+            if (!ValidateReferences(inventoryItemDatabase, inventoryGrid, "Inventory"))
+                return;
+
+            // Initializing InventoryController
+            inventoryController = new InventoryController(inventoryGrid, inventoryEmptyText,
+                inventoryCurrencyText, inventoryWeightText, inventoryConfigData.maxWeight);
+
+            // Adding buttons dynamically
+            inventoryController.AddButtonToPanel(menuButtonPrefab, inventoryMenuButtonPanel, "Gather Resources");
+
+            // Populating Inventory
+            foreach (var itemData in inventoryItemDatabase.allItems)
+            {
+                inventoryController.AddItem(itemData, itemPrefab);
+            }
         }
 
-        if (_parentPanel == null)
+        public void PopulateShop()
         {
-            Debug.LogError($"{type} Panel is not assigned!");
-            return false;
+            if (!ValidateReferences(shopItemDatabase, shopGrid, "Shop"))
+                return;
+
+            // Initializing ShopController
+            shopController = new ShopController(shopGrid, shopEmptyText, shopItemTypeText, shopItemsCountText);
+
+            // Adding buttons dynamically
+            shopController.AddButtonToPanel(menuButtonPrefab, shopMenuButtonPanel, ItemType.All);
+            shopController.AddButtonToPanel(menuButtonPrefab, shopMenuButtonPanel, ItemType.Materials);
+            shopController.AddButtonToPanel(menuButtonPrefab, shopMenuButtonPanel, ItemType.Weapons);
+            shopController.AddButtonToPanel(menuButtonPrefab, shopMenuButtonPanel, ItemType.Consumables);
+            shopController.AddButtonToPanel(menuButtonPrefab, shopMenuButtonPanel, ItemType.Treasure);
+
+            // Populating Shop
+            foreach (var itemData in shopItemDatabase.allItems)
+            {
+                shopController.AddItem(itemData, itemPrefab);
+            }
         }
 
-        return true;
+        private bool ValidateReferences(ItemDatabase _database, Transform _parentPanel, string type)
+        {
+            if (_database == null)
+            {
+                Debug.LogError($"{type} Item Database is not assigned!");
+                return false;
+            }
+
+            if (itemPrefab == null)
+            {
+                Debug.LogError("Item Prefab is not assigned!");
+                return false;
+            }
+
+            if (_parentPanel == null)
+            {
+                Debug.LogError($"{type} Panel is not assigned!");
+                return false;
+            }
+
+            return true;
+        }
     }
 }
