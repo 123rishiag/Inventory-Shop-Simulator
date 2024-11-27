@@ -1,6 +1,5 @@
 using TMPro;
 using UnityEngine;
-using ServiceLocator.Item;
 
 namespace ServiceLocator.Inventory
 {

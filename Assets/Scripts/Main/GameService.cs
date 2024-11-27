@@ -1,17 +1,25 @@
-using UnityEngine;
+using ServiceLocator.Inventory;
+using ServiceLocator.Item;
 using ServiceLocator.UI;
+using UnityEngine;
 
 namespace ServiceLocator.Main
 {
     public class GameService : MonoBehaviour
     {
-        private UIService uiService;
+
+        // Services
+        [SerializeField] private UIService uiService;
+        public UIService UIService => uiService;
+
+        // Scriptable Objects
+        [SerializeField] private ItemDatabase inventoryItemDatabase;
+        [SerializeField] private ItemDatabase shopItemDatabase;
+        [SerializeField] private InventoryConfigScriptableObject inventoryConfig;
 
         private void Start()
         {
-            // Create Services
-            uiService = new UIService();
-
+            // Initializaing Services
             uiService.Init();
         }
     }

@@ -1,6 +1,6 @@
+using ServiceLocator.Item;
 using TMPro;
 using UnityEngine;
-using ServiceLocator.Item;
 
 namespace ServiceLocator.Shop
 {
