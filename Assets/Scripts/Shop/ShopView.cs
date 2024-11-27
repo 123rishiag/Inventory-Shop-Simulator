@@ -8,8 +8,8 @@ namespace ServiceLocator.Shop
     public class ShopView
     {
         private ShopController shopController;
-        public ShopView(ShopController _shopController) 
-        { 
+        public ShopView(ShopController _shopController)
+        {
             shopController = _shopController;
         }
 
@@ -44,15 +44,15 @@ namespace ServiceLocator.Shop
             // Filter items and update visibility
             foreach (var itemController in shopController.GetItems())
             {
-                if (shopController.GetShopModel().SelectedItemType == ItemType.All || 
-                    itemController.GetModel().Type == shopController.GetShopModel().SelectedItemType)
+                if (shopController.GetModel().SelectedItemType == ItemType.All ||
+                    itemController.GetModel().Type == shopController.GetModel().SelectedItemType)
                 {
-                    itemController.ShowView();
+                    itemController.GetView().ShowView();
                     shopController.GetFilteredItems().Add(itemController);
                 }
                 else
                 {
-                    itemController.HideView();
+                    itemController.GetView().HideView();
                 }
             }
         }
@@ -61,7 +61,7 @@ namespace ServiceLocator.Shop
         {
             // Update UI texts based on filtered items
             _uiService.UpdateShopEmptyText(shopController.GetFilteredItems().Count == 0);
-            _uiService.UpdateShopItemTypeText(shopController.GetShopModel().SelectedItemType.ToString());
+            _uiService.UpdateShopItemTypeText(shopController.GetModel().SelectedItemType.ToString());
             _uiService.UpdateShopItemCount(shopController.GetFilteredItems().Count);
         }
     }

@@ -13,15 +13,15 @@ namespace ServiceLocator.Item
 
         private ItemController itemController;
 
-        public static ItemView CreateView(Transform _parentPanel, ItemController _itemController, GameObject _itemPrefab)
+        public static ItemView CreateView(Transform _parentGrid, ItemController _itemController, GameObject _itemPrefab)
         {
-            if (_itemPrefab == null || _parentPanel == null)
+            if (_itemPrefab == null || _parentGrid == null)
             {
-                Debug.LogError("ItemView: Prefab or Parent Panel is null!");
+                Debug.LogError("ItemView: Prefab or Parent Grid is null!");
                 return null;
             }
 
-            GameObject itemObject = Object.Instantiate(_itemPrefab, _parentPanel);
+            GameObject itemObject = Object.Instantiate(_itemPrefab, _parentGrid);
             ItemView itemView = itemObject.GetComponent<ItemView>();
             if (itemView == null)
             {
@@ -49,9 +49,35 @@ namespace ServiceLocator.Item
             quantityText.text = $"{itemController.GetModel().Quantity}x";
         }
 
-        public void UpdateQuantity(int _newQuantity)
+        public void ShowView()
         {
-            quantityText.text = $"{_newQuantity}x";
+            if (this != null)
+            {
+                gameObject.SetActive(true);
+            }
+        }
+
+        public void HideView()
+        {
+            if (this != null)
+            {
+                gameObject.SetActive(false);
+            }
+        }
+
+        // Destructor
+        public void DestroyView()
+        {
+            if (this != null)
+            {
+                Object.Destroy(gameObject);
+            }
+        }
+
+        // Setters
+        public void UpdateQuantity()
+        {
+            quantityText.text = $"{itemController.GetModel().Quantity}x";
         }
     }
 }

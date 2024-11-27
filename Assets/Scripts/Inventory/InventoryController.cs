@@ -1,6 +1,6 @@
 using ServiceLocator.Item;
+using ServiceLocator.UI;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,42 +8,39 @@ namespace ServiceLocator.Inventory
 {
     public class InventoryController
     {
+        private UIService uiService;
+
         private InventoryModel inventoryModel;
         private InventoryView inventoryView;
         private List<ItemController> itemControllers;
 
-        public InventoryController(Transform _inventoryGrid, TMP_Text _inventoryEmptyText,
-            TMP_Text _inventoryCurrencyText, TMP_Text _inventoryWeightText, float _maxWeight)
+        public InventoryController(UIService _uiService, InventoryScriptableObject _scriptableObject)
         {
+            uiService = _uiService;
+
             // Instantiating Model
-            inventoryModel = new InventoryModel(_maxWeight);
+            inventoryModel = new InventoryModel(_scriptableObject);
 
             // Instantiating View
-            inventoryView = new InventoryView(_inventoryGrid, _inventoryEmptyText, _inventoryCurrencyText, _inventoryWeightText);
+            inventoryView = new InventoryView(this);
 
             // Controller List
             itemControllers = new List<ItemController>();
 
-            // Test Values Initialization
-            inventoryModel.Currency = 10;
-            inventoryModel.CurrentWeight = 1;
-
-            // Initial UI values
-            UpdateInventoryTexts();
+            // Update UI
+            UpdateUI();
         }
 
-        public void AddButtonToPanel(GameObject _inventoryMenuButtonPrefab, Transform _inventoryMenuButtonPanel,
-            string _inventoryMenuButtonText)
+        public void AddButtonToPanel(GameObject _menuButtonPrefab, Transform _menuButtonPanel, string _menuButtonText)
         {
             // Instantiating the button
-            GameObject newButton = inventoryView.CreateButton(_inventoryMenuButtonPrefab, _inventoryMenuButtonPanel,
-                _inventoryMenuButtonText);
+            GameObject newButton = inventoryView.CreateButton(_menuButtonPrefab, _menuButtonPanel, _menuButtonText);
 
             // Setting up button logic (e.g., click events)
             Button button = newButton.GetComponent<Button>();
             if (button != null)
             {
-                button.onClick.AddListener(() => OnButtonClicked(_inventoryMenuButtonText));
+                button.onClick.AddListener(() => OnButtonClicked(_menuButtonText));
             }
             else
             {
@@ -51,23 +48,24 @@ namespace ServiceLocator.Inventory
             }
         }
 
-        private void OnButtonClicked(string _inventoryMenuButtonText)
+        private void OnButtonClicked(string _menuButtonText)
         {
-            Debug.Log($"Button '{_inventoryMenuButtonText}' clicked!");
             // Handle button-specific actions here
+            Debug.Log($"Button '{_menuButtonText}' clicked!");
+            UpdateUI();
         }
 
         public void AddItem(ItemScriptableObject _itemData, GameObject _itemPrefab)
         {
             // Create ItemController
-            var itemController = new ItemController(_itemData, inventoryView.GetInventoryGrid(), _itemPrefab);
+            var itemController = new ItemController(_itemData, uiService.GetInventoryGrid(), _itemPrefab);
             itemControllers.Add(itemController);
 
             // Add to Model
             inventoryModel.AddItem(itemController.GetModel());
 
-            // Update UI Metrics
-            UpdateInventoryTexts();
+            // Update UI
+            UpdateUI();
         }
 
         public void RemoveItem(ItemController _itemController)
@@ -81,18 +79,21 @@ namespace ServiceLocator.Inventory
                 itemControllers.Remove(_itemController);
 
                 // Destroy the Item View
-                _itemController.DestroyView();
+                _itemController.GetView().DestroyView();
 
-                // Update UI Metrics
-                UpdateInventoryTexts();
+                // Update UI
+                UpdateUI();
             }
         }
 
-        private void UpdateInventoryTexts()
+        private void UpdateUI()
         {
-            inventoryView.UpdateInventoryEmptyText(itemControllers.Count == 0);
-            inventoryView.UpdateInventoryCurrency(inventoryModel.Currency);
-            inventoryView.UpdateInventoryWeight(inventoryModel.CurrentWeight, inventoryModel.MaxWeight);
+            // Update UI
+            inventoryView.UpdateUI(uiService);
         }
+
+        // Getters
+        public List<ItemController> GetItems() => itemControllers;
+        public InventoryModel GetModel() => inventoryModel;
     }
 }

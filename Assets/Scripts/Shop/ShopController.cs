@@ -29,11 +29,8 @@ namespace ServiceLocator.Shop
             itemControllers = new List<ItemController>();
             filteredItemControllers = new List<ItemController>();
 
-            // Selected Item Type Filter
-            shopModel.SelectedItemType = ItemType.All;
-
-            // Show Filtered Items
-            ShowFilteredItems();
+            // Update UI
+            UpdateUI();
         }
 
         public void AddButtonToPanel(GameObject _menuButtonPrefab, Transform _menuButtonPanel, ItemType _itemType)
@@ -56,7 +53,7 @@ namespace ServiceLocator.Shop
         private void OnButtonClicked(ItemType _selectedItemType)
         {
             shopModel.SelectedItemType = _selectedItemType;
-            ShowFilteredItems();
+            UpdateUI();
         }
 
         public void AddItem(ItemScriptableObject _itemData, GameObject _itemPrefab)
@@ -68,8 +65,8 @@ namespace ServiceLocator.Shop
             // Add to Model
             shopModel.AddItem(itemController.GetModel());
 
-            // Show New Filtered Items
-            ShowFilteredItems();
+            // Update UI
+            UpdateUI();
         }
 
         public void RemoveItem(ItemController _itemController)
@@ -83,14 +80,14 @@ namespace ServiceLocator.Shop
                 itemControllers.Remove(_itemController);
 
                 // Destroy the Item View
-                _itemController.DestroyView();
+                _itemController.GetView().DestroyView();
 
-                // Show New Filtered Items
-                ShowFilteredItems();
+                // Update UI
+                UpdateUI();
             }
         }
 
-        private void ShowFilteredItems()
+        private void UpdateUI()
         {
             // Clear filtered list
             filteredItemControllers.Clear();
@@ -105,6 +102,6 @@ namespace ServiceLocator.Shop
         // Getters
         public List<ItemController> GetItems() => itemControllers;
         public List<ItemController> GetFilteredItems() => filteredItemControllers;
-        public ShopModel GetShopModel() => shopModel;
+        public ShopModel GetModel() => shopModel;
     }
 }
