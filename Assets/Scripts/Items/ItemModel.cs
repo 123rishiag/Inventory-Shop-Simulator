@@ -4,16 +4,16 @@ namespace ServiceLocator.Item
 {
     public class ItemModel
     {
-        public ItemModel(ItemScriptableObject _itemData)
+        public ItemModel(ItemScriptableObject _itemScriptableObject)
         {
-            Icon = _itemData.icon;
-            Description = _itemData.description;
-            BuyingPrice = _itemData.buyingPrice;
-            SellingPrice = _itemData.sellingPrice;
-            Weight = _itemData.weight;
-            Type = _itemData.type;
-            Rarity = _itemData.rarity;
-            Quantity = _itemData.quantity;
+            Icon = _itemScriptableObject.icon;
+            Description = _itemScriptableObject.description;
+            BuyingPrice = _itemScriptableObject.buyingPrice;
+            SellingPrice = _itemScriptableObject.sellingPrice;
+            Weight = _itemScriptableObject.weight;
+            Type = _itemScriptableObject.type;
+            Rarity = _itemScriptableObject.rarity;
+            Quantity = _itemScriptableObject.quantity;
         }
 
         // Getters

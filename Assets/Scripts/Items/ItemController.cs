@@ -7,10 +7,10 @@ namespace ServiceLocator.Item
         private ItemModel itemModel;
         private ItemView itemView;
 
-        public ItemController(ItemScriptableObject _itemData, Transform _parentGrid, GameObject _itemPrefab)
+        public ItemController(ItemScriptableObject _itemScriptableObject, Transform _parentGrid, GameObject _itemPrefab)
         {
             // Creating the Model
-            itemModel = new ItemModel(_itemData);
+            itemModel = new ItemModel(_itemScriptableObject);
 
             // Creating the View
             itemView = ItemView.CreateView(_parentGrid, this, _itemPrefab);
