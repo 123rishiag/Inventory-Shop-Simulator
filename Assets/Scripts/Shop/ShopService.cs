@@ -32,18 +32,20 @@ namespace ServiceLocator.Shop
                 return;
 
             // Initializing ShopController
-            shopController = new ShopController(uiService);
+            shopController = new ShopController(shopScriptableObject, uiService);
 
             // Adding buttons dynamically
             foreach (ItemType itemType in Enum.GetValues(typeof(ItemType)))
             {
-                shopController.AddButtonToPanel(shopScriptableObject.menuButtonPrefab, uiService.GetShopButtonPanel(), itemType);
+                shopController.AddButtonToPanel(itemType);
             }
 
             // Populating Shop
             foreach (var itemData in shopScriptableObject.allItems)
             {
-                shopController.AddItem(itemData, shopScriptableObject.itemPrefab);
+                // Creating ItemControllers
+                var itemController = new ItemController(itemData, uiService.GetShopGrid(), shopScriptableObject.itemPrefab);
+                shopController.AddOrIncrementItems(itemController);
             }
         }
 
@@ -69,6 +71,11 @@ namespace ServiceLocator.Shop
             }
 
             return true;
+        }
+
+        public void SellItems()
+        {
+            
         }
     }
 }

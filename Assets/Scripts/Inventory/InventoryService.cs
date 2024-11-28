@@ -31,16 +31,17 @@ namespace ServiceLocator.Inventory
                 return;
 
             // Initializing InventoryController
-            inventoryController = new InventoryController(uiService, inventoryScriptableObject);
+            inventoryController = new InventoryController(inventoryScriptableObject, uiService);
 
             // Adding buttons dynamically
-            inventoryController.AddButtonToPanel(inventoryScriptableObject.menuButtonPrefab, uiService.GetInventoryButtonPanel(),
-                "Gather Resources");
+            inventoryController.AddButtonToPanel("Gather Resources");
 
             // Populating Inventory
             foreach (var itemData in inventoryScriptableObject.allItems)
             {
-                inventoryController.AddItem(itemData, inventoryScriptableObject.itemPrefab);
+                // Creating ItemControllers
+                var itemController = new ItemController(itemData, uiService.GetInventoryGrid(), inventoryScriptableObject.itemPrefab);
+                inventoryController.AddOrIncrementItems(itemController);
             }
         }
 
@@ -66,6 +67,11 @@ namespace ServiceLocator.Inventory
             }
 
             return true;
+        }
+
+        public void BuyItems()
+        {
+
         }
     }
 }
