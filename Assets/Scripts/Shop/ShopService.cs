@@ -27,8 +27,8 @@ namespace ServiceLocator.Shop
 
         private void InitializeVariables()
         {
-            if (!ValidateReferences(shopScriptableObject.allItems, shopScriptableObject.itemPrefab, uiService.GetShopButtonPanel(),
-                "Shop"))
+            if (!ValidateReferences(shopScriptableObject.allItems, shopScriptableObject.itemPrefab, 
+                uiService.GetShopButtonPanel(), "Shop"))
                 return;
 
             // Initializing ShopController
@@ -44,13 +44,14 @@ namespace ServiceLocator.Shop
             foreach (var itemData in shopScriptableObject.allItems)
             {
                 // Creating ItemControllers
-                var itemController = new ItemController(itemData, uiService.GetShopGrid(), shopScriptableObject.itemPrefab);
+                var itemController = new ItemController(itemData, uiService.GetShopGrid(), 
+                    shopScriptableObject.itemPrefab);
                 shopController.AddOrIncrementItems(itemController);
             }
         }
 
-        private bool ValidateReferences(List<ItemScriptableObject> _itemDatabase, GameObject _itemPrefab, Transform _buttonPanel,
-            string _type)
+        private bool ValidateReferences(List<ItemScriptableObject> _itemDatabase, GameObject _itemPrefab, 
+            Transform _buttonPanel, string _type)
         {
             if (_itemDatabase == null)
             {

@@ -5,12 +5,14 @@ namespace ServiceLocator.Shop
 {
     public class ShopModel
     {
+        private UISection uiSection;
         private List<ItemModel> items;
 
         public ShopModel()
         {
+            uiSection = UISection.Shop;
             items = new List<ItemModel>();
-
+            
             // Initial Values
             SelectedItemType = ItemType.All;
         }
@@ -26,8 +28,8 @@ namespace ServiceLocator.Shop
         }
 
         // Getters
+        public UISection UISection => uiSection;
         public List<ItemModel> Items => items;
-
         public ItemType SelectedItemType { get; set; }
     }
 }

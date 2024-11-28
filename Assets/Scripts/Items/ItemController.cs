@@ -16,6 +16,12 @@ namespace ServiceLocator.Item
             itemView = ItemView.CreateView(_parentGrid, this, _itemPrefab);
         }
 
+        public void OnItemClick()
+        {
+            Debug.Log($"Item {itemModel.Id} clicked! Performing actions.");
+            // Add your click handling logic here
+        }
+
         // Getters
         public ItemModel GetModel() => itemModel;
         public ItemView GetView() => itemView;

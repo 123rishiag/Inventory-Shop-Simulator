@@ -59,39 +59,41 @@ namespace ServiceLocator.Inventory
             UpdateUI();
         }
 
-        public void AddOrIncrementItems(ItemController itemController)
+        public void AddOrIncrementItems(ItemController _itemController)
         {
             // Check if an item with the same ID already exists
-            var existingController = itemControllers.Find(c => c.GetModel().Id == itemController.GetModel().Id);
+            var existingController = itemControllers.Find(c => c.GetModel().Id == _itemController.GetModel().Id);
 
             if (existingController != null)
             {
                 // If the item exists, update its quantity
-                int quantityToRemove = itemController.GetModel().Quantity;
+                int quantityToRemove = _itemController.GetModel().Quantity;
                 existingController.UpdateItemQuantity(quantityToRemove);
             }
             else
             {
                 // If the item doesn't exist, add it to the list
-                itemControllers.Add(itemController);
+                itemControllers.Add(_itemController);
+                // Setting EntityType of Item
+                _itemController.GetModel().UISection = GetModel().UISection;
 
                 // Add to Model
-                inventoryModel.AddItem(itemController.GetModel());
+                inventoryModel.AddItem(_itemController.GetModel());
             }
 
             // Update UI
             UpdateUI();
         }
 
-        public void RemoveOrDecrementItems(ItemController itemController)
+        public void RemoveOrDecrementItems(ItemController _itemController)
         {
             // Check if an item with the same ID already exists
-            var existingController = itemControllers.Find(c => c.GetModel().Id == itemController.GetModel().Id);
+            var existingController = itemControllers.Find(c => c.GetModel().Id == _itemController.GetModel().Id);
 
             if (existingController != null)
             {
                 // Reduce the quantity of the existing item
-                int quantityToRemove = itemController.GetModel().Quantity;
+                int quantityToRemove = _itemController.GetModel().Quantity;
                 existingController.UpdateItemQuantity(-quantityToRemove);
 
                 // If quantity becomes zero or less, remove the item completely

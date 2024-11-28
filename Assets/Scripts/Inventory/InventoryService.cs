@@ -40,13 +40,14 @@ namespace ServiceLocator.Inventory
             foreach (var itemData in inventoryScriptableObject.allItems)
             {
                 // Creating ItemControllers
-                var itemController = new ItemController(itemData, uiService.GetInventoryGrid(), inventoryScriptableObject.itemPrefab);
+                var itemController = new ItemController(itemData, uiService.GetInventoryGrid(), 
+                    inventoryScriptableObject.itemPrefab);
                 inventoryController.AddOrIncrementItems(itemController);
             }
         }
 
-        private bool ValidateReferences(List<ItemScriptableObject> _itemDatabase, GameObject _itemPrefab, Transform _buttonPanel,
-            string _type)
+        private bool ValidateReferences(List<ItemScriptableObject> _itemDatabase, GameObject _itemPrefab, 
+            Transform _buttonPanel, string _type)
         {
             if (_itemDatabase == null)
             {
