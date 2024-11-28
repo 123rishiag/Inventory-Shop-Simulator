@@ -49,10 +49,8 @@ namespace ServiceLocator.Shop
             // Populating Shop
             foreach (var itemData in shopScriptableObject.allItems)
             {
-                // Creating ItemControllers
-                var itemController = itemService.CreateItem(itemData, uiService.GetShopGrid(), 
-                    shopScriptableObject.itemPrefab);
-                shopController.AddNewItem(itemController);
+                // Adding ItemControllers
+                shopController.AddNewItem(itemData);
             }
         }
 
@@ -82,7 +80,6 @@ namespace ServiceLocator.Shop
 
         public void BuyItems(ItemController _itemController)
         {
-            Debug.Log($"Item {_itemController.GetModel().Id} bought!!!");
             bool isTransacted = inventoryService.GetInventoryController().AddOrIncrementItems(_itemController, 2);
             if (isTransacted)
             {
