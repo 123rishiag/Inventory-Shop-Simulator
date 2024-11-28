@@ -76,4 +76,10 @@ namespace ServiceLocator.Item
         Epic,
         Legendary
     }
+
+    public enum UISection
+    {
+        Inventory,
+        Shop
+    }
 }

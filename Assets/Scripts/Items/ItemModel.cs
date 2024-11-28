@@ -18,6 +18,7 @@ namespace ServiceLocator.Item
         }
 
         // Getters
+        public UISection UISection { get; set; }
         public int Id { get; private set; }
         public Sprite Icon { get; private set; }
         public string Description { get; private set; }

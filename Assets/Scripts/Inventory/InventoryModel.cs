@@ -6,11 +6,13 @@ namespace ServiceLocator.Inventory
 {
     public class InventoryModel
     {
+        private UISection uiSection;
         private List<ItemModel> items;
 
         public InventoryModel(InventoryScriptableObject _scriptableObject)
         {
             MaxWeight = _scriptableObject.maxWeight;
+            uiSection = UISection.Inventory;
             items = new List<ItemModel>();
 
             // Initial Values
@@ -29,6 +31,7 @@ namespace ServiceLocator.Inventory
         }
 
         // Getters
+        public UISection UISection => uiSection;
         public List<ItemModel> Items => items;
         public int Currency { get; private set; }
         public float CurrentWeight { get; private set; }

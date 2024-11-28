@@ -30,6 +30,18 @@ namespace ServiceLocator.Item
             }
 
             itemView.SetController(_itemController);
+
+            // Add OnClick listener
+            Button button = itemObject.GetComponent<Button>();
+            if (button != null)
+            {
+                button.onClick.AddListener(() => _itemController.OnItemClick());
+            }
+            else
+            {
+                Debug.LogError("ItemView: Prefab does not have a Button component!");
+            }
+
             return itemView;
         }
 
