@@ -9,6 +9,7 @@ namespace ServiceLocator.Inventory
     {
         private InventoryScriptableObject inventoryScriptableObject;
 
+        private ItemService itemService;
         private UIService uiService;
 
         private InventoryController inventoryController;
@@ -18,8 +19,9 @@ namespace ServiceLocator.Inventory
             inventoryScriptableObject = _scriptableObject;
         }
 
-        public void Init(UIService _uiService)
+        public void Init(ItemService _itemService, UIService _uiService)
         {
+            itemService = _itemService;
             uiService = _uiService;
             InitializeVariables();
         }
@@ -40,7 +42,7 @@ namespace ServiceLocator.Inventory
             foreach (var itemData in inventoryScriptableObject.allItems)
             {
                 // Creating ItemControllers
-                var itemController = new ItemController(itemData, uiService.GetInventoryGrid(), 
+                var itemController = itemService.CreateItem(itemData, uiService.GetInventoryGrid(), 
                     inventoryScriptableObject.itemPrefab);
                 inventoryController.AddOrIncrementItems(itemController);
             }

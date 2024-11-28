@@ -10,6 +10,7 @@ namespace ServiceLocator.Shop
     {
         private ShopScriptableObject shopScriptableObject;
 
+        private ItemService itemService;
         private UIService uiService;
 
         private ShopController shopController;
@@ -19,8 +20,9 @@ namespace ServiceLocator.Shop
             shopScriptableObject = _scriptableObject;
         }
 
-        public void Init(UIService _uiService)
+        public void Init(ItemService _itemService, UIService _uiService)
         {
+            itemService = _itemService;
             uiService = _uiService;
             InitializeVariables();
         }
@@ -44,7 +46,7 @@ namespace ServiceLocator.Shop
             foreach (var itemData in shopScriptableObject.allItems)
             {
                 // Creating ItemControllers
-                var itemController = new ItemController(itemData, uiService.GetShopGrid(), 
+                var itemController = itemService.CreateItem(itemData, uiService.GetShopGrid(), 
                     shopScriptableObject.itemPrefab);
                 shopController.AddOrIncrementItems(itemController);
             }
