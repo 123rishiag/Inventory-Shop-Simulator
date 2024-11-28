@@ -1,4 +1,5 @@
 using ServiceLocator.Item;
+using ServiceLocator.Shop;
 using ServiceLocator.UI;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,14 +9,16 @@ namespace ServiceLocator.Inventory
 {
     public class InventoryController
     {
+        private InventoryScriptableObject inventoryScriptableObject;
         private UIService uiService;
 
         private InventoryModel inventoryModel;
         private InventoryView inventoryView;
         private List<ItemController> itemControllers;
 
-        public InventoryController(UIService _uiService, InventoryScriptableObject _scriptableObject)
+        public InventoryController(InventoryScriptableObject _scriptableObject, UIService _uiService)
         {
+            inventoryScriptableObject = _scriptableObject;
             uiService = _uiService;
 
             // Instantiating Model
@@ -31,10 +34,11 @@ namespace ServiceLocator.Inventory
             UpdateUI();
         }
 
-        public void AddButtonToPanel(GameObject _menuButtonPrefab, Transform _menuButtonPanel, string _menuButtonText)
+        public void AddButtonToPanel(string _menuButtonText)
         {
             // Instantiating the button
-            GameObject newButton = inventoryView.CreateButton(_menuButtonPrefab, _menuButtonPanel, _menuButtonText);
+            GameObject newButton = inventoryView.CreateButton(inventoryScriptableObject.menuButtonPrefab, 
+                uiService.GetInventoryButtonPanel(), _menuButtonText);
 
             // Setting up button logic (e.g., click events)
             Button button = newButton.GetComponent<Button>();
@@ -55,35 +59,55 @@ namespace ServiceLocator.Inventory
             UpdateUI();
         }
 
-        public void AddItem(ItemScriptableObject _itemData, GameObject _itemPrefab)
+        public void AddOrIncrementItems(ItemController itemController)
         {
-            // Create ItemController
-            var itemController = new ItemController(_itemData, uiService.GetInventoryGrid(), _itemPrefab);
-            itemControllers.Add(itemController);
+            // Check if an item with the same ID already exists
+            var existingController = itemControllers.Find(c => c.GetModel().Id == itemController.GetModel().Id);
 
-            // Add to Model
-            inventoryModel.AddItem(itemController.GetModel());
+            if (existingController != null)
+            {
+                // If the item exists, update its quantity
+                int quantityToRemove = itemController.GetModel().Quantity;
+                existingController.UpdateItemQuantity(quantityToRemove);
+            }
+            else
+            {
+                // If the item doesn't exist, add it to the list
+                itemControllers.Add(itemController);
+
+                // Add to Model
+                inventoryModel.AddItem(itemController.GetModel());
+            }
 
             // Update UI
             UpdateUI();
         }
 
-        public void RemoveItem(ItemController _itemController)
+        public void RemoveOrDecrementItems(ItemController itemController)
         {
-            if (itemControllers.Contains(_itemController))
+            // Check if an item with the same ID already exists
+            var existingController = itemControllers.Find(c => c.GetModel().Id == itemController.GetModel().Id);
+
+            if (existingController != null)
             {
-                // Remove from Model
-                inventoryModel.RemoveItem(_itemController.GetModel());
+                // Reduce the quantity of the existing item
+                int quantityToRemove = itemController.GetModel().Quantity;
+                existingController.UpdateItemQuantity(-quantityToRemove);
 
-                // Remove from Controller List
-                itemControllers.Remove(_itemController);
+                // If quantity becomes zero or less, remove the item completely
+                if (existingController.GetModel().Quantity <= 0)
+                {
+                    // Remove from the item list and inventory model
+                    inventoryModel.RemoveItem(existingController.GetModel());
+                    itemControllers.Remove(existingController);
 
-                // Destroy the Item View
-                _itemController.GetView().DestroyView();
-
-                // Update UI
-                UpdateUI();
+                    // Destroy the item
+                    existingController.GetView().DestroyView();
+                }
             }
+
+            // Update UI
+            UpdateUI();
         }
 
         private void UpdateUI()

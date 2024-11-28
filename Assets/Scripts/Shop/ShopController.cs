@@ -8,6 +8,7 @@ namespace ServiceLocator.Shop
 {
     public class ShopController
     {
+        private ShopScriptableObject shopScriptableObject;
         private UIService uiService;
 
         private ShopModel shopModel;
@@ -15,8 +16,9 @@ namespace ServiceLocator.Shop
         private List<ItemController> itemControllers;
         private List<ItemController> filteredItemControllers;
 
-        public ShopController(UIService _uiService)
+        public ShopController(ShopScriptableObject _scriptableObject, UIService _uiService)
         {
+            shopScriptableObject = _scriptableObject;
             uiService = _uiService;
 
             // Instantiating Model
@@ -33,10 +35,11 @@ namespace ServiceLocator.Shop
             UpdateUI();
         }
 
-        public void AddButtonToPanel(GameObject _menuButtonPrefab, Transform _menuButtonPanel, ItemType _itemType)
+        public void AddButtonToPanel(ItemType _itemType)
         {
             // Instantiating the button
-            GameObject newButton = shopView.CreateButton(_menuButtonPrefab, _menuButtonPanel, _itemType);
+            GameObject newButton = shopView.CreateButton(shopScriptableObject.menuButtonPrefab, 
+                uiService.GetShopButtonPanel(), _itemType);
 
             // Setting up button logic (e.g., click events)
             Button button = newButton.GetComponent<Button>();
@@ -56,35 +59,55 @@ namespace ServiceLocator.Shop
             UpdateUI();
         }
 
-        public void AddItem(ItemScriptableObject _itemData, GameObject _itemPrefab)
+        public void AddOrIncrementItems(ItemController itemController)
         {
-            // Create ItemController
-            var itemController = new ItemController(_itemData, uiService.GetShopGrid(), _itemPrefab);
-            itemControllers.Add(itemController);
+            // Check if an item with the same ID already exists
+            var existingController = itemControllers.Find(c => c.GetModel().Id == itemController.GetModel().Id);
 
-            // Add to Model
-            shopModel.AddItem(itemController.GetModel());
+            if (existingController != null)
+            {
+                // If the item exists, update its quantity
+                int quantityToRemove = itemController.GetModel().Quantity;
+                existingController.UpdateItemQuantity(quantityToRemove);
+            }
+            else
+            {
+                // If the item doesn't exist, add it to the list
+                itemControllers.Add(itemController);
+
+                // Add to Model
+                shopModel.AddItem(itemController.GetModel());
+            }
 
             // Update UI
             UpdateUI();
         }
 
-        public void RemoveItem(ItemController _itemController)
+        public void RemoveOrDecrementItems(ItemController itemController)
         {
-            if (itemControllers.Contains(_itemController))
+            // Check if an item with the same ID already exists
+            var existingController = itemControllers.Find(c => c.GetModel().Id == itemController.GetModel().Id);
+
+            if (existingController != null)
             {
-                // Remove from Model
-                shopModel.RemoveItem(_itemController.GetModel());
+                // Reduce the quantity of the existing item
+                int quantityToRemove = itemController.GetModel().Quantity;
+                existingController.UpdateItemQuantity(-quantityToRemove);
 
-                // Remove from Controller List
-                itemControllers.Remove(_itemController);
+                // If quantity becomes zero or less, remove the item completely
+                if (existingController.GetModel().Quantity <= 0)
+                {
+                    // Remove from the item list and shop model
+                    shopModel.RemoveItem(existingController.GetModel());
+                    itemControllers.Remove(existingController);
 
-                // Destroy the Item View
-                _itemController.GetView().DestroyView();
-
-                // Update UI
-                UpdateUI();
+                    // Destroy the item
+                    existingController.GetView().DestroyView();
+                }
             }
+
+            // Update UI
+            UpdateUI();
         }
 
         private void UpdateUI()
