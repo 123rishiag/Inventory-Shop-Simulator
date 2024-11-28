@@ -13,7 +13,7 @@ namespace ServiceLocator.Item
 
         private ItemController itemController;
 
-        public static ItemView CreateView(Transform _parentGrid, ItemController _itemController, GameObject _itemPrefab)
+        public static ItemView CreateView(ItemController _itemController, Transform _parentGrid, GameObject _itemPrefab)
         {
             if (_itemPrefab == null || _parentGrid == null)
             {
@@ -35,7 +35,7 @@ namespace ServiceLocator.Item
             Button button = itemObject.GetComponent<Button>();
             if (button != null)
             {
-                button.onClick.AddListener(() => _itemController.OnItemClick());
+                button.onClick.AddListener(() => _itemController.ProcessItem());
             }
             else
             {

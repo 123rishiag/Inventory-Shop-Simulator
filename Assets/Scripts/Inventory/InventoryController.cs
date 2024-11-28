@@ -10,15 +10,17 @@ namespace ServiceLocator.Inventory
     public class InventoryController
     {
         private InventoryScriptableObject inventoryScriptableObject;
+        private ItemService itemService;
         private UIService uiService;
 
         private InventoryModel inventoryModel;
         private InventoryView inventoryView;
         private List<ItemController> itemControllers;
 
-        public InventoryController(InventoryScriptableObject _scriptableObject, UIService _uiService)
+        public InventoryController(InventoryScriptableObject _scriptableObject, ItemService _itemService, UIService _uiService)
         {
             inventoryScriptableObject = _scriptableObject;
+            itemService = _itemService;
             uiService = _uiService;
 
             // Instantiating Model
@@ -37,7 +39,7 @@ namespace ServiceLocator.Inventory
         public void AddButtonToPanel(string _menuButtonText)
         {
             // Instantiating the button
-            GameObject newButton = inventoryView.CreateButton(inventoryScriptableObject.menuButtonPrefab, 
+            GameObject newButton = inventoryView.CreateButton(inventoryScriptableObject.menuButtonPrefab,
                 uiService.GetInventoryButtonPanel(), _menuButtonText);
 
             // Setting up button logic (e.g., click events)
@@ -59,52 +61,70 @@ namespace ServiceLocator.Inventory
             UpdateUI();
         }
 
-        public void AddOrIncrementItems(ItemController _itemController)
+        public void AddNewItem(ItemController _itemController)
         {
-            // Check if an item with the same ID already exists
-            var existingController = itemControllers.Find(c => c.GetModel().Id == _itemController.GetModel().Id);
+            itemControllers.Add(_itemController);
+            // Setting EntityType of Item
+            _itemController.GetModel().UISection = GetModel().UISection;
 
-            if (existingController != null)
+            // Add to Model
+            inventoryModel.AddItem(_itemController.GetModel());
+        }
+
+        public bool AddOrIncrementItems(ItemController _itemController, int _quanitity = 1)
+        {
+            // If Item does not have that much quantity in other UISection, return false
+            if (_itemController.GetModel().Quantity < _quanitity)
+            {
+                return false;
+            }
+
+            // Check if an item with the same ID already exists
+            var existingItemController = itemControllers.Find(c => c.GetModel().Id == _itemController.GetModel().Id);
+
+            if (existingItemController != null)
             {
                 // If the item exists, update its quantity
-                int quantityToRemove = _itemController.GetModel().Quantity;
-                existingController.UpdateItemQuantity(quantityToRemove);
+                existingItemController.UpdateItemQuantity(_quanitity, true);
             }
             else
             {
-                // If the item doesn't exist, add it to the list
-                itemControllers.Add(_itemController);
-                // Setting EntityType of Item
-                _itemController.GetModel().UISection = GetModel().UISection;
+                // Create New Item
+                var newItemController = itemService.CreateItem(_itemController.GetModel().ItemData, uiService.GetInventoryGrid(),
+                    inventoryScriptableObject.itemPrefab);
 
-                // Add to Model
-                inventoryModel.AddItem(_itemController.GetModel());
+                // If the item doesn't exist, add it to the list
+                AddNewItem(newItemController);
+
+                // If the item does not exists, update new item's quantity
+                newItemController.UpdateItemQuantity(_quanitity, false);
             }
 
             // Update UI
             UpdateUI();
+
+            return true;
         }
 
-        public void RemoveOrDecrementItems(ItemController _itemController)
+        public void RemoveOrDecrementItems(ItemController _itemController, int _quanitity = 1)
         {
             // Check if an item with the same ID already exists
-            var existingController = itemControllers.Find(c => c.GetModel().Id == _itemController.GetModel().Id);
+            var existingItemController = itemControllers.Find(c => c.GetModel().Id == _itemController.GetModel().Id);
 
-            if (existingController != null)
+            if (existingItemController != null)
             {
                 // Reduce the quantity of the existing item
-                int quantityToRemove = _itemController.GetModel().Quantity;
-                existingController.UpdateItemQuantity(-quantityToRemove);
+                existingItemController.UpdateItemQuantity(-_quanitity, true);
 
                 // If quantity becomes zero or less, remove the item completely
-                if (existingController.GetModel().Quantity <= 0)
+                if (existingItemController.GetModel().Quantity <= 0)
                 {
                     // Remove from the item list and inventory model
-                    inventoryModel.RemoveItem(existingController.GetModel());
-                    itemControllers.Remove(existingController);
+                    inventoryModel.RemoveItem(existingItemController.GetModel());
+                    itemControllers.Remove(existingItemController);
 
-                    // Destroy the item
-                    existingController.GetView().DestroyView();
+                    // Remove Item
+                    existingItemController.GetView().DestroyView();
                 }
             }
 
@@ -114,6 +134,9 @@ namespace ServiceLocator.Inventory
 
         private void UpdateUI()
         {
+            // Show Items
+            inventoryView.ShowItems();
+
             // Update UI
             inventoryView.UpdateUI(uiService);
         }

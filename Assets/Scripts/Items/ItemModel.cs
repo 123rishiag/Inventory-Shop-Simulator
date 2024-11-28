@@ -6,6 +6,7 @@ namespace ServiceLocator.Item
     {
         public ItemModel(ItemScriptableObject _itemScriptableObject)
         {
+            ItemData = _itemScriptableObject;
             Id = _itemScriptableObject.Id;
             Icon = _itemScriptableObject.icon;
             Description = _itemScriptableObject.description;
@@ -19,6 +20,7 @@ namespace ServiceLocator.Item
 
         // Getters
         public UISection UISection { get; set; }
+        public ItemScriptableObject ItemData { get; set; }
         public int Id { get; private set; }
         public Sprite Icon { get; private set; }
         public string Description { get; private set; }
@@ -30,9 +32,16 @@ namespace ServiceLocator.Item
         public int Quantity { get; private set; }
 
         // Setters
-        public void UpdateQuantity(int _delta)
+        public void UpdateQuantity(int _quantity, bool _isDelta)
         {
-            Quantity = Mathf.Max(0, Quantity + _delta);
+            if (_isDelta)
+            {
+                Quantity = Mathf.Max(0, Quantity + _quantity);
+            }
+            else
+            {
+                Quantity = Mathf.Max(0, _quantity);
+            }
         }
     }
 }

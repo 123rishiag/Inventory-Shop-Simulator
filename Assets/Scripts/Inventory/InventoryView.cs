@@ -38,6 +38,15 @@ namespace ServiceLocator.Inventory
             return newButton;
         }
 
+        public void ShowItems()
+        {
+            // Update visibility
+            foreach (var itemController in inventoryController.GetItems())
+            {
+                itemController.GetView().ShowView();
+            }
+        }
+
         public void UpdateUI(UIService _uiService)
         {
             // Update UI texts based on items

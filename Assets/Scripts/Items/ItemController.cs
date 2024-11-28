@@ -23,13 +23,22 @@ namespace ServiceLocator.Item
             itemModel = new ItemModel(_itemScriptableObject);
 
             // Creating the View
-            itemView = ItemView.CreateView(_parentGrid, this, _itemPrefab);
+            itemView = ItemView.CreateView(this, _parentGrid, _itemPrefab);
         }
 
-        public void OnItemClick()
+        public void ProcessItem()
         {
-            Debug.Log($"Item {itemModel.Id} clicked! Performing actions.");
-            // Add your click handling logic here
+           switch(itemModel.UISection)
+            {
+                case UISection.Inventory:
+                    inventoryService.SellItems(this);
+                    break;
+                case UISection.Shop:
+                    shopService.BuyItems(this);
+                    break;
+                default:
+                    break;
+            }
         }
 
         // Getters
@@ -37,9 +46,9 @@ namespace ServiceLocator.Item
         public ItemView GetView() => itemView;
 
         // Setters
-        public void UpdateItemQuantity(int _delta)
+        public void UpdateItemQuantity(int _quantity, bool _isDelta)
         {
-            itemModel.UpdateQuantity(_delta);
+            itemModel.UpdateQuantity(_quantity, _isDelta);
             itemView.UpdateQuantity();
         }
     }
