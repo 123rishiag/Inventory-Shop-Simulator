@@ -1,3 +1,4 @@
+using ServiceLocator.Inventory;
 using ServiceLocator.Item;
 using ServiceLocator.UI;
 using System;
@@ -12,6 +13,7 @@ namespace ServiceLocator.Shop
 
         private ItemService itemService;
         private UIService uiService;
+        private InventoryService inventoryService;
 
         private ShopController shopController;
 
@@ -20,10 +22,12 @@ namespace ServiceLocator.Shop
             shopScriptableObject = _scriptableObject;
         }
 
-        public void Init(ItemService _itemService, UIService _uiService)
+        public void Init(ItemService _itemService, UIService _uiService, InventoryService _inventoryService)
         {
             itemService = _itemService;
             uiService = _uiService;
+            inventoryService = _inventoryService;
+
             InitializeVariables();
         }
 
@@ -34,7 +38,7 @@ namespace ServiceLocator.Shop
                 return;
 
             // Initializing ShopController
-            shopController = new ShopController(shopScriptableObject, uiService);
+            shopController = new ShopController(shopScriptableObject, itemService, uiService);
 
             // Adding buttons dynamically
             foreach (ItemType itemType in Enum.GetValues(typeof(ItemType)))
@@ -48,7 +52,7 @@ namespace ServiceLocator.Shop
                 // Creating ItemControllers
                 var itemController = itemService.CreateItem(itemData, uiService.GetShopGrid(), 
                     shopScriptableObject.itemPrefab);
-                shopController.AddOrIncrementItems(itemController);
+                shopController.AddNewItem(itemController);
             }
         }
 
@@ -76,9 +80,20 @@ namespace ServiceLocator.Shop
             return true;
         }
 
-        public void SellItems()
+        public void BuyItems(ItemController _itemController)
         {
-            
+            Debug.Log($"Item {_itemController.GetModel().Id} bought!!!");
+            bool isTransacted = inventoryService.GetInventoryController().AddOrIncrementItems(_itemController, 2);
+            if (isTransacted)
+            {
+                shopController.RemoveOrDecrementItems(_itemController, 2);
+            }
+            else
+            {
+                Debug.Log("Can't do this transaction. Inventory is trying to buy items more than which are present in Shop.");
+            }
         }
+
+        public ShopController GetShopController() => shopController;
     }
 }

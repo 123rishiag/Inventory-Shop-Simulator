@@ -39,7 +39,7 @@ namespace ServiceLocator.Shop
             return newButton;
         }
 
-        public void ShowFilteredItems()
+        public void ShowItems()
         {
             // Filter items and update visibility
             foreach (var itemController in shopController.GetItems())

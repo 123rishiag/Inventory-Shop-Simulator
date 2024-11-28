@@ -35,10 +35,10 @@ namespace ServiceLocator.Main
 
         private void InjectDependencies()
         {
-            inventoryService.Init(itemService, uiService);
-            shopService.Init(itemService, uiService);
-            itemService.Init(inventoryService, shopService);
             uiService.Init();
+            itemService.Init(inventoryService, shopService);
+            shopService.Init(itemService, uiService, inventoryService);
+            inventoryService.Init(itemService, uiService, shopService);
         }
     }
 }
