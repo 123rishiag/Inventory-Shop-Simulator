@@ -1,5 +1,4 @@
 using ServiceLocator.Item;
-using ServiceLocator.Shop;
 using ServiceLocator.UI;
 using System.Collections.Generic;
 using UnityEngine;
@@ -61,14 +60,27 @@ namespace ServiceLocator.Inventory
             UpdateUI();
         }
 
-        public void AddNewItem(ItemController _itemController)
+        public void AddNewItem(ItemScriptableObject _itemScriptableObject, int _quantity = -1)
         {
-            itemControllers.Add(_itemController);
+            var itemController = itemService.CreateItem(_itemScriptableObject, uiService.GetInventoryGrid(),
+                inventoryScriptableObject.itemPrefab);
+
+            itemControllers.Add(itemController);
             // Setting EntityType of Item
-            _itemController.GetModel().UISection = GetModel().UISection;
+            itemController.GetModel().UISection = GetModel().UISection;
 
             // Add to Model
-            inventoryModel.AddItem(_itemController.GetModel());
+            inventoryModel.AddItem(itemController.GetModel());
+
+            // If the item does not exists, update new item's quantity
+            if (_quantity == -1)
+            {
+                itemController.UpdateItemQuantity(itemController.GetModel().Quantity, false);
+            }
+            else
+            {
+                itemController.UpdateItemQuantity(_quantity, false);
+            }
         }
 
         public bool AddOrIncrementItems(ItemController _itemController, int _quanitity = 1)
@@ -89,15 +101,8 @@ namespace ServiceLocator.Inventory
             }
             else
             {
-                // Create New Item
-                var newItemController = itemService.CreateItem(_itemController.GetModel().ItemData, uiService.GetInventoryGrid(),
-                    inventoryScriptableObject.itemPrefab);
-
-                // If the item doesn't exist, add it to the list
-                AddNewItem(newItemController);
-
-                // If the item does not exists, update new item's quantity
-                newItemController.UpdateItemQuantity(_quanitity, false);
+                // Add New Item
+                AddNewItem(_itemController.GetModel().ItemData, _quanitity);
             }
 
             // Update UI
