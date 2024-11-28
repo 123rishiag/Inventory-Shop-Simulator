@@ -1,4 +1,5 @@
 using ServiceLocator.Inventory;
+using ServiceLocator.Item;
 using ServiceLocator.Shop;
 using ServiceLocator.UI;
 using UnityEngine;
@@ -10,6 +11,7 @@ namespace ServiceLocator.Main
         // Services
         private InventoryService inventoryService;
         private ShopService shopService;
+        private ItemService itemService;
 
         [SerializeField] private UIService uiService;
         public UIService UIService => uiService;
@@ -28,12 +30,14 @@ namespace ServiceLocator.Main
         {
             inventoryService = new InventoryService(inventoryScriptableObject);
             shopService = new ShopService(shopScriptableObject);
+            itemService = new ItemService();
         }
 
         private void InjectDependencies()
         {
-            shopService.Init(uiService);
-            inventoryService.Init(uiService);
+            inventoryService.Init(itemService, uiService);
+            shopService.Init(itemService, uiService);
+            itemService.Init(inventoryService, shopService);
             uiService.Init();
         }
     }
