@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace ServiceLocator.UI
 {
@@ -57,6 +58,13 @@ namespace ServiceLocator.UI
         public void UpdateShopItemCount(int _itemCount)
         {
             shopItemsCountText.text = $"Items Count: {_itemCount}";
+        }
+        public void SetButtonInteractivity(Button _button, bool _isInteractable)
+        {
+            if (_button != null)
+            {
+                _button.interactable = _isInteractable;
+            }
         }
     }
 }

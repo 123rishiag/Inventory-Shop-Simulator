@@ -82,5 +82,7 @@ namespace ServiceLocator.Inventory
         }
 
         public InventoryController GetInventoryController() => inventoryController;
+
+        public GameObject GetButtonItemPrefab() => inventoryScriptableObject.menuButtonPrefab;
     }
 }
