@@ -43,7 +43,8 @@ namespace ServiceLocator.Inventory
             Button button = newButton.GetComponent<Button>();
             if (button != null)
             {
-                button.onClick.AddListener(() => OnButtonClicked(_menuButtonText));
+                button.onClick.AddListener(() => OnButtonClicked());
+                inventoryView.AddButtonToView(button);
             }
             else
             {
@@ -51,7 +52,7 @@ namespace ServiceLocator.Inventory
             }
         }
 
-        private void OnButtonClicked(string _menuButtonText)
+        private void OnButtonClicked()
         {
             GatherResources();
         }
@@ -177,33 +178,54 @@ namespace ServiceLocator.Inventory
             return true;
         }
 
-        public void GatherResources()
+        public bool CheckGatherResources(out string _transactionFailReason)
         {
+            _transactionFailReason = string.Empty;
+
             // Ensuring the item pool exists
             if (inventoryScriptableObject.itemDatabase.allItems == null ||
                 inventoryScriptableObject.itemDatabase.allItems.Count == 0)
             {
-                Debug.Log("No items available in the database to gather.");
-                return;
+                _transactionFailReason = "No items available in the database to gather.";
+                return false;
             }
 
             // Ensuring inventory has space
-            if (inventoryModel.CurrentWeight >= inventoryModel.MaxWeight)
+            var items = inventoryScriptableObject.itemDatabase.allItems;
+            var minWeightOfItems = items.Min(item => (float)item.weight);
+
+            if ((inventoryModel.MaxWeight - inventoryModel.CurrentWeight)
+                < minWeightOfItems)
             {
-                Debug.Log("Inventory Full!!!!.");
-                return;
+                _transactionFailReason = "Not Enough Space!!!!.";
+                return false;
             }
 
             // Selecting a random item from the global pool based on rarity
             var itemData = GetRandomItemDataBasedOnRarity();
             if (itemData == null)
             {
-                Debug.Log("No suitable items found!!!!.");
+                _transactionFailReason = "No suitable items found!!!!.";
+                return false;
+            }
+
+            return true;
+        }
+
+        public void GatherResources()
+        {
+            string transactionFailReason;
+            if (!CheckGatherResources(out transactionFailReason))
+            {
+                Debug.Log(transactionFailReason);
+                inventoryView.SetButtonInteractivity(uiService, false);
                 return;
             }
 
-            // Setting item quantity to 1  as whenever gather resources is clicked only one quantity is to be added
-            itemData.quantity = 1;
+            var itemData = GetRandomItemDataBasedOnRarity();
+
+            // Setting quantity to 1  as whenever gather resources is clicked only one quantity is to be added
+            int quantity = 1;
 
             // Check if an item with the same ID already exists
             var existingItemController = itemControllers.Find(c => c.GetModel().Id == itemData.Id);
@@ -211,18 +233,18 @@ namespace ServiceLocator.Inventory
             if (existingItemController != null)
             {
                 // If the item exists, update its quantity
-                existingItemController.UpdateItemQuantity(itemData.quantity, true);
+                existingItemController.UpdateItemQuantity(quantity, true);
 
                 // Updating Inventory Metrics
                 inventoryModel.UpdateUI(0,
-                    existingItemController.GetModel().Weight * itemData.quantity);
+                    existingItemController.GetModel().Weight * quantity);
             }
             else
             {
                 // Add New Item
-                AddNewItem(itemData, itemData.quantity);
+                AddNewItem(itemData, quantity);
             }
-
+            
             // Update UI
             UpdateUI();
         }
@@ -263,7 +285,7 @@ namespace ServiceLocator.Inventory
             inventoryView.ShowItems();
 
             // Update UI
-            inventoryView.UpdateUI(uiService);
+            inventoryView.UpdateUI(uiService, inventoryScriptableObject);
         }        
 
         // Getters
