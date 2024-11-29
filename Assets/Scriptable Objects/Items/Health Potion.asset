@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12bbf96064d4a1e4bb036d4e4a1ff60c, type: 3}
   m_Name: Health Potion
   m_EditorClassIdentifier: 
+  id: 3
   icon: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
   description: Restores 50 HP.
   buyingPrice: 25
   sellingPrice: 10
   weight: 0.5
   type: 3
-  rarity: 0
+  rarity: 1
   quantity: 5
-  id: 3

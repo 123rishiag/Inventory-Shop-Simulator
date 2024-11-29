@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12bbf96064d4a1e4bb036d4e4a1ff60c, type: 3}
   m_Name: Wooden Plank
   m_EditorClassIdentifier: 
+  id: 2
   icon: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
   description: A sturdy wooden plank.
   buyingPrice: 10
   sellingPrice: 5
   weight: 1.5
   type: 1
-  rarity: 1
+  rarity: 2
   quantity: 10
-  id: 2

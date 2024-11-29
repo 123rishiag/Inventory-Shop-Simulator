@@ -33,7 +33,7 @@ namespace ServiceLocator.Shop
 
         private void InitializeVariables()
         {
-            if (!ValidateReferences(shopScriptableObject.allItems, shopScriptableObject.itemPrefab, 
+            if (!ValidateReferences(shopScriptableObject.itemDatabase.allItems, shopScriptableObject.itemPrefab, 
                 uiService.GetShopButtonPanel(), "Shop"))
                 return;
 
@@ -47,7 +47,7 @@ namespace ServiceLocator.Shop
             }
 
             // Populating Shop
-            foreach (var itemData in shopScriptableObject.allItems)
+            foreach (var itemData in shopScriptableObject.itemDatabase.allItems)
             {
                 // Adding ItemControllers
                 shopController.AddNewItem(itemData);

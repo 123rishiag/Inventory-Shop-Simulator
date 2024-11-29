@@ -1,6 +1,7 @@
 using ServiceLocator.Item;
 using ServiceLocator.UI;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -52,8 +53,7 @@ namespace ServiceLocator.Inventory
 
         private void OnButtonClicked(string _menuButtonText)
         {
-            // Handle button-specific actions here
-            Debug.Log($"Button '{_menuButtonText}' clicked!");
+            GatherResources();
         }
 
         public void AddNewItem(ItemScriptableObject _itemScriptableObject, int _quantity = -1)
@@ -175,6 +175,86 @@ namespace ServiceLocator.Inventory
             }
 
             return true;
+        }
+
+        public void GatherResources()
+        {
+            // Ensuring the item pool exists
+            if (inventoryScriptableObject.itemDatabase.allItems == null ||
+                inventoryScriptableObject.itemDatabase.allItems.Count == 0)
+            {
+                Debug.Log("No items available in the database to gather.");
+                return;
+            }
+
+            // Ensuring inventory has space
+            if (inventoryModel.CurrentWeight >= inventoryModel.MaxWeight)
+            {
+                Debug.Log("Inventory Full!!!!.");
+                return;
+            }
+
+            // Selecting a random item from the global pool based on rarity
+            var itemData = GetRandomItemDataBasedOnRarity();
+            if (itemData == null)
+            {
+                Debug.Log("No suitable items found!!!!.");
+                return;
+            }
+
+            // Setting item quantity to 1  as whenever gather resources is clicked only one quantity is to be added
+            itemData.quantity = 1;
+
+            // Check if an item with the same ID already exists
+            var existingItemController = itemControllers.Find(c => c.GetModel().Id == itemData.Id);
+
+            if (existingItemController != null)
+            {
+                // If the item exists, update its quantity
+                existingItemController.UpdateItemQuantity(itemData.quantity, true);
+
+                // Updating Inventory Metrics
+                inventoryModel.UpdateUI(0,
+                    existingItemController.GetModel().Weight * itemData.quantity);
+            }
+            else
+            {
+                // Add New Item
+                AddNewItem(itemData, itemData.quantity);
+            }
+
+            // Update UI
+            UpdateUI();
+        }
+
+        private ItemScriptableObject GetRandomItemDataBasedOnRarity()
+        {
+            // Calculating total rarity weight
+            var items = inventoryScriptableObject.itemDatabase.allItems;
+            var totalRarityWeight = items.Sum(item => (int)item.rarity);
+
+            int randomValue = Random.Range(0, totalRarityWeight);
+            int cumulativeWeight = 0;
+
+            // Selecting item based on cumulative weight
+            foreach (var item in items)
+            {
+                cumulativeWeight += (int)item.rarity;
+
+                // Skipping items that would exceed the max weight
+                float potentialWeight = inventoryModel.CurrentWeight + item.weight;
+                if (potentialWeight > inventoryModel.MaxWeight)
+                {
+                    continue;
+                }
+
+                if (randomValue < cumulativeWeight)
+                {
+                    return item;
+                }
+            }
+
+            return null;
         }
 
         private void UpdateUI()
