@@ -32,9 +32,6 @@ namespace ServiceLocator.Shop
             // Controllers List
             itemControllers = new List<ItemController>();
             filteredItemControllers = new List<ItemController>();
-
-            // Update UI
-            UpdateUI();
         }
 
         public void AddButtonToPanel(ItemType _itemType)
@@ -84,10 +81,9 @@ namespace ServiceLocator.Shop
             }
         }
 
-        public bool AddOrIncrementItems(ItemController _itemController, int _quanitity = 1)
+        public bool AddOrIncrementItems(ItemController _itemController, out string _transactionFailReason, int _quantity = 1)
         {
-            // If Item does not have that much quantity in other UISection, return false
-            if (_itemController.GetModel().Quantity < _quanitity)
+            if (!CheckMetricConditions(_itemController, out _transactionFailReason, _quantity))
             {
                 return false;
             }
@@ -98,12 +94,12 @@ namespace ServiceLocator.Shop
             if (existingItemController != null)
             {
                 // If the item exists, update its quantity
-                existingItemController.UpdateItemQuantity(_quanitity, true);
+                existingItemController.UpdateItemQuantity(_quantity, true);
             }
             else
             {
                 // Add New Item
-                AddNewItem(_itemController.GetModel().ItemData, _quanitity);
+                AddNewItem(_itemController.GetModel().ItemData, _quantity);
             }
 
             // Update UI
@@ -112,7 +108,7 @@ namespace ServiceLocator.Shop
             return true;
         }
 
-        public void RemoveOrDecrementItems(ItemController _itemController, int _quanitity = 1)
+        public void RemoveOrDecrementItems(ItemController _itemController, int _quantity = 1)
         {
             // Check if an item with the same ID already exists
             var existingItemController = itemControllers.Find(c => c.GetModel().Id == _itemController.GetModel().Id);
@@ -120,7 +116,7 @@ namespace ServiceLocator.Shop
             if (existingItemController != null)
             {
                 // Reduce the quantity of the existing item
-                existingItemController.UpdateItemQuantity(-_quanitity, true);
+                existingItemController.UpdateItemQuantity((-1 * _quantity), true);
 
                 // If quantity becomes zero or less, remove the item completely
                 if (existingItemController.GetModel().Quantity <= 0)
@@ -136,6 +132,19 @@ namespace ServiceLocator.Shop
 
             // Update UI
             UpdateUI();
+        }
+
+        private bool CheckMetricConditions(ItemController _itemController, out string _transactionFailReason, int _quantity)
+        {
+            _transactionFailReason = string.Empty;
+            // If Item does not have that much quantity in other UISection, return false
+            if (_itemController.GetModel().Quantity < _quantity)
+            {
+                _transactionFailReason = "Inventory doesn't have that many items.";
+                return false;
+            }
+
+            return true;
         }
 
         private void UpdateUI()

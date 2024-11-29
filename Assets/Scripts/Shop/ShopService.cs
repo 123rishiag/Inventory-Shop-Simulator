@@ -80,14 +80,15 @@ namespace ServiceLocator.Shop
 
         public void BuyItems(ItemController _itemController)
         {
-            bool isTransacted = inventoryService.GetInventoryController().AddOrIncrementItems(_itemController, 2);
+            string transactionFailReason;
+            bool isTransacted = inventoryService.GetInventoryController().AddOrIncrementItems(_itemController, out transactionFailReason, 2);
             if (isTransacted)
             {
                 shopController.RemoveOrDecrementItems(_itemController, 2);
             }
             else
             {
-                Debug.Log("Can't do this transaction. Inventory is trying to buy items more than which are present in Shop.");
+                Debug.Log(transactionFailReason);
             }
         }
 

@@ -76,14 +76,15 @@ namespace ServiceLocator.Inventory
 
         public void SellItems(ItemController _itemController)
         {
-            bool isTransacted = shopService.GetShopController().AddOrIncrementItems(_itemController, 2);
+            string transactionFailReason;
+            bool isTransacted = shopService.GetShopController().AddOrIncrementItems(_itemController, out transactionFailReason, 2);
             if (isTransacted)
             {
                 inventoryController.RemoveOrDecrementItems(_itemController, 2);
             }
             else
             {
-                Debug.Log("Can't do this transaction. Inventory is trying to sell items more than which are present in it.");
+                Debug.Log(transactionFailReason);
             }
         }
 

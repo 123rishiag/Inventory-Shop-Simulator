@@ -14,10 +14,6 @@ namespace ServiceLocator.Inventory
             MaxWeight = _scriptableObject.maxWeight;
             uiSection = UISection.Inventory;
             items = new List<ItemModel>();
-
-            // Initial Values
-            Currency = 10;
-            CurrentWeight = 1;
         }
 
         public void AddItem(ItemModel _item)
@@ -38,12 +34,17 @@ namespace ServiceLocator.Inventory
         public float MaxWeight { get; private set; }
 
         // Setters
-        public void UpdateCurrency(int _delta)
+        public void UpdateUI(int _currencyDelta, float _weightDelta)
+        {
+            UpdateCurrency(_currencyDelta);
+            UpdateCurrentWeight(_weightDelta);
+        }
+        private void UpdateCurrency(int _delta)
         {
             Currency = Mathf.Max(0, Currency + _delta);
         }
         // Setters
-        public void UpdateCurrentWeight(int _delta)
+        private void UpdateCurrentWeight(float _delta)
         {
             CurrentWeight = Mathf.Max(0, CurrentWeight + _delta);
         }
