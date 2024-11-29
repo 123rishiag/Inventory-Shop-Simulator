@@ -70,7 +70,7 @@ namespace ServiceLocator.Item
 
     public enum Rarity
     {
-        VeryCommon,
+        VeryCommon = 1,
         Common,
         Rare,
         Epic,

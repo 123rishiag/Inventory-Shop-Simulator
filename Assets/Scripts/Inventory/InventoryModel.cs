@@ -11,7 +11,7 @@ namespace ServiceLocator.Inventory
 
         public InventoryModel(InventoryScriptableObject _scriptableObject)
         {
-            MaxWeight = _scriptableObject.maxWeight;
+            MaxWeight = Mathf.Round(_scriptableObject.maxWeight * 10f) / 10f;
             uiSection = UISection.Inventory;
             items = new List<ItemModel>();
         }
@@ -46,7 +46,7 @@ namespace ServiceLocator.Inventory
         // Setters
         private void UpdateCurrentWeight(float _delta)
         {
-            CurrentWeight = Mathf.Max(0, CurrentWeight + _delta);
+            CurrentWeight = Mathf.Max(0, Mathf.Round((CurrentWeight + _delta) * 10f) / 10f);
         }
     }
 }

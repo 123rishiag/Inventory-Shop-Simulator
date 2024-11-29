@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12bbf96064d4a1e4bb036d4e4a1ff60c, type: 3}
   m_Name: Golden Coin
   m_EditorClassIdentifier: 
+  id: 4
   icon: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
   description: A valuable treasure.
   buyingPrice: 500
   sellingPrice: 250
   weight: 0.1
   type: 4
-  rarity: 3
+  rarity: 4
   quantity: 20
-  id: 4

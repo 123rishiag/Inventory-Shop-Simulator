@@ -32,7 +32,7 @@ namespace ServiceLocator.Inventory
 
         private void InitializeVariables()
         {
-            if (!ValidateReferences(inventoryScriptableObject.allItems, inventoryScriptableObject.itemPrefab,
+            if (!ValidateReferences(inventoryScriptableObject.itemDatabase.allItems, inventoryScriptableObject.itemPrefab,
                 uiService.GetInventoryButtonPanel(), "Inventory"))
                 return;
 
@@ -41,13 +41,6 @@ namespace ServiceLocator.Inventory
 
             // Adding buttons dynamically
             inventoryController.AddButtonToPanel("Gather Resources");
-
-            // Populating Inventory
-            foreach (var itemData in inventoryScriptableObject.allItems)
-            {
-                // Adding ItemControllers
-                inventoryController.AddNewItem(itemData);
-            }
         }
 
         private bool ValidateReferences(List<ItemScriptableObject> _itemDatabase, GameObject _itemPrefab, 
