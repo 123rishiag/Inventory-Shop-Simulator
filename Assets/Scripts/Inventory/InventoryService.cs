@@ -74,10 +74,12 @@ namespace ServiceLocator.Inventory
         {
             int quantity = 2;
             string transactionMessage;
-            bool isTransacted = shopService.GetShopController().AddOrIncrementItems(_itemController, out transactionMessage, quantity);
+            bool isTransacted = shopService.GetShopController().AddOrIncrementItems(_itemController, 
+                out transactionMessage, quantity);
             if (isTransacted)
             {
-                transactionMessage = $"{quantity}x {_itemController.GetModel().Name} sold!!!!";
+                transactionMessage = $"{quantity}x {_itemController.GetModel().Name} sold worth " +
+                    $"{_itemController.GetModel().SellingPrice * quantity} coins!!!!";
                 uiService.PopupNotification(transactionMessage);
                 inventoryController.RemoveOrDecrementItems(_itemController, quantity);
             }
