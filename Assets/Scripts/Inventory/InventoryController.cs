@@ -279,7 +279,7 @@ namespace ServiceLocator.Inventory
             return null;
         }
 
-        private void UpdateUI()
+        public void UpdateUI()
         {
             // Show Items
             inventoryView.ShowItems();

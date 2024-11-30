@@ -1,19 +1,26 @@
+using ServiceLocator.Inventory;
 using ServiceLocator.Item;
+using ServiceLocator.Shop;
 using TMPro;
 using UnityEngine;
-using UnityEngine.U2D;
 using UnityEngine.UI;
+using Button = UnityEngine.UI.Button;
 
 namespace ServiceLocator.UI
 {
     public class UIService : MonoBehaviour
     {
+        // ItemButton
+        private GameObject itemMenuButton;
+
         [Header("Panels")]
         [SerializeField] private Transform inventoryGrid; // Assign Inventory Content Game Object inside Inventory Panel
         [SerializeField] private Transform inventoryMenuButtonPanel;
         [SerializeField] private Transform shopGrid; // Assign Shop Content Game Object inside Shop Panel
         [SerializeField] private Transform shopMenuButtonPanel;
         [SerializeField] private Transform itemMenuButtonPanel;
+        [SerializeField] private GameObject itemMenuButtonPrefab;
+        [SerializeField] private GameObject itemPanel;
 
         [Header("UI Elements")]
         [SerializeField] private TMP_Text inventoryEmptyText;
@@ -22,6 +29,8 @@ namespace ServiceLocator.UI
         [SerializeField] private TMP_Text shopEmptyText;
         [SerializeField] private TMP_Text shopItemTypeText;
         [SerializeField] private TMP_Text shopItemsCountText;
+        [SerializeField] private TMP_Text itemUISection;
+        [SerializeField] private TMP_Text itemName;
         [SerializeField] private RawImage itemImage;
         [SerializeField] private TMP_Text itemDescription;
         [SerializeField] private TMP_Text itemPrice;
@@ -30,7 +39,10 @@ namespace ServiceLocator.UI
         [SerializeField] private TMP_Text itemRarity;
         [SerializeField] private TMP_Text itemQuantity;
 
-        public void Init() { }
+        public void Init() 
+        {
+            AddButtonToItemPanel();
+        }
 
         // Getters
         public Transform GetInventoryGrid() => inventoryGrid;
@@ -38,6 +50,7 @@ namespace ServiceLocator.UI
         public Transform GetShopGrid() => shopGrid;
         public Transform GetShopButtonPanel() => shopMenuButtonPanel;
         public Transform GetItemButtonPanel() => itemMenuButtonPanel;
+        public GameObject GetItemMenuButton() => itemMenuButton;
 
         // Setters
         public void UpdateInventoryEmptyText(bool _isEmpty)
@@ -70,59 +83,116 @@ namespace ServiceLocator.UI
         {
             shopItemsCountText.text = $"Items Count: {_itemCount}";
         }
+        private void UpdateItemUISection(string _text)
+        {
+            itemUISection.text = $"UI Section: {_text}";
+        }
+        private void UpdateItemName(string _text)
+        {
+            itemName.text = _text;
+        }
+        private void UpdateItemImage(Sprite _sprite)
+        {
+            itemImage.texture = _sprite.texture;
+        }
+        private void UpdateItemDescription(string _text)
+        {
+            itemDescription.text = _text;
+        }
+        private void UpdateItemPrice(int _value)
+        {
+            itemPrice.text = $"Price: {_value}";
+        }
+        private void UpdateItemWeight(float _value)
+        {
+            itemWeight.text = $"Weight: {_value}";
+        }
+        private void UpdateItemType(string _text)
+        {
+            itemType.text = $"Type: {_text}";
+        }
+        private void UpdateItemRarity(string _text)
+        {
+            itemRarity.text = $"Rarity: {_text}";
+        }
+        private void UpdateItemQuantity(int _value)
+        {
+            itemQuantity.text = $"Quantity: {_value}x";
+        }
+        private void AddButtonToItemPanel()
+        {
+            // Instantiating the button
+            // Checking if prefab and panel are valid
+            if (itemMenuButtonPrefab == null || itemMenuButtonPanel == null)
+            {
+                Debug.LogError("Menu Button prefab or panel is null!");
+                return;
+            }
+
+            // Instantiating the button
+            itemMenuButton = Object.Instantiate(itemMenuButtonPrefab, itemMenuButtonPanel);
+
+        }
+        private void EnableItemPanel()
+        {
+            if (itemPanel != null)
+            {
+                itemPanel.SetActive(true);
+            }
+        }
+        public void UpdateItemText(ItemModel _itemModel)
+        {
+            EnableItemPanel();
+            UpdateItemUISection(_itemModel.UISection.ToString());
+            UpdateItemName(_itemModel.Name);
+            UpdateItemImage(_itemModel.Icon);
+            UpdateItemDescription(_itemModel.Description);
+
+            if (_itemModel.UISection == UISection.Inventory)
+            {
+                UpdateItemPrice(_itemModel.SellingPrice);
+            }
+            else if (_itemModel.UISection == UISection.Shop)
+            {
+                UpdateItemPrice(_itemModel.BuyingPrice);
+            }
+
+            UpdateItemWeight(_itemModel.Weight);
+            UpdateItemType(_itemModel.Type.ToString());
+            UpdateItemRarity(_itemModel.Rarity.ToString());
+            UpdateItemQuantity(_itemModel.Quantity);
+            SetItemMenuButtonText(_itemModel);
+        }
+        private void SetItemMenuButtonText(ItemModel _itemModel)
+        {
+            // Fetching TMP_Text component in the button and setting its text
+            TMP_Text buttonText = itemMenuButton.GetComponentInChildren<TMP_Text>();
+
+            if (buttonText != null)
+            {
+                switch (_itemModel.UISection)
+                {
+                    case UISection.Inventory:
+                        buttonText.text = "Sell";
+                        break;
+                    case UISection.Shop:
+                        buttonText.text = "Buy";
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else
+            {
+                Debug.LogWarning("Text component not found in button prefab.");
+            }
+        }
         public void SetButtonInteractivity(Button _button, bool _isInteractable)
         {
             if (_button != null)
             {
                 _button.interactable = _isInteractable;
             }
-        }
-        private void SetItemImage(Sprite _sprite)
-        {
-            itemImage.texture = _sprite.texture;
-        }
-        private void SetItemDescription(string _text)
-        {
-            itemDescription.text = _text;
-        }
-        private void SetItemPrice(int _value)
-        {
-            itemPrice.text = $"Price: {_value}";
-        }
-        private void SetItemWeight(float _value)
-        {
-            itemWeight.text = $"Weight: {_value}";
-        }
-        private void SetItemType(string _text)
-        {
-            itemType.text = $"Type: {_text}";
-        }
-        private void SetItemRarity(string _text)
-        {
-            itemRarity.text = $"Rarity: {_text}";
-        }
-        private void SetItemQuantity(int _value)
-        {
-            itemQuantity.text = $"Quantity: {_value}x";
-        }
-        public void SetItemText(ItemModel _itemModel)
-        {
-            SetItemImage(_itemModel.Icon);
-            SetItemDescription(_itemModel.Description);
-
-            if (_itemModel.UISection == UISection.Inventory)
-            {
-                SetItemPrice(_itemModel.SellingPrice);
-            }
-            else if (_itemModel.UISection == UISection.Shop)
-            {
-                SetItemPrice(_itemModel.BuyingPrice);
-            }
-
-            SetItemWeight(_itemModel.Weight);
-            SetItemType(_itemModel.Type.ToString());
-            SetItemRarity(_itemModel.Rarity.ToString());
-            SetItemQuantity(_itemModel.Quantity);
         }
     }
 }

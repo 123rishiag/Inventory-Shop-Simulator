@@ -52,6 +52,9 @@ namespace ServiceLocator.Shop
                 // Adding ItemControllers
                 shopController.AddNewItem(itemData);
             }
+
+            // Updating UI
+            shopController.UpdateUI();
         }
 
         private bool ValidateReferences(List<ItemScriptableObject> _itemDatabase, GameObject _itemPrefab, 
