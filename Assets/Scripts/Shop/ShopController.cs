@@ -81,9 +81,9 @@ namespace ServiceLocator.Shop
             }
         }
 
-        public bool AddOrIncrementItems(ItemController _itemController, out string _transactionFailReason, int _quantity = 1)
+        public bool AddOrIncrementItems(ItemController _itemController, out string _transactionMessage, int _quantity = 1)
         {
-            if (!CheckMetricConditions(_itemController, out _transactionFailReason, _quantity))
+            if (!CheckMetricConditions(_itemController, out _transactionMessage, _quantity))
             {
                 return false;
             }
@@ -134,13 +134,13 @@ namespace ServiceLocator.Shop
             UpdateUI();
         }
 
-        private bool CheckMetricConditions(ItemController _itemController, out string _transactionFailReason, int _quantity)
+        private bool CheckMetricConditions(ItemController _itemController, out string _transactionMessage, int _quantity)
         {
-            _transactionFailReason = string.Empty;
+            _transactionMessage = string.Empty;
             // If Item does not have that much quantity in other UISection, return false
             if (_itemController.GetModel().Quantity < _quantity)
             {
-                _transactionFailReason = "Inventory doesn't have that many items.";
+                _transactionMessage = "Inventory doesn't have that many items.";
                 return false;
             }
 

@@ -1,6 +1,5 @@
-using ServiceLocator.Inventory;
 using ServiceLocator.Item;
-using ServiceLocator.Shop;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -39,7 +38,11 @@ namespace ServiceLocator.UI
         [SerializeField] private TMP_Text itemRarity;
         [SerializeField] private TMP_Text itemQuantity;
 
-        public void Init() 
+        [Header("Notification Popup Elements")]
+        [SerializeField] private GameObject notificationPopupPanel;
+        [SerializeField] private TMP_Text notificationPopupText;
+
+        public void Init()
         {
             AddButtonToItemPanel();
         }
@@ -133,16 +136,9 @@ namespace ServiceLocator.UI
             itemMenuButton = Object.Instantiate(itemMenuButtonPrefab, itemMenuButtonPanel);
 
         }
-        private void EnableItemPanel()
+        public void UpdateItemMenuUI(ItemModel _itemModel)
         {
-            if (itemPanel != null)
-            {
-                itemPanel.SetActive(true);
-            }
-        }
-        public void UpdateItemText(ItemModel _itemModel)
-        {
-            EnableItemPanel();
+            StartCoroutine(ShowItemPanel(0.2f));
             UpdateItemUISection(_itemModel.UISection.ToString());
             UpdateItemName(_itemModel.Name);
             UpdateItemImage(_itemModel.Icon);
@@ -186,6 +182,26 @@ namespace ServiceLocator.UI
             {
                 Debug.LogWarning("Text component not found in button prefab.");
             }
+        }
+        private IEnumerator ShowItemPanel(float _timeInSeconds)
+        {
+            if (itemPanel != null)
+            {
+                itemPanel.SetActive(false);
+                yield return new WaitForSeconds(_timeInSeconds);
+                itemPanel.SetActive(true);
+            }
+        }
+        private IEnumerator PopupNotification(float _timeInSeconds)
+        {
+            notificationPopupPanel.gameObject.SetActive(true);
+            yield return new WaitForSeconds(_timeInSeconds);
+            notificationPopupPanel.gameObject.SetActive(false);
+        }
+        public void PopupNotification(string _text)
+        {
+            notificationPopupText.text = _text;
+            StartCoroutine(PopupNotification(3f));
         }
         public void SetButtonInteractivity(Button _button, bool _isInteractable)
         {
