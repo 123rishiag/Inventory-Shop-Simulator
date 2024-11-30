@@ -83,15 +83,18 @@ namespace ServiceLocator.Shop
 
         public void BuyItems(ItemController _itemController)
         {
-            string transactionFailReason;
-            bool isTransacted = inventoryService.GetInventoryController().AddOrIncrementItems(_itemController, out transactionFailReason, 2);
+            int quantity = 2;
+            string transactionMessage;
+            bool isTransacted = inventoryService.GetInventoryController().AddOrIncrementItems(_itemController, out transactionMessage, quantity);
             if (isTransacted)
             {
-                shopController.RemoveOrDecrementItems(_itemController, 2);
+                transactionMessage = $"{quantity}x {_itemController.GetModel().Name} bought!!!!";
+                uiService.PopupNotification(transactionMessage);
+                shopController.RemoveOrDecrementItems(_itemController, quantity);
             }
             else
             {
-                Debug.Log(transactionFailReason);
+                uiService.PopupNotification(transactionMessage);
             }
         }
 

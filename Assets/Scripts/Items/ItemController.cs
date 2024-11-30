@@ -32,7 +32,7 @@ namespace ServiceLocator.Item
 
         public void ProcessItem()
         {
-            uiService.UpdateItemText(itemModel);
+            uiService.UpdateItemMenuUI(itemModel);
             GameObject itemMenuButton = uiService.GetItemMenuButton();
 
             Button button = itemMenuButton.GetComponent<Button>();

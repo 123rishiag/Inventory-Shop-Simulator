@@ -90,9 +90,9 @@ namespace ServiceLocator.Inventory
             UpdateUI();
         }
 
-        public bool AddOrIncrementItems(ItemController _itemController, out string _transactionFailReason, int _quantity = 1)
+        public bool AddOrIncrementItems(ItemController _itemController, out string _transactionMessage, int _quantity = 1)
         {
-            if(!CheckMetricConditions(_itemController, out _transactionFailReason, _quantity))
+            if(!CheckMetricConditions(_itemController, out _transactionMessage, _quantity))
             {
                 return false;
             }
@@ -151,42 +151,42 @@ namespace ServiceLocator.Inventory
             UpdateUI();
         }
 
-        private bool CheckMetricConditions(ItemController _itemController, out string _transactionFailReason, int _quantity)
+        private bool CheckMetricConditions(ItemController _itemController, out string _transactionMessage, int _quantity)
         {
-            _transactionFailReason = string.Empty;
+            _transactionMessage = string.Empty;
             // If Item does not have that much quantity in other UISection, return false
             if (_itemController.GetModel().Quantity < _quantity)
             {
-                _transactionFailReason = "Shop doesn't have that many items.";
+                _transactionMessage = "Shop doesn't have that many items.";
                 return false;
             }
 
             // If Item Buying Price is greater than the current currency, return false
             if (_itemController.GetModel().BuyingPrice * _quantity > inventoryModel.Currency)
             {
-                _transactionFailReason = "Not Enough Money!!!!.";
+                _transactionMessage = "Not Enough Money!!!!";
                 return false;
             }
 
             // If the inventory does not have that much space left in Inventory, return false
             if (_itemController.GetModel().Weight * _quantity > (inventoryModel.MaxWeight - inventoryModel.CurrentWeight))
             {
-                _transactionFailReason = "Not Enough Space!!!!.";
+                _transactionMessage = "Not Enough Space!!!!";
                 return false;
             }
 
             return true;
         }
 
-        public bool CheckGatherResources(out string _transactionFailReason)
+        public bool CheckGatherResources(out string _transactionMessage)
         {
-            _transactionFailReason = string.Empty;
+            _transactionMessage = string.Empty;
 
             // Ensuring the item pool exists
             if (inventoryScriptableObject.itemDatabase.allItems == null ||
                 inventoryScriptableObject.itemDatabase.allItems.Count == 0)
             {
-                _transactionFailReason = "No items available in the database to gather.";
+                _transactionMessage = "No items available in the database to gather.";
                 return false;
             }
 
@@ -197,7 +197,7 @@ namespace ServiceLocator.Inventory
             if ((inventoryModel.MaxWeight - inventoryModel.CurrentWeight)
                 < minWeightOfItems)
             {
-                _transactionFailReason = "Not Enough Space!!!!.";
+                _transactionMessage = "Not Enough Space!!!!";
                 return false;
             }
 
@@ -205,7 +205,7 @@ namespace ServiceLocator.Inventory
             var itemData = GetRandomItemDataBasedOnRarity();
             if (itemData == null)
             {
-                _transactionFailReason = "No suitable items found!!!!.";
+                _transactionMessage = "No suitable items found!!!!";
                 return false;
             }
 
@@ -214,10 +214,10 @@ namespace ServiceLocator.Inventory
 
         public void GatherResources()
         {
-            string transactionFailReason;
-            if (!CheckGatherResources(out transactionFailReason))
+            string transactionMessage;
+            if (!CheckGatherResources(out transactionMessage))
             {
-                Debug.Log(transactionFailReason);
+                uiService.PopupNotification(transactionMessage);
                 inventoryView.SetButtonInteractivity(uiService, false);
                 return;
             }
