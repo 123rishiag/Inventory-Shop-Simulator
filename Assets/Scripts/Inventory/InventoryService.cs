@@ -41,6 +41,9 @@ namespace ServiceLocator.Inventory
 
             // Adding buttons dynamically
             inventoryController.AddButtonToPanel("Gather Resources");
+
+            // Updating UI
+            inventoryController.UpdateUI();
         }
 
         private bool ValidateReferences(List<ItemScriptableObject> _itemDatabase, GameObject _itemPrefab, 

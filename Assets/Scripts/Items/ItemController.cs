@@ -1,6 +1,8 @@
 using ServiceLocator.Inventory;
 using ServiceLocator.Shop;
+using ServiceLocator.UI;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace ServiceLocator.Item
 {
@@ -8,16 +10,18 @@ namespace ServiceLocator.Item
     {
         private InventoryService inventoryService;
         private ShopService shopService;
+        private UIService uiService;
 
         private ItemModel itemModel;
         private ItemView itemView;
 
-        public ItemController(InventoryService _inventoryService, ShopService _shopService, 
+        public ItemController(InventoryService _inventoryService, ShopService _shopService, UIService _uIService,
             ItemScriptableObject _itemScriptableObject, Transform _parentGrid, GameObject _itemPrefab)
         {
             // Setting the services
             inventoryService = _inventoryService;
             shopService = _shopService;
+            uiService = _uIService;
 
             // Creating the Model
             itemModel = new ItemModel(_itemScriptableObject);
@@ -28,16 +32,28 @@ namespace ServiceLocator.Item
 
         public void ProcessItem()
         {
-           switch(itemModel.UISection)
+            uiService.UpdateItemText(itemModel);
+            GameObject itemMenuButton = uiService.GetItemMenuButton();
+
+            Button button = itemMenuButton.GetComponent<Button>();
+            if (button != null)
             {
-                case UISection.Inventory:
-                    inventoryService.SellItems(this);
-                    break;
-                case UISection.Shop:
-                    shopService.BuyItems(this);
-                    break;
-                default:
-                    break;
+                button.onClick.RemoveAllListeners();
+                switch (itemModel.UISection)
+                {
+                    case UISection.Inventory:
+                        button.onClick.AddListener(() => inventoryService.SellItems(this));
+                        break;
+                    case UISection.Shop:
+                        button.onClick.AddListener(() => shopService.BuyItems(this));
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else
+            {
+                Debug.LogWarning("Button component not found in button prefab.");
             }
         }
 

@@ -36,7 +36,7 @@ namespace ServiceLocator.Main
         private void InjectDependencies()
         {
             uiService.Init();
-            itemService.Init(inventoryService, shopService);
+            itemService.Init(inventoryService, shopService, uiService);
             shopService.Init(itemService, uiService, inventoryService);
             inventoryService.Init(itemService, uiService, shopService);
         }

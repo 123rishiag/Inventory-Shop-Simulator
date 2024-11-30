@@ -147,7 +147,7 @@ namespace ServiceLocator.Shop
             return true;
         }
 
-        private void UpdateUI()
+        public void UpdateUI()
         {
             // Clear filtered list
             filteredItemControllers.Clear();

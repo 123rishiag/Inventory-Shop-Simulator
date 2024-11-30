@@ -8,6 +8,7 @@ namespace ServiceLocator.Item
         {
             ItemData = _itemScriptableObject;
             Id = _itemScriptableObject.Id;
+            Name = _itemScriptableObject.name;
             Icon = _itemScriptableObject.icon;
             Description = _itemScriptableObject.description;
             BuyingPrice = _itemScriptableObject.buyingPrice;
@@ -22,6 +23,7 @@ namespace ServiceLocator.Item
         public UISection UISection { get; set; }
         public ItemScriptableObject ItemData { get; set; }
         public int Id { get; private set; }
+        public string Name { get; private set; }
         public Sprite Icon { get; private set; }
         public string Description { get; private set; }
         public int BuyingPrice { get; private set; }
