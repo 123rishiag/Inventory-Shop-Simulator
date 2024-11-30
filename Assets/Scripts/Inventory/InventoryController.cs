@@ -186,7 +186,7 @@ namespace ServiceLocator.Inventory
             if (inventoryScriptableObject.itemDatabase.allItems == null ||
                 inventoryScriptableObject.itemDatabase.allItems.Count == 0)
             {
-                _transactionMessage = "No items available in the database to gather.";
+                _transactionMessage = "No items available in the database to gather. \n\nGather Resource Disabled";
                 return false;
             }
 
@@ -197,7 +197,7 @@ namespace ServiceLocator.Inventory
             if ((inventoryModel.MaxWeight - inventoryModel.CurrentWeight)
                 < minWeightOfItems)
             {
-                _transactionMessage = "Not Enough Space!!!!";
+                _transactionMessage = "Not Enough Space!!!! \n\nGather Resource Disabled";
                 return false;
             }
 
@@ -205,7 +205,7 @@ namespace ServiceLocator.Inventory
             var itemData = GetRandomItemDataBasedOnRarity();
             if (itemData == null)
             {
-                _transactionMessage = "No suitable items found!!!!";
+                _transactionMessage = "No suitable items found!!!! \n\nGather Resource Disabled";
                 return false;
             }
 
