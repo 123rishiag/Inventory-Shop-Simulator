@@ -92,11 +92,11 @@ namespace ServiceLocator.Inventory
 
         public bool AddOrIncrementItems(ItemController _itemController, out string _transactionMessage, int _quantity = 1)
         {
-            if(!CheckMetricConditions(_itemController, out _transactionMessage, _quantity))
+            if (!CheckMetricConditions(_itemController, out _transactionMessage, _quantity))
             {
                 return false;
             }
-     
+
             // Check if an item with the same ID already exists
             var existingItemController = itemControllers.Find(c => c.GetModel().Id == _itemController.GetModel().Id);
 
@@ -244,7 +244,7 @@ namespace ServiceLocator.Inventory
                 // Add New Item
                 AddNewItem(itemData, quantity);
             }
-            
+
             // Update UI
             UpdateUI();
         }
@@ -286,7 +286,7 @@ namespace ServiceLocator.Inventory
 
             // Update UI
             inventoryView.UpdateUI(uiService, inventoryScriptableObject);
-        }        
+        }
 
         // Getters
         public List<ItemController> GetItems() => itemControllers;

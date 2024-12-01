@@ -12,7 +12,7 @@ namespace ServiceLocator.Shop
         {
             uiSection = UISection.Shop;
             items = new List<ItemModel>();
-            
+
             // Initial Values
             SelectedItemType = ItemType.All;
         }
