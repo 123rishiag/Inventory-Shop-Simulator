@@ -40,6 +40,12 @@ namespace ServiceLocator.UI
         [SerializeField] private TMP_Text itemRarity;
         [SerializeField] private TMP_Text itemQuantity;
 
+        [Header("Transaction Confirmation Elements")]
+        [SerializeField] private GameObject transactionConfirmationPanel;
+        [SerializeField] private TMP_Text transactionConfirmationText;
+        [SerializeField] private Button transactionConfirmationYesButton;
+        [SerializeField] private Button transactionConfirmationNoButton;
+
         [Header("Quantity Selection Elements")]
         [SerializeField] private GameObject quantitySelectionPanel;
         [SerializeField] private Button quantitySelectionDecrementButton;
@@ -208,8 +214,62 @@ namespace ServiceLocator.UI
                 itemPanel.SetActive(false);
             }
         }
-        private void OnQuantityDecrementButton(Button _decrementButton, Button _incrementButton,
-            int _minQuantity, ref int _quantity)
+        public void OnTransactionConfirmation(ItemModel _itemModel, int _quantity, Action<bool> _callback)
+        {
+            // Enabling Panel
+            transactionConfirmationPanel.SetActive(true);
+
+            // Setting Text
+            string activity = string.Empty;
+            int price = 0;
+            switch (_itemModel.UISection)
+            {
+                case UISection.Inventory:
+                    activity = "sell";
+                    price = _itemModel.SellingPrice;
+                    break;
+                case UISection.Shop:
+                    activity = "buy";
+                    price = _itemModel.BuyingPrice;
+                    break;
+                default:
+                    break;
+            }
+
+            if (transactionConfirmationText != null)
+            {
+                transactionConfirmationText.text = $"Do you really wanna {activity} '{_quantity} {_itemModel.Name}' for " +
+                    $"{_quantity * price}.";
+            }
+
+            // Fetching UI Elements
+            Button yesButton = transactionConfirmationYesButton.GetComponent<Button>();
+            Button noButton = transactionConfirmationNoButton.GetComponent<Button>();
+
+            if (yesButton != null)
+            {
+                yesButton.onClick.RemoveAllListeners();
+                yesButton.onClick.AddListener(() =>
+                {
+                    transactionConfirmationPanel.SetActive(false);
+                    _callback.Invoke(true);
+                }
+                );
+            }
+
+            if (noButton != null)
+            {
+                noButton.onClick.RemoveAllListeners();
+                noButton.onClick.AddListener(() =>
+                {
+                    transactionConfirmationPanel.SetActive(false);
+                    _callback.Invoke(false);
+                }
+                );
+            }
+        }
+        private int OnQuantityDecrementButton(Button _decrementButton, Button _incrementButton,
+            int _minQuantity, int _quantity)
         {
             if (_quantity != _minQuantity)
             {
@@ -233,9 +293,11 @@ namespace ServiceLocator.UI
                     _incrementButton.interactable = true;
                 }
             }
+
+            return _quantity;
         }
-        private void OnQuantityIncrementButton(Button _decrementButton, Button _incrementButton,
-            int _maxQuantity, ref int _quantity)
+        private int OnQuantityIncrementButton(Button _decrementButton, Button _incrementButton,
+            int _maxQuantity, int _quantity)
         {
             if (_quantity != _maxQuantity)
             {
@@ -259,16 +321,18 @@ namespace ServiceLocator.UI
                     _decrementButton.interactable = true;
                 }
             }
+
+            return _quantity;
         }
-        public void SetItemQuanity(ItemModel _itemModel, Action<int> _callback)
+        public void OnSetItemQuanity(ItemModel _itemModel, Action<int> _callback)
         {
             // Setting Initial Values
             int minQuantity = 1;
-            int _currentQuantity = 1;
+            int currentQuantity = minQuantity;
             int maxQuantity = _itemModel.Quantity;
             if (quantitySelectionText != null)
             {
-                quantitySelectionText.text = _currentQuantity.ToString();
+                quantitySelectionText.text = currentQuantity.ToString();
             }
 
             // Enabling Panel
@@ -283,9 +347,15 @@ namespace ServiceLocator.UI
             if (decrementbutton != null)
             {
                 decrementbutton.onClick.RemoveAllListeners();
-                decrementbutton.onClick.AddListener(() => OnQuantityDecrementButton(decrementbutton, incrementbutton,
-                    minQuantity, ref _currentQuantity));
-                if (_currentQuantity == minQuantity)
+                decrementbutton.onClick.AddListener(() =>
+                {
+                    currentQuantity = OnQuantityDecrementButton(decrementbutton, incrementbutton,
+                        minQuantity, currentQuantity);
+                }
+                );
+
+                // Initial Button Status
+                if (currentQuantity == minQuantity)
                 {
                     decrementbutton.interactable = false;
                 }
@@ -299,9 +369,15 @@ namespace ServiceLocator.UI
             if (incrementbutton != null)
             {
                 incrementbutton.onClick.RemoveAllListeners();
-                incrementbutton.onClick.AddListener(() => OnQuantityIncrementButton(decrementbutton, incrementbutton,
-                    maxQuantity, ref _currentQuantity));
-                if (_currentQuantity == maxQuantity)
+                incrementbutton.onClick.AddListener(() =>
+                {
+                    currentQuantity = OnQuantityIncrementButton(decrementbutton, incrementbutton,
+                        maxQuantity, currentQuantity);
+                }
+                );
+
+                // Initial Button Status
+                if (currentQuantity == maxQuantity)
                 {
                     incrementbutton.interactable = false;
                 }
@@ -315,11 +391,10 @@ namespace ServiceLocator.UI
             if (doneButton != null)
             {
                 doneButton.onClick.RemoveAllListeners();
-
                 doneButton.onClick.AddListener(() =>
                 {
                     quantitySelectionPanel.SetActive(false);
-                    _callback.Invoke(_currentQuantity);
+                    _callback.Invoke(currentQuantity);
                 }
                 );
             }
