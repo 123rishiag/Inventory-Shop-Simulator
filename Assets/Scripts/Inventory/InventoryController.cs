@@ -1,9 +1,11 @@
 using ServiceLocator.Item;
 using ServiceLocator.UI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 namespace ServiceLocator.Inventory
 {
@@ -251,9 +253,16 @@ namespace ServiceLocator.Inventory
 
         private ItemScriptableObject GetRandomItemDataBasedOnRarity()
         {
-            // Calculating total rarity weight
+            // Fetching all items
             var items = inventoryScriptableObject.itemDatabase.allItems;
-            var totalRarityWeight = items.Sum(item => (int)item.rarity);
+
+            // Inverting rarity weights: Higher enum value -> Lower weight
+            var maxRarityValue = Enum.GetValues(typeof(Rarity)).Cast<int>().Max() + 1;
+            var rarityWeights = items.ToDictionary(item => item,
+                                                   item => maxRarityValue - (int)item.rarity);
+
+            // Calculating total rarity weight based on inverted weights
+            var totalRarityWeight = rarityWeights.Sum(rw => rw.Value);
 
             int randomValue = Random.Range(0, totalRarityWeight);
             int cumulativeWeight = 0;
@@ -261,7 +270,7 @@ namespace ServiceLocator.Inventory
             // Selecting item based on cumulative weight
             foreach (var item in items)
             {
-                cumulativeWeight += (int)item.rarity;
+                cumulativeWeight += rarityWeights[item];
 
                 // Skipping items that would exceed the max weight
                 float potentialWeight = inventoryModel.CurrentWeight + item.weight;
