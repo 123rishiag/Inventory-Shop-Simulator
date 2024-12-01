@@ -46,7 +46,7 @@ namespace ServiceLocator.Inventory
             inventoryController.UpdateUI();
         }
 
-        private bool ValidateReferences(List<ItemScriptableObject> _itemDatabase, GameObject _itemPrefab, 
+        private bool ValidateReferences(List<ItemScriptableObject> _itemDatabase, GameObject _itemPrefab,
             Transform _buttonPanel, string _type)
         {
             if (_itemDatabase == null)
@@ -70,18 +70,17 @@ namespace ServiceLocator.Inventory
             return true;
         }
 
-        public void SellItems(ItemController _itemController)
+        public void SellItems(ItemController _itemController, int _quantity)
         {
-            int quantity = 2;
             string transactionMessage;
-            bool isTransacted = shopService.GetShopController().AddOrIncrementItems(_itemController, 
-                out transactionMessage, quantity);
+            bool isTransacted = shopService.GetShopController().AddOrIncrementItems(_itemController,
+                out transactionMessage, _quantity);
             if (isTransacted)
             {
-                transactionMessage = $"{quantity}x {_itemController.GetModel().Name} sold worth " +
-                    $"{_itemController.GetModel().SellingPrice * quantity} coins!!!!";
+                transactionMessage = $"{_quantity}x {_itemController.GetModel().Name} sold worth " +
+                    $"{_itemController.GetModel().SellingPrice * _quantity} coins!!!!";
                 uiService.PopupNotification(transactionMessage);
-                inventoryController.RemoveOrDecrementItems(_itemController, quantity);
+                inventoryController.RemoveOrDecrementItems(_itemController, _quantity);
             }
             else
             {

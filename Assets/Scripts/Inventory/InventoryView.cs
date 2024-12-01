@@ -83,6 +83,8 @@ namespace ServiceLocator.Inventory
             {
                 SetButtonInteractivity(_uiService, true);
             }
+
+            _uiService.HideItemPanel();
         }
     }
 }

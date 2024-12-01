@@ -1,9 +1,11 @@
 using ServiceLocator.Item;
+using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Button = UnityEngine.UI.Button;
+using Object = UnityEngine.Object;
 
 namespace ServiceLocator.UI
 {
@@ -37,6 +39,13 @@ namespace ServiceLocator.UI
         [SerializeField] private TMP_Text itemType;
         [SerializeField] private TMP_Text itemRarity;
         [SerializeField] private TMP_Text itemQuantity;
+
+        [Header("Quantity Selection Elements")]
+        [SerializeField] private GameObject quantitySelectionPanel;
+        [SerializeField] private Button quantitySelectionDecrementButton;
+        [SerializeField] private TMP_Text quantitySelectionText;
+        [SerializeField] private Button quantitySelectionIncrementButton;
+        [SerializeField] private Button quantitySelectionDoneButton;
 
         [Header("Notification Popup Elements")]
         [SerializeField] private GameObject notificationPopupPanel;
@@ -190,6 +199,129 @@ namespace ServiceLocator.UI
                 itemPanel.SetActive(false);
                 yield return new WaitForSeconds(_timeInSeconds);
                 itemPanel.SetActive(true);
+            }
+        }
+        public void HideItemPanel()
+        {
+            if (itemPanel != null)
+            {
+                itemPanel.SetActive(false);
+            }
+        }
+        private void OnQuantityDecrementButton(Button _decrementButton, Button _incrementButton,
+            int _minQuantity, ref int _quantity)
+        {
+            if (_quantity != _minQuantity)
+            {
+                _quantity -= 1;
+
+                // Updating Panel Text
+                if (quantitySelectionText != null)
+                {
+                    quantitySelectionText.text = _quantity.ToString();
+                }
+
+                // Disabling Decrement Button if quantity is minimum
+                if (_quantity == _minQuantity && _decrementButton != null)
+                {
+                    _decrementButton.interactable = false;
+                }
+
+                // If quantity decreases, enabling Increment Button
+                if (_incrementButton != null)
+                {
+                    _incrementButton.interactable = true;
+                }
+            }
+        }
+        private void OnQuantityIncrementButton(Button _decrementButton, Button _incrementButton,
+            int _maxQuantity, ref int _quantity)
+        {
+            if (_quantity != _maxQuantity)
+            {
+                _quantity += 1;
+
+                // Updating Panel Text
+                if (quantitySelectionText != null)
+                {
+                    quantitySelectionText.text = _quantity.ToString();
+                }
+
+                // Disabling Increment Button if quantity is maximum
+                if (_quantity == _maxQuantity && _incrementButton != null)
+                {
+                    _incrementButton.interactable = false;
+                }
+
+                // If quantity increases, enabling Decrement Button
+                if (_decrementButton != null)
+                {
+                    _decrementButton.interactable = true;
+                }
+            }
+        }
+        public void SetItemQuanity(ItemModel _itemModel, Action<int> _callback)
+        {
+            // Setting Initial Values
+            int minQuantity = 1;
+            int _currentQuantity = 1;
+            int maxQuantity = _itemModel.Quantity;
+            if (quantitySelectionText != null)
+            {
+                quantitySelectionText.text = _currentQuantity.ToString();
+            }
+
+            // Enabling Panel
+            quantitySelectionPanel.SetActive(true);
+
+            // Fetching buttons
+            Button decrementbutton = quantitySelectionDecrementButton.GetComponent<Button>();
+            Button incrementbutton = quantitySelectionIncrementButton.GetComponent<Button>();
+            Button doneButton = quantitySelectionDoneButton.GetComponent<Button>();
+
+            // Decrement Button Setup
+            if (decrementbutton != null)
+            {
+                decrementbutton.onClick.RemoveAllListeners();
+                decrementbutton.onClick.AddListener(() => OnQuantityDecrementButton(decrementbutton, incrementbutton,
+                    minQuantity, ref _currentQuantity));
+                if (_currentQuantity == minQuantity)
+                {
+                    decrementbutton.interactable = false;
+                }
+                else
+                {
+                    decrementbutton.interactable = true;
+                }
+            }
+
+            // Increment Button Setup
+            if (incrementbutton != null)
+            {
+                incrementbutton.onClick.RemoveAllListeners();
+                incrementbutton.onClick.AddListener(() => OnQuantityIncrementButton(decrementbutton, incrementbutton,
+                    maxQuantity, ref _currentQuantity));
+                if (_currentQuantity == maxQuantity)
+                {
+                    incrementbutton.interactable = false;
+                }
+                else
+                {
+                    incrementbutton.interactable = true;
+                }
+            }
+
+            // Done Button Setup
+            if (doneButton != null)
+            {
+                doneButton.onClick.RemoveAllListeners();
+
+                doneButton.onClick.AddListener(() =>
+                {
+                    quantitySelectionPanel.SetActive(false);
+                    _callback.Invoke(_currentQuantity);
+                }
+                );
             }
         }
         private IEnumerator PopupNotification(float _timeInSeconds)

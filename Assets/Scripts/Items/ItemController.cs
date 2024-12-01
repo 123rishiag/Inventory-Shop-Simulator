@@ -39,17 +39,21 @@ namespace ServiceLocator.Item
             if (button != null)
             {
                 button.onClick.RemoveAllListeners();
-                switch (itemModel.UISection)
+                button.onClick.AddListener(() => uiService.SetItemQuanity(itemModel, quantity =>
                 {
-                    case UISection.Inventory:
-                        button.onClick.AddListener(() => inventoryService.SellItems(this));
-                        break;
-                    case UISection.Shop:
-                        button.onClick.AddListener(() => shopService.BuyItems(this));
-                        break;
-                    default:
-                        break;
-                }
+                    switch (itemModel.UISection)
+                    {
+                        case UISection.Inventory:
+                            inventoryService.SellItems(this, quantity);
+                            break;
+                        case UISection.Shop:
+                            shopService.BuyItems(this, quantity);
+                            break;
+                        default:
+                            break;
+                    }
+                    uiService.HideItemPanel();
+                }));
             }
             else
             {

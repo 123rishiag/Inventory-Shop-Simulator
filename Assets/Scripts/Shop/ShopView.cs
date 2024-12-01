@@ -63,6 +63,8 @@ namespace ServiceLocator.Shop
             _uiService.UpdateShopEmptyText(shopController.GetFilteredItems().Count == 0);
             _uiService.UpdateShopItemTypeText(shopController.GetModel().SelectedItemType.ToString());
             _uiService.UpdateShopItemCount(shopController.GetFilteredItems().Count);
+
+            _uiService.HideItemPanel();
         }
     }
 }

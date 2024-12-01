@@ -1,5 +1,3 @@
-using ServiceLocator.Inventory;
-using ServiceLocator.UI;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

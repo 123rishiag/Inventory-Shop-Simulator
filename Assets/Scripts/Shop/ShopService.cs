@@ -33,7 +33,7 @@ namespace ServiceLocator.Shop
 
         private void InitializeVariables()
         {
-            if (!ValidateReferences(shopScriptableObject.itemDatabase.allItems, shopScriptableObject.itemPrefab, 
+            if (!ValidateReferences(shopScriptableObject.itemDatabase.allItems, shopScriptableObject.itemPrefab,
                 uiService.GetShopButtonPanel(), "Shop"))
                 return;
 
@@ -57,7 +57,7 @@ namespace ServiceLocator.Shop
             shopController.UpdateUI();
         }
 
-        private bool ValidateReferences(List<ItemScriptableObject> _itemDatabase, GameObject _itemPrefab, 
+        private bool ValidateReferences(List<ItemScriptableObject> _itemDatabase, GameObject _itemPrefab,
             Transform _buttonPanel, string _type)
         {
             if (_itemDatabase == null)
@@ -81,18 +81,17 @@ namespace ServiceLocator.Shop
             return true;
         }
 
-        public void BuyItems(ItemController _itemController)
+        public void BuyItems(ItemController _itemController, int _quantity)
         {
-            int quantity = 2;
             string transactionMessage;
-            bool isTransacted = inventoryService.GetInventoryController().AddOrIncrementItems(_itemController, 
-                out transactionMessage, quantity);
+            bool isTransacted = inventoryService.GetInventoryController().AddOrIncrementItems(_itemController,
+                out transactionMessage, _quantity);
             if (isTransacted)
             {
-                transactionMessage = $"{quantity}x {_itemController.GetModel().Name} bought worth " +
-                    $"{_itemController.GetModel().BuyingPrice * quantity} coins!!!!";
+                transactionMessage = $"{_quantity}x {_itemController.GetModel().Name} bought worth " +
+                    $"{_itemController.GetModel().BuyingPrice * _quantity} coins!!!!";
                 uiService.PopupNotification(transactionMessage);
-                shopController.RemoveOrDecrementItems(_itemController, quantity);
+                shopController.RemoveOrDecrementItems(_itemController, _quantity);
             }
             else
             {
