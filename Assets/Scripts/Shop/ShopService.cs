@@ -12,7 +12,6 @@ namespace ServiceLocator.Shop
     {
         private ShopScriptableObject shopScriptableObject;
 
-        private UIService uiService;
         private InventoryService inventoryService;
         private EventService eventService;
 
@@ -23,9 +22,8 @@ namespace ServiceLocator.Shop
             shopScriptableObject = _scriptableObject;
         }
 
-        public void Init(UIService _uiService, InventoryService _inventoryService, EventService _eventService)
+        public void Init(InventoryService _inventoryService, EventService _eventService)
         {
-            uiService = _uiService;
             inventoryService = _inventoryService;
             eventService = _eventService;
 
@@ -38,7 +36,7 @@ namespace ServiceLocator.Shop
                 return;
 
             // Initializing ShopController
-            shopController = new ShopController(uiService, eventService);
+            shopController = new ShopController(eventService);
 
             // Adding buttons dynamically
             foreach (ItemType itemType in Enum.GetValues(typeof(ItemType)))

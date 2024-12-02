@@ -1,4 +1,5 @@
 using ServiceLocator.Event;
+using ServiceLocator.Inventory;
 using ServiceLocator.Item;
 using ServiceLocator.Shop;
 using System;
@@ -72,6 +73,8 @@ namespace ServiceLocator.UI
             eventService.OnSetButtonInteractionEvent.RemoveListener(SetButtonInteractivity);
             eventService.OnCreateItemButtonViewEvent.RemoveListener(CreateItemButtonPrefab);
             eventService.OnCreateMenuButtonViewEvent.RemoveListener(CreateMenuButtonPrefab);
+            eventService.OnShopUpdatedEvent.RemoveListener(UpdateShopUI);
+            eventService.OnInventoryUpdatedEvent.RemoveListener(UpdateInventoryUI);
         }
         public void Init(EventService _eventService)
         {
@@ -80,6 +83,8 @@ namespace ServiceLocator.UI
             eventService.OnSetButtonInteractionEvent.AddListener(SetButtonInteractivity);
             eventService.OnCreateItemButtonViewEvent.AddListener(CreateItemButtonPrefab);
             eventService.OnCreateMenuButtonViewEvent.AddListener(CreateMenuButtonPrefab);
+            eventService.OnShopUpdatedEvent.AddListener(UpdateShopUI);
+            eventService.OnInventoryUpdatedEvent.AddListener(UpdateInventoryUI);
 
             AddButtonToItemPanel();
         }
@@ -169,35 +174,52 @@ namespace ServiceLocator.UI
         public GameObject GetItemMenuButton() => itemMenuButton;
 
         // Setters
-        public void UpdateInventoryEmptyText(bool _isEmpty)
+        private void UpdateInventoryEmptyText(bool _isEmpty)
         {
             if (inventoryEmptyText != null)
             {
                 inventoryEmptyText.gameObject.SetActive(_isEmpty);
             }
         }
-        public void UpdateInventoryCurrency(int _currency)
+        private void UpdateInventoryCurrency(int _currency)
         {
             inventoryCurrencyText.text = $"Currency: {_currency}A";
         }
-        public void UpdateInventoryWeight(float _currentWeight, float _maxWeight)
+        private void UpdateInventoryWeight(float _currentWeight, float _maxWeight)
         {
             inventoryWeightText.text = $"Weight: {_currentWeight}/{_maxWeight}";
         }
-        public void UpdateShopEmptyText(bool _isEmpty)
+        private void UpdateInventoryUI(int _itemCount, int _currency, float _currentWeight, float _totalWeight)
+        {
+            // Update UI texts based on items
+            UpdateInventoryEmptyText(_itemCount == 0);
+            UpdateInventoryCurrency(_currency);
+            UpdateInventoryWeight(_currentWeight, _totalWeight);
+
+            HideItemPanel();
+        }
+        private void UpdateShopEmptyText(bool _isEmpty)
         {
             if (shopEmptyText != null)
             {
                 shopEmptyText.gameObject.SetActive(_isEmpty);
             }
         }
-        public void UpdateShopItemTypeText(string _text)
+        private void UpdateShopItemTypeText(string _text)
         {
             shopItemTypeText.text = $"Item Type: {_text}";
         }
-        public void UpdateShopItemCount(int _itemCount)
+        private void UpdateShopItemCount(int _itemCount)
         {
             shopItemsCountText.text = $"Items Count: {_itemCount}";
+        }
+        private void UpdateShopUI(ItemType _itemType, int _itemCount)
+        {
+            UpdateShopEmptyText(_itemCount == 0);
+            UpdateShopItemTypeText(_itemType.ToString());
+            UpdateShopItemCount(_itemCount);
+
+            HideItemPanel();
         }
         private void UpdateItemUISection(string _text)
         {

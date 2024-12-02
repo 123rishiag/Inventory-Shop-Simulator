@@ -1,7 +1,5 @@
 using ServiceLocator.Event;
 using ServiceLocator.Item;
-using ServiceLocator.Shop;
-using ServiceLocator.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,17 +12,15 @@ namespace ServiceLocator.Inventory
     public class InventoryController
     {
         private InventoryScriptableObject inventoryScriptableObject;
-        private UIService uiService;
         private EventService eventService;
 
         private InventoryModel inventoryModel;
         private InventoryView inventoryView;
         private List<ItemController> itemControllers;
 
-        public InventoryController(InventoryScriptableObject _scriptableObject, UIService _uiService, EventService _eventService)
+        public InventoryController(InventoryScriptableObject _scriptableObject, EventService _eventService)
         {
             inventoryScriptableObject = _scriptableObject;
-            uiService = _uiService;
             eventService = _eventService;
 
             // Instantiating Model
@@ -291,7 +287,7 @@ namespace ServiceLocator.Inventory
         public void UpdateUI()
         {
             // Update UI
-            inventoryView.UpdateUI(eventService, uiService, inventoryScriptableObject);
+            inventoryView.UpdateUI(eventService);
         }
 
         // Getters

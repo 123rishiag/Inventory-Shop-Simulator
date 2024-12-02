@@ -11,7 +11,6 @@ namespace ServiceLocator.Inventory
     {
         private InventoryScriptableObject inventoryScriptableObject;
 
-        private UIService uiService;
         private ShopService shopService;
         private EventService eventService;
 
@@ -22,9 +21,8 @@ namespace ServiceLocator.Inventory
             inventoryScriptableObject = _scriptableObject;
         }
 
-        public void Init(UIService _uiService, ShopService _shopService, EventService _eventService)
+        public void Init(ShopService _shopService, EventService _eventService)
         {
-            uiService = _uiService;
             shopService = _shopService;
             eventService = _eventService;
 
@@ -37,7 +35,7 @@ namespace ServiceLocator.Inventory
                 return;
 
             // Initializing InventoryController
-            inventoryController = new InventoryController(inventoryScriptableObject, uiService, eventService);
+            inventoryController = new InventoryController(inventoryScriptableObject, eventService);
 
             // Adding buttons dynamically
             inventoryController.AddButtonToPanel("Gather Resources");

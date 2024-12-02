@@ -1,6 +1,5 @@
 using ServiceLocator.Event;
 using ServiceLocator.Item;
-using ServiceLocator.UI;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -10,16 +9,14 @@ namespace ServiceLocator.Shop
 {
     public class ShopController
     {
-        private UIService uiService;
         private EventService eventService;
 
         private ShopModel shopModel;
         private ShopView shopView;
         private List<ItemController> itemControllers;
 
-        public ShopController(UIService _uiService, EventService _eventService)
+        public ShopController(EventService _eventService)
         {
-            uiService = _uiService;
             eventService = _eventService;
 
             // Instantiating Model
@@ -146,7 +143,7 @@ namespace ServiceLocator.Shop
         public void UpdateUI()
         {
             // Update UI
-            shopView.UpdateUI(eventService, uiService);
+            shopView.UpdateUI(eventService);
         }
 
         // Getters
