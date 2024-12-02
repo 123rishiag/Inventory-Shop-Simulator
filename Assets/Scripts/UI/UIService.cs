@@ -1,7 +1,5 @@
 using ServiceLocator.Event;
-using ServiceLocator.Inventory;
 using ServiceLocator.Item;
-using ServiceLocator.Shop;
 using System;
 using System.Collections;
 using TMPro;

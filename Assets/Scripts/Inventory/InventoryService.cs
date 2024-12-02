@@ -1,7 +1,5 @@
 using ServiceLocator.Event;
 using ServiceLocator.Item;
-using ServiceLocator.Shop;
-using ServiceLocator.UI;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,10 +8,7 @@ namespace ServiceLocator.Inventory
     public class InventoryService
     {
         private InventoryScriptableObject inventoryScriptableObject;
-
-        private ShopService shopService;
         private EventService eventService;
-
         private InventoryController inventoryController;
 
         public InventoryService(InventoryScriptableObject _scriptableObject)
@@ -21,11 +16,9 @@ namespace ServiceLocator.Inventory
             inventoryScriptableObject = _scriptableObject;
         }
 
-        public void Init(ShopService _shopService, EventService _eventService)
+        public void Init(EventService _eventService)
         {
-            shopService = _shopService;
             eventService = _eventService;
-
             InitializeVariables();
         }
 
@@ -55,24 +48,13 @@ namespace ServiceLocator.Inventory
             return true;
         }
 
-        public void SellItems(ItemScriptableObject _itemData, int _quantity)
+        public void SellItems(ItemModel _itemModel, int _quantity)
         {
-            string transactionMessage;
-            bool isTransacted = shopService.GetShopController().AddOrIncrementItems(_itemData,
-                out transactionMessage, _quantity);
+            bool isTransacted = eventService.OnSellItemEvent.Invoke<bool>(_itemModel, _quantity);
             if (isTransacted)
             {
-                transactionMessage = $"{_quantity}x {_itemData.name} sold worth " +
-                    $"{_itemData.sellingPrice * _quantity}A!!!!";
-                inventoryController.RemoveOrDecrementItems(_itemData, _quantity);
-                eventService.OnPopupNotificationEvent.Invoke(transactionMessage);
-            }
-            else
-            {
-                eventService.OnPopupNotificationEvent.Invoke(transactionMessage);
+                inventoryController.RemoveOrDecrementItems(_itemModel, _quantity);
             }
         }
-
-        public InventoryController GetInventoryController() => inventoryController;
     }
 }

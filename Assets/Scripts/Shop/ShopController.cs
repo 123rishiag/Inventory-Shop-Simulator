@@ -27,6 +27,14 @@ namespace ServiceLocator.Shop
 
             // Controllers List
             itemControllers = new List<ItemController>();
+
+            // Adding Event Listeners
+            eventService.OnSellItemEvent.AddListener(AddOrIncrementItems);
+        }
+        ~ShopController()
+        {
+            // Removing Event Listeners
+            eventService.OnSellItemEvent.RemoveListener(AddOrIncrementItems);
         }
 
         public void AddButtonToPanel(ItemType _itemType)
@@ -63,7 +71,9 @@ namespace ServiceLocator.Shop
             // Add to Model
             shopModel.AddItem(itemController.GetModel());
 
-            // If the item does not exists, update new item's quantity
+            // If the item does not exists,
+            // happens when no transaction but only item addition happens during initialization
+            // then update weight with quantity given in Scriptable Objects
             if (_quantity == -1)
             {
                 itemController.UpdateItemQuantity(itemController.GetModel().Quantity, false);
@@ -74,15 +84,18 @@ namespace ServiceLocator.Shop
             }
         }
 
-        public bool AddOrIncrementItems(ItemScriptableObject _itemData, out string _transactionMessage, int _quantity = 1)
+        public bool AddOrIncrementItems(ItemModel _itemModel, int _quantity = 1)
         {
-            if (!CheckMetricConditions(_itemData, out _transactionMessage, _quantity))
+            string transactionMessage = string.Empty;
+            if (!CheckMetricConditions(_itemModel, out transactionMessage, _quantity))
             {
+                // Displaying Unsuccessful Transaction Popup
+                eventService.OnPopupNotificationEvent.Invoke(transactionMessage);
                 return false;
             }
 
             // Check if an item with the same ID already exists
-            var existingItemController = itemControllers.Find(c => c.GetModel().Id == _itemData.Id);
+            var existingItemController = itemControllers.Find(c => c.GetModel().Id == _itemModel.Id);
 
             if (existingItemController != null)
             {
@@ -92,19 +105,24 @@ namespace ServiceLocator.Shop
             else
             {
                 // Add New Item
-                AddNewItem(_itemData, _quantity);
+                AddNewItem(_itemModel.ItemData, _quantity);
             }
 
             // Update UI
             UpdateUI();
 
+            // Displaying Successful Transaction Popup
+            transactionMessage = $"{_quantity}x {_itemModel.Name} sold worth " +
+                    $"{_itemModel.SellingPrice * _quantity}A!!!!";
+            eventService.OnPopupNotificationEvent.Invoke(transactionMessage);
+
             return true;
         }
 
-        public void RemoveOrDecrementItems(ItemScriptableObject _itemData, int _quantity = 1)
+        public void RemoveOrDecrementItems(ItemModel _itemModel, int _quantity = 1)
         {
             // Check if an item with the same ID already exists
-            var existingItemController = itemControllers.Find(c => c.GetModel().Id == _itemData.Id);
+            var existingItemController = itemControllers.Find(c => c.GetModel().Id == _itemModel.Id);
 
             if (existingItemController != null)
             {
@@ -127,11 +145,11 @@ namespace ServiceLocator.Shop
             UpdateUI();
         }
 
-        private bool CheckMetricConditions(ItemScriptableObject _itemData, out string _transactionMessage, int _quantity)
+        private bool CheckMetricConditions(ItemModel _itemModel, out string _transactionMessage, int _quantity)
         {
             _transactionMessage = string.Empty;
             // If Item does not have that much quantity in other UISection, return false
-            if (_itemData.quantity < _quantity)
+            if (_itemModel.Quantity < _quantity)
             {
                 _transactionMessage = "Inventory doesn't have that many items.";
                 return false;

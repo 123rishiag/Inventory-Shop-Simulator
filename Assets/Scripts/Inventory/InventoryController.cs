@@ -31,6 +31,14 @@ namespace ServiceLocator.Inventory
 
             // Controller List
             itemControllers = new List<ItemController>();
+
+            // Adding Event Listeners
+            eventService.OnBuyItemEvent.AddListener(AddOrIncrementItems);
+        }
+        ~InventoryController()
+        {
+            // Removing Event Listeners
+            eventService.OnBuyItemEvent.RemoveListener(AddOrIncrementItems);
         }
 
         public void AddButtonToPanel(string _menuButtonText)
@@ -69,7 +77,7 @@ namespace ServiceLocator.Inventory
 
             // If the item does not exists,
             // happens when no transaction but only item addition happens during initialization or gathering resources
-            // then only update weight, not currency
+            // then only update weight, not currency with quantity given in Scriptable Objects for initialization
             if (_quantity == -1)
             {
                 itemController.UpdateItemQuantity(itemController.GetModel().Quantity, false);
@@ -88,15 +96,18 @@ namespace ServiceLocator.Inventory
             UpdateUI();
         }
 
-        public bool AddOrIncrementItems(ItemScriptableObject _itemData, out string _transactionMessage, int _quantity = 1)
+        public bool AddOrIncrementItems(ItemModel _itemModel, int _quantity = 1)
         {
-            if (!CheckMetricConditions(_itemData, out _transactionMessage, _quantity))
+            string transactionMessage = string.Empty;
+            if (!CheckMetricConditions(_itemModel, out transactionMessage, _quantity))
             {
+                // Displaying Unsuccessful Transaction Popup
+                eventService.OnPopupNotificationEvent.Invoke(transactionMessage);
                 return false;
             }
 
             // Check if an item with the same ID already exists
-            var existingItemController = itemControllers.Find(c => c.GetModel().Id == _itemData.Id);
+            var existingItemController = itemControllers.Find(c => c.GetModel().Id == _itemModel.Id);
 
             if (existingItemController != null)
             {
@@ -110,19 +121,24 @@ namespace ServiceLocator.Inventory
             else
             {
                 // Add New Item
-                AddNewItem(_itemData, _quantity);
+                AddNewItem(_itemModel.ItemData, _quantity);
             }
 
             // Update UI
             UpdateUI();
 
+            // Displaying Successful Transaction Popup
+            transactionMessage = $"{_quantity}x {_itemModel.Name} bought worth " +
+                    $"{_itemModel.BuyingPrice * _quantity}A!!!!";
+            eventService.OnPopupNotificationEvent.Invoke(transactionMessage);
+
             return true;
         }
 
-        public void RemoveOrDecrementItems(ItemScriptableObject _itemData, int _quantity = 1)
+        public void RemoveOrDecrementItems(ItemModel _itemModel, int _quantity = 1)
         {
             // Check if an item with the same ID already exists
-            var existingItemController = itemControllers.Find(c => c.GetModel().Id == _itemData.Id);
+            var existingItemController = itemControllers.Find(c => c.GetModel().Id == _itemModel.Id);
 
             if (existingItemController != null)
             {
@@ -149,25 +165,25 @@ namespace ServiceLocator.Inventory
             UpdateUI();
         }
 
-        private bool CheckMetricConditions(ItemScriptableObject _itemData, out string _transactionMessage, int _quantity)
+        private bool CheckMetricConditions(ItemModel _itemModel, out string _transactionMessage, int _quantity)
         {
             _transactionMessage = string.Empty;
             // If Item does not have that much quantity in other UISection, return false
-            if (_itemData.quantity < _quantity)
+            if (_itemModel.Quantity < _quantity)
             {
                 _transactionMessage = "Shop doesn't have that many items.";
                 return false;
             }
 
             // If Item Buying Price is greater than the current currency, return false
-            if (_itemData.buyingPrice * _quantity > inventoryModel.Currency)
+            if (_itemModel.BuyingPrice * _quantity > inventoryModel.Currency)
             {
                 _transactionMessage = "Not Enough Money!!!!";
                 return false;
             }
 
             // If the inventory does not have that much space left in Inventory, return false
-            if (_itemData.weight * _quantity > (inventoryModel.MaxWeight - inventoryModel.CurrentWeight))
+            if (_itemModel.Weight * _quantity > (inventoryModel.MaxWeight - inventoryModel.CurrentWeight))
             {
                 _transactionMessage = "Not Enough Space!!!!";
                 return false;
