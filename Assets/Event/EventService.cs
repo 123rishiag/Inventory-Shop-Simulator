@@ -18,6 +18,8 @@ namespace ServiceLocator.Event
         public EventController<Action<UISection, int>> OnDestroyItemEvent { get; private set; }
         public EventController<Action<ItemType, int>> OnShopUpdatedEvent { get; private set; }
         public EventController<Action<int, int, float, float>> OnInventoryUpdatedEvent { get; private set; }
+        public EventController<Func<ItemModel, int, bool>> OnSellItemEvent { get; private set; }
+        public EventController<Func<ItemModel, int, bool>> OnBuyItemEvent { get; private set; }
 
         public EventService()
         {
@@ -30,6 +32,8 @@ namespace ServiceLocator.Event
             OnDestroyItemEvent = new EventController<Action<UISection, int>>();
             OnShopUpdatedEvent = new EventController<Action<ItemType, int>>();
             OnInventoryUpdatedEvent = new EventController<Action<int, int, float, float>>();
+            OnSellItemEvent = new EventController<Func<ItemModel, int, bool>>();
+            OnBuyItemEvent = new EventController<Func<ItemModel, int, bool>>();
         }
     }
 }

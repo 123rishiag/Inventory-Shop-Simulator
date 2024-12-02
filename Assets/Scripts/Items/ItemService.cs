@@ -11,7 +11,7 @@ namespace ServiceLocator.Item
         private ShopService shopService;
         private UIService uiService;
         private EventService eventService;
-        public ItemService(EventService _eventService) 
+        public ItemService(EventService _eventService)
         {
             eventService = _eventService;
             eventService.OnCreateItemEvent.AddListener(CreateItem);

@@ -84,10 +84,10 @@ namespace ServiceLocator.Item
                             switch (itemModel.UISection)
                             {
                                 case UISection.Inventory:
-                                    inventoryService.SellItems(itemModel.ItemData, quantity);
+                                    inventoryService.SellItems(itemModel, quantity);
                                     break;
                                 case UISection.Shop:
-                                    shopService.BuyItems(itemModel.ItemData, quantity);
+                                    shopService.BuyItems(itemModel, quantity);
                                     break;
                                 default:
                                     break;
@@ -105,7 +105,7 @@ namespace ServiceLocator.Item
 
         private void ShowItem(UISection _uiSection, ItemType _itemType)
         {
-            if(itemModel.UISection == _uiSection)
+            if (itemModel.UISection == _uiSection)
             {
                 itemView.HideView();
                 if (_itemType == ItemType.All || itemModel.Type == _itemType)

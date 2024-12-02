@@ -42,8 +42,8 @@ namespace ServiceLocator.Main
             eventService.Init();
             uiService.Init(eventService);
             itemService.Init(inventoryService, shopService, uiService);
-            inventoryService.Init(shopService, eventService);
-            shopService.Init(inventoryService, eventService);
+            inventoryService.Init(eventService);
+            shopService.Init(eventService);
         }
     }
 }

@@ -1,7 +1,5 @@
 using ServiceLocator.Event;
-using ServiceLocator.Inventory;
 using ServiceLocator.Item;
-using ServiceLocator.UI;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,10 +9,7 @@ namespace ServiceLocator.Shop
     public class ShopService
     {
         private ShopScriptableObject shopScriptableObject;
-
-        private InventoryService inventoryService;
         private EventService eventService;
-
         private ShopController shopController;
 
         public ShopService(ShopScriptableObject _scriptableObject)
@@ -22,11 +17,9 @@ namespace ServiceLocator.Shop
             shopScriptableObject = _scriptableObject;
         }
 
-        public void Init(InventoryService _inventoryService, EventService _eventService)
+        public void Init(EventService _eventService)
         {
-            inventoryService = _inventoryService;
             eventService = _eventService;
-
             InitializeVariables();
         }
 
@@ -66,24 +59,13 @@ namespace ServiceLocator.Shop
             return true;
         }
 
-        public void BuyItems(ItemScriptableObject _itemData, int _quantity)
+        public void BuyItems(ItemModel _itemModel, int _quantity)
         {
-            string transactionMessage;
-            bool isTransacted = inventoryService.GetInventoryController().AddOrIncrementItems(_itemData,
-                out transactionMessage, _quantity);
+            bool isTransacted = eventService.OnBuyItemEvent.Invoke<bool>(_itemModel, _quantity);
             if (isTransacted)
             {
-                transactionMessage = $"{_quantity}x {_itemData.name} bought worth " +
-                    $"{_itemData.buyingPrice * _quantity}A!!!!";
-                shopController.RemoveOrDecrementItems(_itemData, _quantity);
-                eventService.OnPopupNotificationEvent.Invoke(transactionMessage);
-            }
-            else
-            {
-                eventService.OnPopupNotificationEvent.Invoke(transactionMessage);
+                shopController.RemoveOrDecrementItems(_itemModel, _quantity);
             }
         }
-
-        public ShopController GetShopController() => shopController;
     }
 }
