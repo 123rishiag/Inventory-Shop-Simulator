@@ -12,7 +12,6 @@ namespace ServiceLocator.Shop
     {
         private ShopScriptableObject shopScriptableObject;
 
-        private ItemService itemService;
         private UIService uiService;
         private InventoryService inventoryService;
         private EventService eventService;
@@ -24,9 +23,8 @@ namespace ServiceLocator.Shop
             shopScriptableObject = _scriptableObject;
         }
 
-        public void Init(ItemService _itemService, UIService _uiService, InventoryService _inventoryService, EventService _eventService)
+        public void Init(UIService _uiService, InventoryService _inventoryService, EventService _eventService)
         {
-            itemService = _itemService;
             uiService = _uiService;
             inventoryService = _inventoryService;
             eventService = _eventService;
@@ -41,7 +39,7 @@ namespace ServiceLocator.Shop
                 return;
 
             // Initializing ShopController
-            shopController = new ShopController(shopScriptableObject, itemService, uiService, eventService);
+            shopController = new ShopController(shopScriptableObject, uiService, eventService);
 
             // Adding buttons dynamically
             foreach (ItemType itemType in Enum.GetValues(typeof(ItemType)))
@@ -92,7 +90,7 @@ namespace ServiceLocator.Shop
             if (isTransacted)
             {
                 transactionMessage = $"{_quantity}x {_itemController.GetModel().Name} bought worth " +
-                    $"{_itemController.GetModel().BuyingPrice * _quantity} coins!!!!";
+                    $"{_itemController.GetModel().BuyingPrice * _quantity}A!!!!";
                 shopController.RemoveOrDecrementItems(_itemController, _quantity);
                 eventService.OnPopupNotificationEvent.Invoke(transactionMessage);
             }
