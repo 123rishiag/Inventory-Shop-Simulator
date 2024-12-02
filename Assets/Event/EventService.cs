@@ -1,5 +1,4 @@
 using ServiceLocator.Item;
-using ServiceLocator.Shop;
 using System;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,6 +16,8 @@ namespace ServiceLocator.Event
         public EventController<Func<UISection, string, GameObject>> OnCreateMenuButtonViewEvent { get; private set; }
         public EventController<Action<UISection, ItemType>> OnShowItemEvent { get; private set; }
         public EventController<Action<UISection, int>> OnDestroyItemEvent { get; private set; }
+        public EventController<Action<ItemType, int>> OnShopUpdatedEvent { get; private set; }
+        public EventController<Action<int, int, float, float>> OnInventoryUpdatedEvent { get; private set; }
 
         public EventService()
         {
@@ -27,6 +28,8 @@ namespace ServiceLocator.Event
             OnCreateMenuButtonViewEvent = new EventController<Func<UISection, string, GameObject>>();
             OnShowItemEvent = new EventController<Action<UISection, ItemType>>();
             OnDestroyItemEvent = new EventController<Action<UISection, int>>();
+            OnShopUpdatedEvent = new EventController<Action<ItemType, int>>();
+            OnInventoryUpdatedEvent = new EventController<Action<int, int, float, float>>();
         }
     }
 }

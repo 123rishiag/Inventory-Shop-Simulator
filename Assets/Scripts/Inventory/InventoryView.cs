@@ -1,6 +1,4 @@
 using ServiceLocator.Event;
-using ServiceLocator.Shop;
-using ServiceLocator.UI;
 using System.Collections.Generic;
 using UnityEngine.UI;
 
@@ -35,18 +33,14 @@ namespace ServiceLocator.Inventory
             }
         }
 
-        public void UpdateUI(EventService _eventService, UIService _uiService, InventoryScriptableObject _scriptableObject)
+        public void UpdateUI(EventService _eventService)
         {
             _eventService.OnShowItemEvent.Invoke(inventoryController.GetModel().UISection,
                 inventoryController.GetModel().SelectedItemType);
 
-            // Update UI texts based on items
-            _uiService.UpdateInventoryEmptyText(inventoryController.GetItems().Count == 0);
-            _uiService.UpdateInventoryCurrency(inventoryController.GetModel().Currency);
-            _uiService.UpdateInventoryWeight(inventoryController.GetModel().CurrentWeight,
+            _eventService.OnInventoryUpdatedEvent.Invoke(inventoryController.GetItems().Count,
+                inventoryController.GetModel().Currency, inventoryController.GetModel().CurrentWeight,
                 inventoryController.GetModel().MaxWeight);
-
-            _uiService.HideItemPanel();
 
             // Enabling or Disabling Buttons
             if (inventoryController.CheckGatherResources(out _))
