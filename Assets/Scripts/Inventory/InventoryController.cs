@@ -1,3 +1,4 @@
+using ServiceLocator.Event;
 using ServiceLocator.Item;
 using ServiceLocator.UI;
 using System;
@@ -14,16 +15,18 @@ namespace ServiceLocator.Inventory
         private InventoryScriptableObject inventoryScriptableObject;
         private ItemService itemService;
         private UIService uiService;
+        private EventService eventService;
 
         private InventoryModel inventoryModel;
         private InventoryView inventoryView;
         private List<ItemController> itemControllers;
 
-        public InventoryController(InventoryScriptableObject _scriptableObject, ItemService _itemService, UIService _uiService)
+        public InventoryController(InventoryScriptableObject _scriptableObject, ItemService _itemService, UIService _uiService, EventService _eventService)
         {
             inventoryScriptableObject = _scriptableObject;
             itemService = _itemService;
             uiService = _uiService;
+            eventService = _eventService;
 
             // Instantiating Model
             inventoryModel = new InventoryModel(_scriptableObject);
@@ -38,8 +41,7 @@ namespace ServiceLocator.Inventory
         public void AddButtonToPanel(string _menuButtonText)
         {
             // Instantiating the button
-            GameObject newButton = inventoryView.CreateButton(inventoryScriptableObject.menuButtonPrefab,
-                uiService.GetInventoryButtonPanel(), _menuButtonText);
+            GameObject newButton = eventService.OnCreateMenuButtonEvent.Invoke<GameObject>(inventoryModel.UISection, _menuButtonText);
 
             // Setting up button logic (e.g., click events)
             Button button = newButton.GetComponent<Button>();
@@ -219,7 +221,7 @@ namespace ServiceLocator.Inventory
             string transactionMessage;
             if (!CheckGatherResources(out transactionMessage))
             {
-                uiService.PopupNotification(transactionMessage);
+                eventService.OnPopupNotificationEvent.Invoke(transactionMessage);
                 inventoryView.SetButtonInteractivity(uiService, false);
                 return;
             }

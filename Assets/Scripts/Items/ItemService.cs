@@ -1,3 +1,4 @@
+using ServiceLocator.Event;
 using ServiceLocator.Inventory;
 using ServiceLocator.Shop;
 using ServiceLocator.UI;
@@ -10,18 +11,20 @@ namespace ServiceLocator.Item
         private InventoryService inventoryService;
         private ShopService shopService;
         private UIService uiService;
+        private EventService eventService;
         public ItemService() { }
 
-        public void Init(InventoryService _inventoryService, ShopService _shopService, UIService _uIService)
+        public void Init(InventoryService _inventoryService, ShopService _shopService, UIService _uIService, EventService _eventService)
         {
             inventoryService = _inventoryService;
             shopService = _shopService;
             uiService = _uIService;
+            eventService = _eventService;
         }
 
         public ItemController CreateItem(ItemScriptableObject _itemScriptableObject, Transform _parentGrid, GameObject _itemPrefab)
         {
-            return new ItemController(inventoryService, shopService, uiService, _itemScriptableObject, _parentGrid, _itemPrefab);
+            return new ItemController(inventoryService, shopService, uiService, eventService, _itemScriptableObject, _parentGrid, _itemPrefab);
         }
     }
 }

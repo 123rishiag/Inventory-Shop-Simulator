@@ -1,3 +1,4 @@
+using ServiceLocator.Event;
 using ServiceLocator.Inventory;
 using ServiceLocator.Item;
 using ServiceLocator.UI;
@@ -14,6 +15,7 @@ namespace ServiceLocator.Shop
         private ItemService itemService;
         private UIService uiService;
         private InventoryService inventoryService;
+        private EventService eventService;
 
         private ShopController shopController;
 
@@ -22,11 +24,12 @@ namespace ServiceLocator.Shop
             shopScriptableObject = _scriptableObject;
         }
 
-        public void Init(ItemService _itemService, UIService _uiService, InventoryService _inventoryService)
+        public void Init(ItemService _itemService, UIService _uiService, InventoryService _inventoryService, EventService _eventService)
         {
             itemService = _itemService;
             uiService = _uiService;
             inventoryService = _inventoryService;
+            eventService = _eventService;
 
             InitializeVariables();
         }
@@ -38,7 +41,7 @@ namespace ServiceLocator.Shop
                 return;
 
             // Initializing ShopController
-            shopController = new ShopController(shopScriptableObject, itemService, uiService);
+            shopController = new ShopController(shopScriptableObject, itemService, uiService, eventService);
 
             // Adding buttons dynamically
             foreach (ItemType itemType in Enum.GetValues(typeof(ItemType)))
@@ -90,12 +93,12 @@ namespace ServiceLocator.Shop
             {
                 transactionMessage = $"{_quantity}x {_itemController.GetModel().Name} bought worth " +
                     $"{_itemController.GetModel().BuyingPrice * _quantity} coins!!!!";
-                uiService.PopupNotification(transactionMessage);
                 shopController.RemoveOrDecrementItems(_itemController, _quantity);
+                eventService.OnPopupNotificationEvent.Invoke(transactionMessage);
             }
             else
             {
-                uiService.PopupNotification(transactionMessage);
+                eventService.OnPopupNotificationEvent.Invoke(transactionMessage);
             }
         }
 

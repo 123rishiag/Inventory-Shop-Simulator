@@ -1,4 +1,6 @@
+using ServiceLocator.Item;
 using System;
+using UnityEngine;
 
 namespace ServiceLocator.Event
 {
@@ -6,16 +8,14 @@ namespace ServiceLocator.Event
     {
         private static EventService instance;
         public void Init() { }
+        public EventController<Action<string>> OnPopupNotificationEvent { get; private set; }
 
-        public EventController<Action> OnNoParametersEvent { get; private set; }
-        public EventController<Action<int>> OnOneParametersEvent { get; private set; }
-        public EventController<Action<int, int>> OnTwoParametersEvent { get; private set; }
+        public EventController<Func<UISection, string, GameObject>> OnCreateMenuButtonEvent { get; private set; }
 
         public EventService()
         {
-            OnNoParametersEvent = new EventController<Action>();
-            OnOneParametersEvent = new EventController<Action<int>>();
-            OnTwoParametersEvent = new EventController<Action<int, int>>();
+            OnPopupNotificationEvent = new EventController<Action<string>>();
+            OnCreateMenuButtonEvent = new EventController<Func<UISection, string, GameObject>>();
         }
     }
 }
