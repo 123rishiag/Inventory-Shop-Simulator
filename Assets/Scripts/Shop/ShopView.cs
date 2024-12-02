@@ -1,13 +1,16 @@
 using ServiceLocator.Item;
 using ServiceLocator.UI;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace ServiceLocator.Shop
 {
     public class ShopView
     {
         private ShopController shopController;
+
         public ShopView(ShopController _shopController)
         {
             shopController = _shopController;

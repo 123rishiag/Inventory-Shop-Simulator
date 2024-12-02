@@ -222,7 +222,7 @@ namespace ServiceLocator.Inventory
             if (!CheckGatherResources(out transactionMessage))
             {
                 eventService.OnPopupNotificationEvent.Invoke(transactionMessage);
-                inventoryView.SetButtonInteractivity(uiService, false);
+                inventoryView.SetButtonInteractivity(eventService, false);
                 return;
             }
 
@@ -296,7 +296,7 @@ namespace ServiceLocator.Inventory
             inventoryView.ShowItems();
 
             // Update UI
-            inventoryView.UpdateUI(uiService, inventoryScriptableObject);
+            inventoryView.UpdateUI(uiService, eventService, inventoryScriptableObject);
         }
 
         // Getters

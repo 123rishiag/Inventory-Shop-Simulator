@@ -1,3 +1,4 @@
+using ServiceLocator.Event;
 using ServiceLocator.UI;
 using System.Collections.Generic;
 using TMPro;
@@ -32,19 +33,19 @@ namespace ServiceLocator.Inventory
             }
         }
 
-        public void SetButtonInteractivity(UIService _uiService, bool _isInteractable)
+        public void SetButtonInteractivity(EventService _eventService, bool _isInteractable)
         {
             // Enabling or Disabling Buttons
             if (inventoryButtons != null)
             {
                 foreach (var button in inventoryButtons)
                 {
-                    _uiService.SetButtonInteractivity(button, _isInteractable);
+                    _eventService.OnSetButtonInteractionEvent.Invoke(button, _isInteractable);
                 }
             }
         }
 
-        public void UpdateUI(UIService _uiService, InventoryScriptableObject _scriptableObject)
+        public void UpdateUI(UIService _uiService, EventService _eventService, InventoryScriptableObject _scriptableObject)
         {
             // Update UI texts based on items
             _uiService.UpdateInventoryEmptyText(inventoryController.GetItems().Count == 0);
@@ -55,7 +56,7 @@ namespace ServiceLocator.Inventory
             // Enabling or Disabling Buttons
             if (inventoryController.CheckGatherResources(out _))
             {
-                SetButtonInteractivity(_uiService, true);
+                SetButtonInteractivity(_eventService, true);
             }
 
             _uiService.HideItemPanel();
