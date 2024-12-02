@@ -28,9 +28,9 @@ namespace ServiceLocator.Item
             uiService = _uIService;
         }
 
-        private ItemController CreateItem(ItemScriptableObject _itemScriptableObject, UISection _uiSection)
+        private ItemController CreateItem(ItemScriptableObject _itemData, UISection _uiSection)
         {
-            return new ItemController(inventoryService, shopService, uiService, eventService, _itemScriptableObject, _uiSection);
+            return new ItemController(inventoryService, shopService, uiService, eventService, _itemData, _uiSection);
         }
     }
 }

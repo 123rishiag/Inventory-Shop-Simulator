@@ -56,9 +56,9 @@ namespace ServiceLocator.Inventory
             GatherResources();
         }
 
-        public void AddNewItem(ItemScriptableObject _itemScriptableObject, int _quantity = -1)
+        public void AddNewItem(ItemScriptableObject _itemData, int _quantity = -1)
         {
-            var itemController = eventService.OnCreateItemEvent.Invoke<ItemController>(_itemScriptableObject, inventoryModel.UISection);
+            var itemController = eventService.OnCreateItemEvent.Invoke<ItemController>(_itemData, inventoryModel.UISection);
 
             itemControllers.Add(itemController);
             // Setting EntityType of Item
@@ -88,15 +88,15 @@ namespace ServiceLocator.Inventory
             UpdateUI();
         }
 
-        public bool AddOrIncrementItems(ItemController _itemController, out string _transactionMessage, int _quantity = 1)
+        public bool AddOrIncrementItems(ItemScriptableObject _itemData, out string _transactionMessage, int _quantity = 1)
         {
-            if (!CheckMetricConditions(_itemController, out _transactionMessage, _quantity))
+            if (!CheckMetricConditions(_itemData, out _transactionMessage, _quantity))
             {
                 return false;
             }
 
             // Check if an item with the same ID already exists
-            var existingItemController = itemControllers.Find(c => c.GetModel().Id == _itemController.GetModel().Id);
+            var existingItemController = itemControllers.Find(c => c.GetModel().Id == _itemData.Id);
 
             if (existingItemController != null)
             {
@@ -110,7 +110,7 @@ namespace ServiceLocator.Inventory
             else
             {
                 // Add New Item
-                AddNewItem(_itemController.GetModel().ItemData, _quantity);
+                AddNewItem(_itemData, _quantity);
             }
 
             // Update UI
@@ -119,10 +119,10 @@ namespace ServiceLocator.Inventory
             return true;
         }
 
-        public void RemoveOrDecrementItems(ItemController _itemController, int _quantity = 1)
+        public void RemoveOrDecrementItems(ItemScriptableObject _itemData, int _quantity = 1)
         {
             // Check if an item with the same ID already exists
-            var existingItemController = itemControllers.Find(c => c.GetModel().Id == _itemController.GetModel().Id);
+            var existingItemController = itemControllers.Find(c => c.GetModel().Id == _itemData.Id);
 
             if (existingItemController != null)
             {
@@ -149,25 +149,25 @@ namespace ServiceLocator.Inventory
             UpdateUI();
         }
 
-        private bool CheckMetricConditions(ItemController _itemController, out string _transactionMessage, int _quantity)
+        private bool CheckMetricConditions(ItemScriptableObject _itemData, out string _transactionMessage, int _quantity)
         {
             _transactionMessage = string.Empty;
             // If Item does not have that much quantity in other UISection, return false
-            if (_itemController.GetModel().Quantity < _quantity)
+            if (_itemData.quantity < _quantity)
             {
                 _transactionMessage = "Shop doesn't have that many items.";
                 return false;
             }
 
             // If Item Buying Price is greater than the current currency, return false
-            if (_itemController.GetModel().BuyingPrice * _quantity > inventoryModel.Currency)
+            if (_itemData.buyingPrice * _quantity > inventoryModel.Currency)
             {
                 _transactionMessage = "Not Enough Money!!!!";
                 return false;
             }
 
             // If the inventory does not have that much space left in Inventory, return false
-            if (_itemController.GetModel().Weight * _quantity > (inventoryModel.MaxWeight - inventoryModel.CurrentWeight))
+            if (_itemData.weight * _quantity > (inventoryModel.MaxWeight - inventoryModel.CurrentWeight))
             {
                 _transactionMessage = "Not Enough Space!!!!";
                 return false;

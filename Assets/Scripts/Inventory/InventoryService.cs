@@ -55,16 +55,16 @@ namespace ServiceLocator.Inventory
             return true;
         }
 
-        public void SellItems(ItemController _itemController, int _quantity)
+        public void SellItems(ItemScriptableObject _itemData, int _quantity)
         {
             string transactionMessage;
-            bool isTransacted = shopService.GetShopController().AddOrIncrementItems(_itemController,
+            bool isTransacted = shopService.GetShopController().AddOrIncrementItems(_itemData,
                 out transactionMessage, _quantity);
             if (isTransacted)
             {
-                transactionMessage = $"{_quantity}x {_itemController.GetModel().Name} sold worth " +
-                    $"{_itemController.GetModel().SellingPrice * _quantity}A!!!!";
-                inventoryController.RemoveOrDecrementItems(_itemController, _quantity);
+                transactionMessage = $"{_quantity}x {_itemData.name} sold worth " +
+                    $"{_itemData.sellingPrice * _quantity}A!!!!";
+                inventoryController.RemoveOrDecrementItems(_itemData, _quantity);
                 eventService.OnPopupNotificationEvent.Invoke(transactionMessage);
             }
             else
