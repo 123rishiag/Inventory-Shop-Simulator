@@ -22,9 +22,9 @@ namespace ServiceLocator.Item
             eventService = _eventService;
         }
 
-        public ItemController CreateItem(ItemScriptableObject _itemScriptableObject, Transform _parentGrid, GameObject _itemPrefab)
+        public ItemController CreateItem(ItemScriptableObject _itemScriptableObject, UISection _uiSection)
         {
-            return new ItemController(inventoryService, shopService, uiService, eventService, _itemScriptableObject, _parentGrid, _itemPrefab);
+            return new ItemController(inventoryService, shopService, uiService, eventService, _itemScriptableObject, _uiSection);
         }
     }
 }

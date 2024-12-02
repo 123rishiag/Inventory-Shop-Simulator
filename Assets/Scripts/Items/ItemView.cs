@@ -1,3 +1,4 @@
+using ServiceLocator.Event;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,15 +14,9 @@ namespace ServiceLocator.Item
 
         private ItemController itemController;
 
-        public static ItemView CreateView(ItemController _itemController, Transform _parentGrid, GameObject _itemPrefab)
+        public static ItemView CreateView(ItemController _itemController, EventService _eventService, UISection _uiSection)
         {
-            if (_itemPrefab == null || _parentGrid == null)
-            {
-                Debug.LogError("ItemView: Prefab or Parent Grid is null!");
-                return null;
-            }
-
-            GameObject itemObject = Object.Instantiate(_itemPrefab, _parentGrid);
+            GameObject itemObject = _eventService.OnCreateItemButtonViewEvent.Invoke<GameObject>(_uiSection);
             ItemView itemView = itemObject.GetComponent<ItemView>();
             if (itemView == null)
             {

@@ -31,6 +31,7 @@ namespace ServiceLocator.Main
         private void CreateServices()
         {
             eventService = new EventService();
+            // UI Service is self instantitated
             inventoryService = new InventoryService(inventoryScriptableObject);
             shopService = new ShopService(shopScriptableObject);
             itemService = new ItemService();
