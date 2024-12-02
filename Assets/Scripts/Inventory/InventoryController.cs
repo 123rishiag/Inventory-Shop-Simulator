@@ -1,5 +1,6 @@
 using ServiceLocator.Event;
 using ServiceLocator.Item;
+using ServiceLocator.Shop;
 using ServiceLocator.UI;
 using System;
 using System.Collections.Generic;
@@ -144,7 +145,7 @@ namespace ServiceLocator.Inventory
                     itemControllers.Remove(existingItemController);
 
                     // Remove Item
-                    existingItemController.GetView().DestroyView();
+                    eventService.OnDestroyItemEvent.Invoke(inventoryModel.UISection, existingItemController.GetModel().Id);
                 }
             }
 
@@ -256,7 +257,7 @@ namespace ServiceLocator.Inventory
             var items = inventoryScriptableObject.itemDatabase.allItems;
 
             // Inverting rarity weights: Higher enum value -> Lower weight
-            var maxRarityValue = Enum.GetValues(typeof(Rarity)).Cast<int>().Max() + 1;
+            var maxRarityValue = Enum.GetValues(typeof(ItemRarity)).Cast<int>().Max() + 1;
             var rarityWeights = items.ToDictionary(item => item,
                                                    item => maxRarityValue - (int)item.rarity);
 
@@ -289,11 +290,8 @@ namespace ServiceLocator.Inventory
 
         public void UpdateUI()
         {
-            // Show Items
-            inventoryView.ShowItems();
-
             // Update UI
-            inventoryView.UpdateUI(uiService, eventService, inventoryScriptableObject);
+            inventoryView.UpdateUI(eventService, uiService, inventoryScriptableObject);
         }
 
         // Getters

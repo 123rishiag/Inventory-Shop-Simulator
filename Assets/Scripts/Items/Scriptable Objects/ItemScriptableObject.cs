@@ -17,7 +17,7 @@ namespace ServiceLocator.Item
         public int sellingPrice;
         public float weight;
         public ItemType type;
-        public Rarity rarity;
+        public ItemRarity rarity;
         public int quantity;
 
         // Logic to auto update identity and make it readonly
@@ -68,7 +68,7 @@ namespace ServiceLocator.Item
         Treasure
     }
 
-    public enum Rarity
+    public enum ItemRarity
     {
         VeryCommon = 1,
         Common,

@@ -1,4 +1,5 @@
 using ServiceLocator.Item;
+using ServiceLocator.Shop;
 using System;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,7 +8,6 @@ namespace ServiceLocator.Event
 {
     public class EventService
     {
-        private static EventService instance;
         public void Init() { }
 
         public EventController<Action<string>> OnPopupNotificationEvent { get; private set; }
@@ -15,6 +15,8 @@ namespace ServiceLocator.Event
         public EventController<Func<ItemScriptableObject, UISection, ItemController>> OnCreateItemEvent { get; private set; }
         public EventController<Func<UISection, GameObject>> OnCreateItemButtonViewEvent { get; private set; }
         public EventController<Func<UISection, string, GameObject>> OnCreateMenuButtonViewEvent { get; private set; }
+        public EventController<Action<UISection, ItemType>> OnShowItemEvent { get; private set; }
+        public EventController<Action<UISection, int>> OnDestroyItemEvent { get; private set; }
 
         public EventService()
         {
@@ -23,6 +25,8 @@ namespace ServiceLocator.Event
             OnCreateItemEvent = new EventController<Func<ItemScriptableObject, UISection, ItemController>>();
             OnCreateItemButtonViewEvent = new EventController<Func<UISection, GameObject>>();
             OnCreateMenuButtonViewEvent = new EventController<Func<UISection, string, GameObject>>();
+            OnShowItemEvent = new EventController<Action<UISection, ItemType>>();
+            OnDestroyItemEvent = new EventController<Action<UISection, int>>();
         }
     }
 }

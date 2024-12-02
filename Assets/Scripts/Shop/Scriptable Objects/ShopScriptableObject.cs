@@ -7,8 +7,5 @@ namespace ServiceLocator.Shop
     public class ShopScriptableObject : ScriptableObject
     {
         public ItemDatabaseScriptableObject itemDatabase;
-
-        public GameObject menuButtonPrefab;
-        public GameObject itemPrefab;
     }
 }

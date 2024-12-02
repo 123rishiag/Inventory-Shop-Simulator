@@ -1,9 +1,6 @@
+using ServiceLocator.Event;
 using ServiceLocator.Item;
 using ServiceLocator.UI;
-using System.Collections.Generic;
-using TMPro;
-using UnityEngine;
-using UnityEngine.UI;
 
 namespace ServiceLocator.Shop
 {
@@ -16,30 +13,15 @@ namespace ServiceLocator.Shop
             shopController = _shopController;
         }
 
-        public void ShowItems()
+        public void UpdateUI(EventService _eventService, UIService _uiService)
         {
-            // Filter items and update visibility
-            foreach (var itemController in shopController.GetItems())
-            {
-                if (shopController.GetModel().SelectedItemType == ItemType.All ||
-                    itemController.GetModel().Type == shopController.GetModel().SelectedItemType)
-                {
-                    itemController.GetView().ShowView();
-                    shopController.GetFilteredItems().Add(itemController);
-                }
-                else
-                {
-                    itemController.GetView().HideView();
-                }
-            }
-        }
+            _eventService.OnShowItemEvent.Invoke(shopController.GetModel().UISection,
+                shopController.GetModel().SelectedItemType);
 
-        public void UpdateUI(UIService _uiService)
-        {
             // Update UI texts based on filtered items
-            _uiService.UpdateShopEmptyText(shopController.GetFilteredItems().Count == 0);
+            _uiService.UpdateShopEmptyText(shopController.GetFilteredItemsCount() == 0);
             _uiService.UpdateShopItemTypeText(shopController.GetModel().SelectedItemType.ToString());
-            _uiService.UpdateShopItemCount(shopController.GetFilteredItems().Count);
+            _uiService.UpdateShopItemCount(shopController.GetFilteredItemsCount());
 
             _uiService.HideItemPanel();
         }

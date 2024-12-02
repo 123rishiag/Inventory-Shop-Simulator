@@ -14,6 +14,9 @@ namespace ServiceLocator.Inventory
             MaxWeight = Mathf.Round(_scriptableObject.maxWeight * 10f) / 10f;
             uiSection = UISection.Inventory;
             items = new List<ItemModel>();
+
+            // Initial Values
+            SelectedItemType = ItemType.All;
         }
 
         public void AddItem(ItemModel _item)
@@ -29,6 +32,7 @@ namespace ServiceLocator.Inventory
         // Getters
         public UISection UISection => uiSection;
         public List<ItemModel> Items => items;
+        public ItemType SelectedItemType { get; set; }
         public int Currency { get; private set; }
         public float CurrentWeight { get; private set; }
         public float MaxWeight { get; private set; }

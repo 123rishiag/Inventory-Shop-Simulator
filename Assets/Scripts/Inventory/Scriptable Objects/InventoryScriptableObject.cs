@@ -7,10 +7,6 @@ namespace ServiceLocator.Inventory
     public class InventoryScriptableObject : ScriptableObject
     {
         public ItemDatabaseScriptableObject itemDatabase;
-
-        public GameObject menuButtonPrefab;
-        public GameObject itemPrefab;
-
         public float maxWeight; // Maximum allowable weight
     }
 }

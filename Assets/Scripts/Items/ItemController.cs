@@ -32,6 +32,16 @@ namespace ServiceLocator.Item
             // Creating the View
             itemView = _eventService.OnCreateItemButtonViewEvent.Invoke<GameObject>(_uiSection).GetComponent<ItemView>();
             SetListener();
+
+            // Adding Event Listeners
+            eventService.OnShowItemEvent.AddListener(ShowItem);
+            eventService.OnDestroyItemEvent.AddListener(DestroyItem);
+        }
+        ~ItemController()
+        {
+            // Removing Event Listeners
+            eventService.OnShowItemEvent.RemoveListener(ShowItem);
+            eventService.OnDestroyItemEvent.RemoveListener(DestroyItem);
         }
 
         private void SetListener()
@@ -93,9 +103,28 @@ namespace ServiceLocator.Item
             }
         }
 
+        private void ShowItem(UISection _uiSection, ItemType _itemType)
+        {
+            if(itemModel.UISection == _uiSection)
+            {
+                itemView.HideView();
+                if (_itemType == ItemType.All || itemModel.Type == _itemType)
+                {
+                    itemView.ShowView();
+                }
+            }
+        }
+
+        private void DestroyItem(UISection _uiSection, int _id)
+        {
+            if (itemModel.UISection == _uiSection && itemModel.Id == _id)
+            {
+                itemView.DestroyView();
+            }
+        }
+
         // Getters
         public ItemModel GetModel() => itemModel;
-        public ItemView GetView() => itemView;
 
         // Setters
         public void UpdateItemQuantity(int _quantity, bool _isDelta)
