@@ -41,7 +41,7 @@ namespace ServiceLocator.Shop
         public void AddButtonToPanel(ItemType _itemType)
         {
             // Instantiating the button
-            GameObject newButton = eventService.OnCreateMenuButtonEvent.Invoke<GameObject>(shopModel.UISection, _itemType.ToString());
+            GameObject newButton = eventService.OnCreateMenuButtonViewEvent.Invoke<GameObject>(shopModel.UISection, _itemType.ToString());
 
             // Setting up button logic (e.g., click events)
             Button button = newButton.GetComponent<Button>();
@@ -63,8 +63,7 @@ namespace ServiceLocator.Shop
 
         public void AddNewItem(ItemScriptableObject _itemScriptableObject, int _quantity = -1)
         {
-            var itemController = itemService.CreateItem(_itemScriptableObject, uiService.GetShopGrid(),
-                shopScriptableObject.itemPrefab);
+            var itemController = itemService.CreateItem(_itemScriptableObject, shopModel.UISection);
 
             itemControllers.Add(itemController);
             // Setting EntityType of Item

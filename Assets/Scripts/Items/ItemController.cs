@@ -18,7 +18,7 @@ namespace ServiceLocator.Item
         private ItemView itemView;
 
         public ItemController(InventoryService _inventoryService, ShopService _shopService, UIService _uIService, EventService _eventService,
-            ItemScriptableObject _itemScriptableObject, Transform _parentGrid, GameObject _itemPrefab)
+            ItemScriptableObject _itemScriptableObject, UISection _uiSection)
         {
             // Setting the services
             inventoryService = _inventoryService;
@@ -30,7 +30,7 @@ namespace ServiceLocator.Item
             itemModel = new ItemModel(_itemScriptableObject);
 
             // Creating the View
-            itemView = ItemView.CreateView(this, _parentGrid, _itemPrefab);
+            itemView = ItemView.CreateView(this, eventService, _uiSection);
         }
 
         public void ProcessItem()
