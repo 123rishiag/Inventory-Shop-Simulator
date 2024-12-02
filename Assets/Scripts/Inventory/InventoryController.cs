@@ -13,7 +13,6 @@ namespace ServiceLocator.Inventory
     public class InventoryController
     {
         private InventoryScriptableObject inventoryScriptableObject;
-        private ItemService itemService;
         private UIService uiService;
         private EventService eventService;
 
@@ -21,10 +20,9 @@ namespace ServiceLocator.Inventory
         private InventoryView inventoryView;
         private List<ItemController> itemControllers;
 
-        public InventoryController(InventoryScriptableObject _scriptableObject, ItemService _itemService, UIService _uiService, EventService _eventService)
+        public InventoryController(InventoryScriptableObject _scriptableObject, UIService _uiService, EventService _eventService)
         {
             inventoryScriptableObject = _scriptableObject;
-            itemService = _itemService;
             uiService = _uiService;
             eventService = _eventService;
 
@@ -63,7 +61,7 @@ namespace ServiceLocator.Inventory
 
         public void AddNewItem(ItemScriptableObject _itemScriptableObject, int _quantity = -1)
         {
-            var itemController = itemService.CreateItem(_itemScriptableObject, inventoryModel.UISection);
+            var itemController = eventService.OnCreateItemEvent.Invoke<ItemController>(_itemScriptableObject, inventoryModel.UISection);
 
             itemControllers.Add(itemController);
             // Setting EntityType of Item

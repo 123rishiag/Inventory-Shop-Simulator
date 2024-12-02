@@ -30,10 +30,33 @@ namespace ServiceLocator.Item
             itemModel = new ItemModel(_itemScriptableObject);
 
             // Creating the View
-            itemView = ItemView.CreateView(this, eventService, _uiSection);
+            itemView = _eventService.OnCreateItemButtonViewEvent.Invoke<GameObject>(_uiSection).GetComponent<ItemView>();
+            SetListener();
         }
 
-        public void ProcessItem()
+        private void SetListener()
+        {
+            if (itemView == null)
+            {
+                Debug.LogError("ItemView: Prefab does not have an ItemView component!");
+                return;
+            }
+
+            itemView.SetController(this);
+
+            // Add OnClick listener
+            Button button = itemView.GetComponent<Button>();
+            if (button != null)
+            {
+                button.onClick.AddListener(() => ProcessItem());
+            }
+            else
+            {
+                Debug.LogError("ItemView: Prefab does not have a Button component!");
+            }
+        }
+
+        private void ProcessItem()
         {
             uiService.UpdateItemMenuUI(itemModel);
             GameObject itemMenuButton = uiService.GetItemMenuButton();

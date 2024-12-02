@@ -11,7 +11,6 @@ namespace ServiceLocator.Shop
     public class ShopController
     {
         private ShopScriptableObject shopScriptableObject;
-        private ItemService itemService;
         private UIService uiService;
         private EventService eventService;
 
@@ -20,10 +19,9 @@ namespace ServiceLocator.Shop
         private List<ItemController> itemControllers;
         private List<ItemController> filteredItemControllers;
 
-        public ShopController(ShopScriptableObject _scriptableObject, ItemService _itemService, UIService _uiService, EventService _eventService)
+        public ShopController(ShopScriptableObject _scriptableObject, UIService _uiService, EventService _eventService)
         {
             shopScriptableObject = _scriptableObject;
-            itemService = _itemService;
             uiService = _uiService;
             eventService = _eventService;
 
@@ -63,7 +61,7 @@ namespace ServiceLocator.Shop
 
         public void AddNewItem(ItemScriptableObject _itemScriptableObject, int _quantity = -1)
         {
-            var itemController = itemService.CreateItem(_itemScriptableObject, shopModel.UISection);
+            var itemController = eventService.OnCreateItemEvent.Invoke<ItemController>(_itemScriptableObject, shopModel.UISection);
 
             itemControllers.Add(itemController);
             // Setting EntityType of Item

@@ -32,18 +32,18 @@ namespace ServiceLocator.Main
         {
             eventService = new EventService();
             // UI Service is self instantitated
+            itemService = new ItemService(eventService);
             inventoryService = new InventoryService(inventoryScriptableObject);
             shopService = new ShopService(shopScriptableObject);
-            itemService = new ItemService();
         }
 
         private void InjectDependencies()
         {
             eventService.Init();
             uiService.Init(eventService);
-            itemService.Init(inventoryService, shopService, uiService, eventService);
-            shopService.Init(itemService, uiService, inventoryService, eventService);
-            inventoryService.Init(itemService, uiService, shopService, eventService);
+            itemService.Init(inventoryService, shopService, uiService);
+            inventoryService.Init(uiService, shopService, eventService);
+            shopService.Init(uiService, inventoryService, eventService);
         }
     }
 }

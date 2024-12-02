@@ -2,7 +2,6 @@ using ServiceLocator.Event;
 using ServiceLocator.Inventory;
 using ServiceLocator.Shop;
 using ServiceLocator.UI;
-using UnityEngine;
 
 namespace ServiceLocator.Item
 {
@@ -12,17 +11,24 @@ namespace ServiceLocator.Item
         private ShopService shopService;
         private UIService uiService;
         private EventService eventService;
-        public ItemService() { }
+        public ItemService(EventService _eventService) 
+        {
+            eventService = _eventService;
+            eventService.OnCreateItemEvent.AddListener(CreateItem);
+        }
+        ~ItemService()
+        {
+            eventService.OnCreateItemEvent.RemoveListener(CreateItem);
+        }
 
-        public void Init(InventoryService _inventoryService, ShopService _shopService, UIService _uIService, EventService _eventService)
+        public void Init(InventoryService _inventoryService, ShopService _shopService, UIService _uIService)
         {
             inventoryService = _inventoryService;
             shopService = _shopService;
             uiService = _uIService;
-            eventService = _eventService;
         }
 
-        public ItemController CreateItem(ItemScriptableObject _itemScriptableObject, UISection _uiSection)
+        private ItemController CreateItem(ItemScriptableObject _itemScriptableObject, UISection _uiSection)
         {
             return new ItemController(inventoryService, shopService, uiService, eventService, _itemScriptableObject, _uiSection);
         }

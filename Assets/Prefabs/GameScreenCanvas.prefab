@@ -3734,7 +3734,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2295310723518318749}
   m_HandleRect: {fileID: 8676048658477068877}
   m_Direction: 0
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -5293,7 +5293,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.00006389618, y: 0}
+  m_AnchoredPosition: {x: -0.0000038146973, y: -0.000030517578}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &7034777515620251625
@@ -6564,7 +6564,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.000007033348, y: 0}
+  m_AnchoredPosition: {x: 0.000004529953, y: -0.000030517578}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1650863275343736045
@@ -8175,7 +8175,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Currency: 0'
+  m_text: 'Currency: 0A'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -8595,8 +8595,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 6919492328536386598}
   m_HandleRect: {fileID: 6900323756553175146}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 1
+  m_Value: 1
+  m_Size: 0.99997884
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -8721,8 +8721,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 9108255985938106038}
   m_HandleRect: {fileID: 4719524713540225308}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 1
+  m_Value: 1
+  m_Size: 0.99997884
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

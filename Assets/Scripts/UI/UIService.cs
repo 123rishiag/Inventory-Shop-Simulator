@@ -177,7 +177,7 @@ namespace ServiceLocator.UI
         }
         public void UpdateInventoryCurrency(int _currency)
         {
-            inventoryCurrencyText.text = $"Currency: {_currency}";
+            inventoryCurrencyText.text = $"Currency: {_currency}A";
         }
         public void UpdateInventoryWeight(float _currentWeight, float _maxWeight)
         {
@@ -321,8 +321,8 @@ namespace ServiceLocator.UI
 
             if (transactionConfirmationText != null)
             {
-                transactionConfirmationText.text = $"Do you really wanna {activity} '{_quantity} {_itemModel.Name}' for " +
-                    $"{_quantity * price}.";
+                transactionConfirmationText.text = $"Do you really wanna {activity} {_quantity} {_itemModel.Name} for " +
+                    $"{_quantity * price}A.";
             }
 
             // Fetching UI Elements

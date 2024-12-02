@@ -11,7 +11,6 @@ namespace ServiceLocator.Inventory
     {
         private InventoryScriptableObject inventoryScriptableObject;
 
-        private ItemService itemService;
         private UIService uiService;
         private ShopService shopService;
         private EventService eventService;
@@ -23,9 +22,8 @@ namespace ServiceLocator.Inventory
             inventoryScriptableObject = _scriptableObject;
         }
 
-        public void Init(ItemService _itemService, UIService _uiService, ShopService _shopService, EventService _eventService)
+        public void Init(UIService _uiService, ShopService _shopService, EventService _eventService)
         {
-            itemService = _itemService;
             uiService = _uiService;
             shopService = _shopService;
             eventService = _eventService;
@@ -40,7 +38,7 @@ namespace ServiceLocator.Inventory
                 return;
 
             // Initializing InventoryController
-            inventoryController = new InventoryController(inventoryScriptableObject, itemService, uiService, eventService);
+            inventoryController = new InventoryController(inventoryScriptableObject, uiService, eventService);
 
             // Adding buttons dynamically
             inventoryController.AddButtonToPanel("Gather Resources");
@@ -81,7 +79,7 @@ namespace ServiceLocator.Inventory
             if (isTransacted)
             {
                 transactionMessage = $"{_quantity}x {_itemController.GetModel().Name} sold worth " +
-                    $"{_itemController.GetModel().SellingPrice * _quantity} coins!!!!";
+                    $"{_itemController.GetModel().SellingPrice * _quantity}A!!!!";
                 inventoryController.RemoveOrDecrementItems(_itemController, _quantity);
                 eventService.OnPopupNotificationEvent.Invoke(transactionMessage);
             }

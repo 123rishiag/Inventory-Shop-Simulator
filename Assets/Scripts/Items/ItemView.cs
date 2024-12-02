@@ -14,34 +14,8 @@ namespace ServiceLocator.Item
 
         private ItemController itemController;
 
-        public static ItemView CreateView(ItemController _itemController, EventService _eventService, UISection _uiSection)
-        {
-            GameObject itemObject = _eventService.OnCreateItemButtonViewEvent.Invoke<GameObject>(_uiSection);
-            ItemView itemView = itemObject.GetComponent<ItemView>();
-            if (itemView == null)
-            {
-                Debug.LogError("ItemView: Prefab does not have an ItemView component!");
-                return null;
-            }
-
-            itemView.SetController(_itemController);
-
-            // Add OnClick listener
-            Button button = itemObject.GetComponent<Button>();
-            if (button != null)
-            {
-                button.onClick.AddListener(() => _itemController.ProcessItem());
-            }
-            else
-            {
-                Debug.LogError("ItemView: Prefab does not have a Button component!");
-            }
-
-            return itemView;
-        }
-
         // Sets the controller and initializes the view
-        private void SetController(ItemController _itemController)
+        public void SetController(ItemController _itemController)
         {
             itemController = _itemController;
 
