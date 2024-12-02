@@ -17,8 +17,8 @@ namespace ServiceLocator.Event
         {
             baseEvent = (TDelegate)Delegate.Remove(baseEvent, listener);
         }
-
-        // Invoking the event
+        
+        // Invoking the event without any return value
         public void Invoke(params object[] args)
         {
             if (baseEvent == null) return;
@@ -27,6 +27,21 @@ namespace ServiceLocator.Event
             {
                 handler?.DynamicInvoke(args);
             }
+        }
+        
+        // Invoking the event with a return value
+        public TResult Invoke<TResult>(params object[] args)
+        {
+            if (baseEvent == null) return default;
+
+            TResult result = default;
+
+            foreach (var handler in baseEvent.GetInvocationList())
+            {
+                result = (TResult)handler?.DynamicInvoke(args);
+            }
+
+            return result;
         }
     }
 }

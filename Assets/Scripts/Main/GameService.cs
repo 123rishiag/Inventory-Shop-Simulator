@@ -26,7 +26,6 @@ namespace ServiceLocator.Main
         {
             CreateServices();
             InjectDependencies();
-            TestEventService();
         }
 
         private void CreateServices()
@@ -40,41 +39,10 @@ namespace ServiceLocator.Main
         private void InjectDependencies()
         {
             eventService.Init();
-            uiService.Init();
-            itemService.Init(inventoryService, shopService, uiService);
-            shopService.Init(itemService, uiService, inventoryService);
-            inventoryService.Init(itemService, uiService, shopService);
+            uiService.Init(eventService);
+            itemService.Init(inventoryService, shopService, uiService, eventService);
+            shopService.Init(itemService, uiService, inventoryService, eventService);
+            inventoryService.Init(itemService, uiService, shopService, eventService);
         }
-
-        private void TestEventService()
-        {
-            eventService.OnNoParametersEvent.AddListener(TestNoParameter);
-            eventService.OnOneParametersEvent.AddListener(TestOneParameter);
-            eventService.OnTwoParametersEvent.AddListener(TestTwoParameter);
-
-            eventService.OnNoParametersEvent.Invoke();
-            eventService.OnOneParametersEvent.Invoke(1);
-            eventService.OnTwoParametersEvent.Invoke(1, 2);
-
-            eventService.OnNoParametersEvent.RemoveListener(TestNoParameter);
-            eventService.OnOneParametersEvent.RemoveListener(TestOneParameter);
-            eventService.OnTwoParametersEvent.RemoveListener(TestTwoParameter);
-        }
-
-        private void TestNoParameter()
-        {
-            Debug.Log($"Invoked EventService with No Parameters!!");
-        }
-
-        private void TestOneParameter(int _param)
-        {
-            Debug.Log($"Invoked EventService with One Parameters [{_param}]!!");
-        }
-
-        private void TestTwoParameter(int _param1, int _param2)
-        {
-            Debug.Log($"Invoked EventService with No Parameters [{_param1}, {_param2}]!!");
-        }
-
     }
 }

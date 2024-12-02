@@ -1,3 +1,5 @@
+using ServiceLocator.Event;
+using ServiceLocator.Inventory;
 using ServiceLocator.Item;
 using ServiceLocator.UI;
 using System.Collections.Generic;
@@ -11,17 +13,19 @@ namespace ServiceLocator.Shop
         private ShopScriptableObject shopScriptableObject;
         private ItemService itemService;
         private UIService uiService;
+        private EventService eventService;
 
         private ShopModel shopModel;
         private ShopView shopView;
         private List<ItemController> itemControllers;
         private List<ItemController> filteredItemControllers;
 
-        public ShopController(ShopScriptableObject _scriptableObject, ItemService _itemService, UIService _uiService)
+        public ShopController(ShopScriptableObject _scriptableObject, ItemService _itemService, UIService _uiService, EventService _eventService)
         {
             shopScriptableObject = _scriptableObject;
             itemService = _itemService;
             uiService = _uiService;
+            eventService = _eventService;
 
             // Instantiating Model
             shopModel = new ShopModel();
@@ -37,8 +41,7 @@ namespace ServiceLocator.Shop
         public void AddButtonToPanel(ItemType _itemType)
         {
             // Instantiating the button
-            GameObject newButton = shopView.CreateButton(shopScriptableObject.menuButtonPrefab,
-                uiService.GetShopButtonPanel(), _itemType);
+            GameObject newButton = eventService.OnCreateMenuButtonEvent.Invoke<GameObject>(shopModel.UISection, _itemType.ToString());
 
             // Setting up button logic (e.g., click events)
             Button button = newButton.GetComponent<Button>();

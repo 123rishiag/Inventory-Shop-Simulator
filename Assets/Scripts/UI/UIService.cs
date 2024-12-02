@@ -1,3 +1,4 @@
+using ServiceLocator.Event;
 using ServiceLocator.Item;
 using System;
 using System.Collections;
@@ -11,17 +12,22 @@ namespace ServiceLocator.UI
 {
     public class UIService : MonoBehaviour
     {
+        // Services
+        private EventService eventService;
+
         // ItemButton
         private GameObject itemMenuButton;
+
+        [Header("Prefabs")]
+        [SerializeField] private GameObject menuButtonPrefab;
 
         [Header("Panels")]
         [SerializeField] private Transform inventoryGrid; // Assign Inventory Content Game Object inside Inventory Panel
         [SerializeField] private Transform inventoryMenuButtonPanel;
         [SerializeField] private Transform shopGrid; // Assign Shop Content Game Object inside Shop Panel
         [SerializeField] private Transform shopMenuButtonPanel;
+        [SerializeField] private GameObject itemPanel; // Item Panel Object
         [SerializeField] private Transform itemMenuButtonPanel;
-        [SerializeField] private GameObject itemMenuButtonPrefab;
-        [SerializeField] private GameObject itemPanel;
 
         [Header("UI Elements")]
         [SerializeField] private TMP_Text inventoryEmptyText;
@@ -57,9 +63,70 @@ namespace ServiceLocator.UI
         [SerializeField] private GameObject notificationPopupPanel;
         [SerializeField] private TMP_Text notificationPopupText;
 
-        public void Init()
+        public UIService()
         {
+        }
+        ~UIService()
+        {
+            eventService.OnPopupNotificationEvent.RemoveListener(PopupNotification);
+            eventService.OnSetButtonInteractionEvent.RemoveListener(SetButtonInteractivity);
+            eventService.OnCreateMenuButtonEvent.RemoveListener(CreateButton);
+        }
+        public void Init(EventService _eventService)
+        {
+            eventService = _eventService;
+            eventService.OnPopupNotificationEvent.AddListener(PopupNotification);
+            eventService.OnSetButtonInteractionEvent.AddListener(SetButtonInteractivity);
+            eventService.OnCreateMenuButtonEvent.AddListener(CreateButton);
+
             AddButtonToItemPanel();
+        }
+
+        private GameObject CreateButton(UISection _uISection, string _menuButtonText)
+        {
+            Transform menuButtonPanel = GetButtonPanel(_uISection);
+
+            // Checking if prefab and panel are valid
+            if (menuButtonPrefab == null || menuButtonPanel == null)
+            {
+                Debug.LogError("Menu Button prefab or panel is null!");
+                return null;
+            }
+
+            // Instantiating the button
+            GameObject newButton = Object.Instantiate(menuButtonPrefab, menuButtonPanel);
+
+            // Fetching TMP_Text component in the button and setting its text
+            TMP_Text buttonText = newButton.GetComponentInChildren<TMP_Text>();
+            if (buttonText != null)
+            {
+                buttonText.text = _menuButtonText;
+            }
+            else
+            {
+                Debug.LogWarning("Text component not found in button prefab.");
+            }
+
+            return newButton;
+        }
+        private void AddButtonToItemPanel()
+        {
+            // Instantiating the button
+            itemMenuButton = eventService.OnCreateMenuButtonEvent.Invoke<GameObject>(UISection.Item, "");
+        }
+        private Transform GetButtonPanel(UISection _uiSection)
+        {
+            switch (_uiSection)
+            {
+                case UISection.Inventory:
+                    return inventoryMenuButtonPanel;
+                case UISection.Shop:
+                    return shopMenuButtonPanel;
+                case UISection.Item:
+                    return itemMenuButtonPanel;
+                default:
+                    return null;
+            }
         }
 
         // Getters
@@ -136,20 +203,6 @@ namespace ServiceLocator.UI
         private void UpdateItemQuantity(int _value)
         {
             itemQuantity.text = $"Quantity: {_value}x";
-        }
-        private void AddButtonToItemPanel()
-        {
-            // Instantiating the button
-            // Checking if prefab and panel are valid
-            if (itemMenuButtonPrefab == null || itemMenuButtonPanel == null)
-            {
-                Debug.LogError("Menu Button prefab or panel is null!");
-                return;
-            }
-
-            // Instantiating the button
-            itemMenuButton = Object.Instantiate(itemMenuButtonPrefab, itemMenuButtonPanel);
-
         }
         public void UpdateItemMenuUI(ItemModel _itemModel)
         {
@@ -399,18 +452,18 @@ namespace ServiceLocator.UI
                 );
             }
         }
-        private IEnumerator PopupNotification(float _timeInSeconds)
+        private IEnumerator PopupNotificationCounter(float _timeInSeconds)
         {
             notificationPopupPanel.gameObject.SetActive(true);
             yield return new WaitForSeconds(_timeInSeconds);
             notificationPopupPanel.gameObject.SetActive(false);
         }
-        public void PopupNotification(string _text)
+        private void PopupNotification(string _text)
         {
             notificationPopupText.text = _text;
-            StartCoroutine(PopupNotification(3f));
+            StartCoroutine(PopupNotificationCounter(3f));
         }
-        public void SetButtonInteractivity(Button _button, bool _isInteractable)
+        private void SetButtonInteractivity(Button _button, bool _isInteractable)
         {
             if (_button != null)
             {

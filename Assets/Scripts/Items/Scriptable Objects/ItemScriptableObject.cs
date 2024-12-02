@@ -80,6 +80,7 @@ namespace ServiceLocator.Item
     public enum UISection
     {
         Inventory,
-        Shop
+        Shop,
+        Item
     }
 }
