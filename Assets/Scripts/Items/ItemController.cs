@@ -18,7 +18,7 @@ namespace ServiceLocator.Item
         private ItemView itemView;
 
         public ItemController(InventoryService _inventoryService, ShopService _shopService, UIService _uIService, EventService _eventService,
-            ItemScriptableObject _itemScriptableObject, UISection _uiSection)
+            ItemScriptableObject _itemData, UISection _uiSection)
         {
             // Setting the services
             inventoryService = _inventoryService;
@@ -27,7 +27,7 @@ namespace ServiceLocator.Item
             eventService = _eventService;
 
             // Creating the Model
-            itemModel = new ItemModel(_itemScriptableObject);
+            itemModel = new ItemModel(_itemData);
 
             // Creating the View
             itemView = _eventService.OnCreateItemButtonViewEvent.Invoke<GameObject>(_uiSection).GetComponent<ItemView>();
@@ -84,10 +84,10 @@ namespace ServiceLocator.Item
                             switch (itemModel.UISection)
                             {
                                 case UISection.Inventory:
-                                    inventoryService.SellItems(this, quantity);
+                                    inventoryService.SellItems(itemModel.ItemData, quantity);
                                     break;
                                 case UISection.Shop:
-                                    shopService.BuyItems(this, quantity);
+                                    shopService.BuyItems(itemModel.ItemData, quantity);
                                     break;
                                 default:
                                     break;
@@ -115,9 +115,9 @@ namespace ServiceLocator.Item
             }
         }
 
-        private void DestroyItem(UISection _uiSection, int _id)
+        private void DestroyItem(UISection _uiSection, int _itemId)
         {
-            if (itemModel.UISection == _uiSection && itemModel.Id == _id)
+            if (itemModel.UISection == _uiSection && itemModel.Id == _itemId)
             {
                 itemView.DestroyView();
             }

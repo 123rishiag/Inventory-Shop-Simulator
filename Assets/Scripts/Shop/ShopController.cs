@@ -52,9 +52,9 @@ namespace ServiceLocator.Shop
             UpdateUI();
         }
 
-        public void AddNewItem(ItemScriptableObject _itemScriptableObject, int _quantity = -1)
+        public void AddNewItem(ItemScriptableObject _itemData, int _quantity = -1)
         {
-            var itemController = eventService.OnCreateItemEvent.Invoke<ItemController>(_itemScriptableObject, shopModel.UISection);
+            var itemController = eventService.OnCreateItemEvent.Invoke<ItemController>(_itemData, shopModel.UISection);
 
             itemControllers.Add(itemController);
             // Setting EntityType of Item
@@ -74,15 +74,15 @@ namespace ServiceLocator.Shop
             }
         }
 
-        public bool AddOrIncrementItems(ItemController _itemController, out string _transactionMessage, int _quantity = 1)
+        public bool AddOrIncrementItems(ItemScriptableObject _itemData, out string _transactionMessage, int _quantity = 1)
         {
-            if (!CheckMetricConditions(_itemController, out _transactionMessage, _quantity))
+            if (!CheckMetricConditions(_itemData, out _transactionMessage, _quantity))
             {
                 return false;
             }
 
             // Check if an item with the same ID already exists
-            var existingItemController = itemControllers.Find(c => c.GetModel().Id == _itemController.GetModel().Id);
+            var existingItemController = itemControllers.Find(c => c.GetModel().Id == _itemData.Id);
 
             if (existingItemController != null)
             {
@@ -92,7 +92,7 @@ namespace ServiceLocator.Shop
             else
             {
                 // Add New Item
-                AddNewItem(_itemController.GetModel().ItemData, _quantity);
+                AddNewItem(_itemData, _quantity);
             }
 
             // Update UI
@@ -101,10 +101,10 @@ namespace ServiceLocator.Shop
             return true;
         }
 
-        public void RemoveOrDecrementItems(ItemController _itemController, int _quantity = 1)
+        public void RemoveOrDecrementItems(ItemScriptableObject _itemData, int _quantity = 1)
         {
             // Check if an item with the same ID already exists
-            var existingItemController = itemControllers.Find(c => c.GetModel().Id == _itemController.GetModel().Id);
+            var existingItemController = itemControllers.Find(c => c.GetModel().Id == _itemData.Id);
 
             if (existingItemController != null)
             {
@@ -127,11 +127,11 @@ namespace ServiceLocator.Shop
             UpdateUI();
         }
 
-        private bool CheckMetricConditions(ItemController _itemController, out string _transactionMessage, int _quantity)
+        private bool CheckMetricConditions(ItemScriptableObject _itemData, out string _transactionMessage, int _quantity)
         {
             _transactionMessage = string.Empty;
             // If Item does not have that much quantity in other UISection, return false
-            if (_itemController.GetModel().Quantity < _quantity)
+            if (_itemData.quantity < _quantity)
             {
                 _transactionMessage = "Inventory doesn't have that many items.";
                 return false;
