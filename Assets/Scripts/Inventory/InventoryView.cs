@@ -1,4 +1,5 @@
 using ServiceLocator.Event;
+using ServiceLocator.Shop;
 using ServiceLocator.UI;
 using System.Collections.Generic;
 using UnityEngine.UI;
@@ -22,15 +23,6 @@ namespace ServiceLocator.Inventory
             inventoryButtons.Add(_button);
         }
 
-        public void ShowItems()
-        {
-            // Update visibility
-            foreach (var itemController in inventoryController.GetItems())
-            {
-                itemController.GetView().ShowView();
-            }
-        }
-
         public void SetButtonInteractivity(EventService _eventService, bool _isInteractable)
         {
             // Enabling or Disabling Buttons
@@ -43,21 +35,24 @@ namespace ServiceLocator.Inventory
             }
         }
 
-        public void UpdateUI(UIService _uiService, EventService _eventService, InventoryScriptableObject _scriptableObject)
+        public void UpdateUI(EventService _eventService, UIService _uiService, InventoryScriptableObject _scriptableObject)
         {
+            _eventService.OnShowItemEvent.Invoke(inventoryController.GetModel().UISection,
+                inventoryController.GetModel().SelectedItemType);
+
             // Update UI texts based on items
             _uiService.UpdateInventoryEmptyText(inventoryController.GetItems().Count == 0);
             _uiService.UpdateInventoryCurrency(inventoryController.GetModel().Currency);
             _uiService.UpdateInventoryWeight(inventoryController.GetModel().CurrentWeight,
                 inventoryController.GetModel().MaxWeight);
 
+            _uiService.HideItemPanel();
+
             // Enabling or Disabling Buttons
             if (inventoryController.CheckGatherResources(out _))
             {
                 SetButtonInteractivity(_eventService, true);
             }
-
-            _uiService.HideItemPanel();
         }
     }
 }

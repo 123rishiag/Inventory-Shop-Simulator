@@ -33,8 +33,7 @@ namespace ServiceLocator.Inventory
 
         private void InitializeVariables()
         {
-            if (!ValidateReferences(inventoryScriptableObject.itemDatabase.allItems, inventoryScriptableObject.itemPrefab,
-                uiService.GetInventoryButtonPanel(), "Inventory"))
+            if (!ValidateReferences(inventoryScriptableObject.itemDatabase.allItems, "Inventory"))
                 return;
 
             // Initializing InventoryController
@@ -47,24 +46,11 @@ namespace ServiceLocator.Inventory
             inventoryController.UpdateUI();
         }
 
-        private bool ValidateReferences(List<ItemScriptableObject> _itemDatabase, GameObject _itemPrefab,
-            Transform _buttonPanel, string _type)
+        private bool ValidateReferences(List<ItemScriptableObject> _itemDatabase, string _type)
         {
             if (_itemDatabase == null)
             {
                 Debug.LogError($"{_type} Item Database is not assigned!");
-                return false;
-            }
-
-            if (_itemPrefab == null)
-            {
-                Debug.LogError($"{_type} Item Prefab is not assigned!");
-                return false;
-            }
-
-            if (_buttonPanel == null)
-            {
-                Debug.LogError($"{_type} Button Panel is not assigned!");
                 return false;
             }
 
@@ -90,7 +76,5 @@ namespace ServiceLocator.Inventory
         }
 
         public InventoryController GetInventoryController() => inventoryController;
-
-        public GameObject GetButtonItemPrefab() => inventoryScriptableObject.menuButtonPrefab;
     }
 }

@@ -34,12 +34,11 @@ namespace ServiceLocator.Shop
 
         private void InitializeVariables()
         {
-            if (!ValidateReferences(shopScriptableObject.itemDatabase.allItems, shopScriptableObject.itemPrefab,
-                uiService.GetShopButtonPanel(), "Shop"))
+            if (!ValidateReferences(shopScriptableObject.itemDatabase.allItems, "Shop"))
                 return;
 
             // Initializing ShopController
-            shopController = new ShopController(shopScriptableObject, uiService, eventService);
+            shopController = new ShopController(uiService, eventService);
 
             // Adding buttons dynamically
             foreach (ItemType itemType in Enum.GetValues(typeof(ItemType)))
@@ -58,24 +57,11 @@ namespace ServiceLocator.Shop
             shopController.UpdateUI();
         }
 
-        private bool ValidateReferences(List<ItemScriptableObject> _itemDatabase, GameObject _itemPrefab,
-            Transform _buttonPanel, string _type)
+        private bool ValidateReferences(List<ItemScriptableObject> _itemDatabase, string _type)
         {
             if (_itemDatabase == null)
             {
                 Debug.LogError($"{_type} Item Database is not assigned!");
-                return false;
-            }
-
-            if (_itemPrefab == null)
-            {
-                Debug.LogError($"{_type} Item Prefab is not assigned!");
-                return false;
-            }
-
-            if (_buttonPanel == null)
-            {
-                Debug.LogError($"{_type} Button Panel is not assigned!");
                 return false;
             }
 

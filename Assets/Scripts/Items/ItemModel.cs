@@ -30,7 +30,7 @@ namespace ServiceLocator.Item
         public int SellingPrice { get; private set; }
         public float Weight { get; private set; }
         public ItemType Type { get; private set; }
-        public Rarity Rarity { get; private set; }
+        public ItemRarity Rarity { get; private set; }
         public int Quantity { get; private set; }
 
         // Setters

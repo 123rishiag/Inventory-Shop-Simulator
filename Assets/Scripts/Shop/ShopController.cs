@@ -1,8 +1,8 @@
 using ServiceLocator.Event;
-using ServiceLocator.Inventory;
 using ServiceLocator.Item;
 using ServiceLocator.UI;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,18 +10,15 @@ namespace ServiceLocator.Shop
 {
     public class ShopController
     {
-        private ShopScriptableObject shopScriptableObject;
         private UIService uiService;
         private EventService eventService;
 
         private ShopModel shopModel;
         private ShopView shopView;
         private List<ItemController> itemControllers;
-        private List<ItemController> filteredItemControllers;
 
-        public ShopController(ShopScriptableObject _scriptableObject, UIService _uiService, EventService _eventService)
+        public ShopController(UIService _uiService, EventService _eventService)
         {
-            shopScriptableObject = _scriptableObject;
             uiService = _uiService;
             eventService = _eventService;
 
@@ -33,7 +30,6 @@ namespace ServiceLocator.Shop
 
             // Controllers List
             itemControllers = new List<ItemController>();
-            filteredItemControllers = new List<ItemController>();
         }
 
         public void AddButtonToPanel(ItemType _itemType)
@@ -126,7 +122,7 @@ namespace ServiceLocator.Shop
                     itemControllers.Remove(existingItemController);
 
                     // Remove Item
-                    existingItemController.GetView().DestroyView();
+                    eventService.OnDestroyItemEvent.Invoke(shopModel.UISection, existingItemController.GetModel().Id);
                 }
             }
 
@@ -149,19 +145,16 @@ namespace ServiceLocator.Shop
 
         public void UpdateUI()
         {
-            // Clear filtered list
-            filteredItemControllers.Clear();
-
-            // Show Items
-            shopView.ShowItems();
-
             // Update UI
-            shopView.UpdateUI(uiService);
+            shopView.UpdateUI(eventService, uiService);
         }
 
         // Getters
         public List<ItemController> GetItems() => itemControllers;
-        public List<ItemController> GetFilteredItems() => filteredItemControllers;
+        public int GetFilteredItemsCount() => itemControllers.Count(
+            item => (item.GetModel().Type == shopModel.SelectedItemType || shopModel.SelectedItemType == ItemType.All)
+            );
+
         public ShopModel GetModel() => shopModel;
     }
 }
