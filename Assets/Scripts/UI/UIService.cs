@@ -71,6 +71,8 @@ namespace ServiceLocator.UI
             eventService.OnCreateMenuButtonViewEvent.RemoveListener(CreateMenuButtonPrefab);
             eventService.OnShopUpdatedEvent.RemoveListener(UpdateShopUI);
             eventService.OnInventoryUpdatedEvent.RemoveListener(UpdateInventoryUI);
+            eventService.OnItemClickEvent.RemoveListener(UpdateItemMenuUI);
+            eventService.OnBuySellButtonClickEvent.RemoveListener(GetItemTransactionStatus);
         }
         public void Init(EventService _eventService)
         {
@@ -83,6 +85,8 @@ namespace ServiceLocator.UI
             eventService.OnCreateMenuButtonViewEvent.AddListener(CreateMenuButtonPrefab);
             eventService.OnShopUpdatedEvent.AddListener(UpdateShopUI);
             eventService.OnInventoryUpdatedEvent.AddListener(UpdateInventoryUI);
+            eventService.OnItemClickEvent.AddListener(UpdateItemMenuUI);
+            eventService.OnBuySellButtonClickEvent.AddListener(GetItemTransactionStatus);
         }
         private GameObject CreateMenuButtonPrefab(UISection _uISection, string _menuButtonText)
         {
@@ -239,7 +243,7 @@ namespace ServiceLocator.UI
         {
             itemQuantity.text = $"Quantity: {_value}x";
         }
-        public void UpdateItemMenuUI(ItemModel _itemModel, GameObject _menubutton)
+        private void UpdateItemMenuUI(ItemModel _itemModel, GameObject _menubutton)
         {
             StartCoroutine(ShowItemPanel(0.2f));
             UpdateItemUISection(_itemModel.UISection.ToString());
@@ -302,7 +306,20 @@ namespace ServiceLocator.UI
                 itemPanel.SetActive(false);
             }
         }
-        public void OnTransactionConfirmation(ItemModel _itemModel, int _quantity, Action<bool> _callback)
+        public void GetItemTransactionStatus(ItemModel _itemModel, Action<int, bool> _callback)
+        {
+            // Setting the item quantity first
+            SetItemQuanity(_itemModel, _quantity =>
+            {
+                // After getting the quantity, proceeding to get transaction confirmation
+                GetTransactionConfirmation(_itemModel, _quantity, _isTransacted =>
+                {
+                    // Passing the result back through the callback
+                    _callback.Invoke(_quantity, _isTransacted);
+                });
+            });
+        }
+        private void GetTransactionConfirmation(ItemModel _itemModel, int _quantity, Action<bool> _callback)
         {
             // Enabling Panel
             transactionConfirmationPanel.SetActive(true);
@@ -412,7 +429,7 @@ namespace ServiceLocator.UI
 
             return _quantity;
         }
-        public void OnSetItemQuanity(ItemModel _itemModel, Action<int> _callback)
+        private void SetItemQuanity(ItemModel _itemModel, Action<int> _callback)
         {
             // Setting Initial Values
             int minQuantity = 1;

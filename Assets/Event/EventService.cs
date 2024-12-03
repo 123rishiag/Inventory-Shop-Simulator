@@ -22,6 +22,8 @@ namespace ServiceLocator.Event
         public EventController<Func<ItemModel, int, bool>> OnInventoryAddItemEvent { get; private set; }
         public EventController<Action<ItemModel, int>> OnSellItemEvent { get; private set; }
         public EventController<Action<ItemModel, int>> OnBuyItemEvent {  get; private set; }
+        public EventController<Action<ItemModel, GameObject>> OnItemClickEvent { get; private set; }
+        public EventController<Action<ItemModel, Action<int, bool>>> OnBuySellButtonClickEvent { get; private set; }
 
         public EventService()
         {
@@ -38,6 +40,8 @@ namespace ServiceLocator.Event
             OnInventoryAddItemEvent = new EventController<Func<ItemModel, int, bool>>();
             OnSellItemEvent = new EventController<Action<ItemModel, int>>();
             OnBuyItemEvent = new EventController<Action<ItemModel, int>>();
+            OnItemClickEvent = new EventController<Action<ItemModel, GameObject>>();
+            OnBuySellButtonClickEvent = new EventController<Action<ItemModel, Action<int, bool>>>();
         }
     }
 }

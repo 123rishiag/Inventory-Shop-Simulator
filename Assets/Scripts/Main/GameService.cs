@@ -41,7 +41,7 @@ namespace ServiceLocator.Main
         {
             eventService.Init();
             uiService.Init(eventService);
-            itemService.Init(uiService);
+            itemService.Init();
             inventoryService.Init(eventService);
             shopService.Init(eventService);
         }

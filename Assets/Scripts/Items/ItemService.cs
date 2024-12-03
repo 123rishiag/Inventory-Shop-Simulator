@@ -1,14 +1,11 @@
 using ServiceLocator.Event;
-using ServiceLocator.UI;
 using UnityEngine;
 
 namespace ServiceLocator.Item
 {
     public class ItemService
     {
-        private UIService uiService;
         private EventService eventService;
-
         private GameObject itemMenuButton;
 
         public ItemService(EventService _eventService)
@@ -21,10 +18,8 @@ namespace ServiceLocator.Item
             eventService.OnCreateItemEvent.RemoveListener(CreateItem);
         }
 
-        public void Init(UIService _uIService)
+        public void Init()
         {
-            uiService = _uIService;
-
             AddButtonToPanel("");
         }
 
@@ -35,7 +30,7 @@ namespace ServiceLocator.Item
         }
         private ItemController CreateItem(ItemScriptableObject _itemData, UISection _uiSection)
         {
-            return new ItemController(uiService, eventService, itemMenuButton, _itemData, _uiSection);
+            return new ItemController(eventService, itemMenuButton, _itemData, _uiSection);
         }
     }
 }
