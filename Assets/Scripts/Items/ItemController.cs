@@ -1,5 +1,5 @@
 using ServiceLocator.Event;
-using ServiceLocator.UI;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,16 +7,14 @@ namespace ServiceLocator.Item
 {
     public class ItemController
     {
-        private UIService uiService;
         private EventService eventService;
 
         private ItemModel itemModel;
         private ItemView itemView;
 
-        public ItemController(UIService _uIService, EventService _eventService, GameObject _menubutton, ItemScriptableObject _itemData, UISection _uiSection)
+        public ItemController(EventService _eventService, GameObject _menubutton, ItemScriptableObject _itemData, UISection _uiSection)
         {
             // Setting the services
-            uiService = _uIService;
             eventService = _eventService;
 
             // Creating the Model
@@ -62,36 +60,43 @@ namespace ServiceLocator.Item
         private void ProcessItem()
         {
             GameObject itemMenuButton = itemView.GetMenuButton();
-            uiService.UpdateItemMenuUI(itemModel, itemMenuButton);
+            eventService.OnItemClickEvent.Invoke(itemModel, itemMenuButton);
 
             Button button = itemMenuButton.GetComponent<Button>();
             if (button != null)
             {
                 button.onClick.RemoveAllListeners();
-                button.onClick.AddListener(() => uiService.OnSetItemQuanity(itemModel, quantity =>
-                {
-                    uiService.OnTransactionConfirmation(itemModel, quantity, isTransacted =>
-                    {
-                        if (isTransacted)
-                        {
-                            switch (itemModel.UISection)
-                            {
-                                case UISection.Inventory:
-                                    eventService.OnSellItemEvent.Invoke(itemModel, quantity);
-                                    break;
-                                case UISection.Shop:
-                                    eventService.OnBuyItemEvent.Invoke(itemModel, quantity);
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }
-                    });
-                }));
+                button.onClick.AddListener(() =>
+                GetItemTransactionStatus((_quantity, _isTransacted) =>
+                ProcessTransaction(_quantity, _isTransacted)
+                )
+                );
             }
             else
             {
                 Debug.LogWarning("Button component not found in button prefab.");
+            }
+        }
+
+        private void GetItemTransactionStatus(Action<int, bool> _callback)
+        {
+            eventService.OnBuySellButtonClickEvent.Invoke(itemModel, _callback);
+        }
+        private void ProcessTransaction(int _quantity, bool _isTransacted)
+        {
+            if (_isTransacted)
+            {
+                switch (itemModel.UISection)
+                {
+                    case UISection.Inventory:
+                        eventService.OnSellItemEvent.Invoke(itemModel, _quantity);
+                        break;
+                    case UISection.Shop:
+                        eventService.OnBuyItemEvent.Invoke(itemModel, _quantity);
+                        break;
+                    default:
+                        break;
+                }
             }
         }
 
