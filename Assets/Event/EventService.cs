@@ -7,8 +7,6 @@ namespace ServiceLocator.Event
 {
     public class EventService
     {
-        public void Init() { }
-
         public EventController<Action<string>> OnPopupNotificationEvent { get; private set; }
         public EventController<Action<Button, bool>> OnSetButtonInteractionEvent { get; private set; }
         public EventController<Func<ItemScriptableObject, UISection, ItemController>> OnCreateItemEvent { get; private set; }
