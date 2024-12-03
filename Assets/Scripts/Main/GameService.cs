@@ -14,9 +14,7 @@ namespace ServiceLocator.Main
         private InventoryService inventoryService;
         private ShopService shopService;
         private ItemService itemService;
-
         [SerializeField] private UIService uiService;
-        public UIService UIService => uiService;
 
         // Scriptable Objects
         [SerializeField] private InventoryScriptableObject inventoryScriptableObject;
@@ -25,25 +23,15 @@ namespace ServiceLocator.Main
         private void Start()
         {
             CreateServices();
-            InjectDependencies();
         }
 
         private void CreateServices()
         {
             eventService = new EventService();
-            // UI Service is self instantitated
-            itemService = new ItemService(eventService);
-            inventoryService = new InventoryService(inventoryScriptableObject);
-            shopService = new ShopService(shopScriptableObject);
-        }
-
-        private void InjectDependencies()
-        {
-            eventService.Init();
             uiService.Init(eventService);
-            itemService.Init();
-            inventoryService.Init(eventService);
-            shopService.Init(eventService);
+            itemService = new ItemService(eventService);
+            inventoryService = new InventoryService(eventService, inventoryScriptableObject);
+            shopService = new ShopService(eventService, shopScriptableObject);
         }
     }
 }

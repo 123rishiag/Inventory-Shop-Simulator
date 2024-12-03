@@ -11,25 +11,20 @@ namespace ServiceLocator.Inventory
         private EventService eventService;
         private InventoryController inventoryController;
 
-        public InventoryService(InventoryScriptableObject _scriptableObject)
+        public InventoryService(EventService _eventService, InventoryScriptableObject _scriptableObject)
         {
+            eventService = _eventService;
             inventoryScriptableObject = _scriptableObject;
+            InitializeVariables();
+
+            // Adding Event Listeners
+            eventService.OnSellItemEvent.AddListener(SellItems);
         }
 
         ~InventoryService()
         {
             // Removing Event Listeners
             eventService.OnSellItemEvent.RemoveListener(SellItems);
-        }
-
-        public void Init(EventService _eventService)
-        {
-            eventService = _eventService;
-
-            // Adding Event Listeners
-            eventService.OnSellItemEvent.AddListener(SellItems);
-
-            InitializeVariables();
         }
 
         private void InitializeVariables()

@@ -12,25 +12,20 @@ namespace ServiceLocator.Shop
         private EventService eventService;
         private ShopController shopController;
 
-        public ShopService(ShopScriptableObject _scriptableObject)
+        public ShopService(EventService _eventService, ShopScriptableObject _scriptableObject)
         {
+            eventService = _eventService;
             shopScriptableObject = _scriptableObject;
+            InitializeVariables();
+
+            // Adding Event Listeners
+            eventService.OnBuyItemEvent.AddListener(BuyItems);
         }
 
         ~ShopService() 
         {
             // Removing Event Listeners
             eventService.OnBuyItemEvent.RemoveListener(BuyItems);
-        }
-
-        public void Init(EventService _eventService)
-        {
-            eventService = _eventService;
-
-            // Adding Event Listeners
-            eventService.OnBuyItemEvent.AddListener(BuyItems);
-
-            InitializeVariables();
         }
 
         private void InitializeVariables()

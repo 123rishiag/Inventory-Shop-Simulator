@@ -11,14 +11,18 @@ namespace ServiceLocator.Item
         public ItemService(EventService _eventService)
         {
             eventService = _eventService;
+            InitializeVariables();
+
+            // Adding Event Listeners
             eventService.OnCreateItemEvent.AddListener(CreateItem);
         }
         ~ItemService()
         {
+            // Removing Event Listeners
             eventService.OnCreateItemEvent.RemoveListener(CreateItem);
         }
 
-        public void Init()
+        private void InitializeVariables()
         {
             AddButtonToPanel("");
         }
