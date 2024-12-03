@@ -18,7 +18,7 @@ namespace ServiceLocator.Inventory
         private InventoryView inventoryView;
         private List<ItemController> itemControllers;
 
-        public InventoryController(InventoryScriptableObject _scriptableObject, EventService _eventService)
+        public InventoryController(EventService _eventService, InventoryScriptableObject _scriptableObject)
         {
             inventoryScriptableObject = _scriptableObject;
             eventService = _eventService;
@@ -33,12 +33,12 @@ namespace ServiceLocator.Inventory
             itemControllers = new List<ItemController>();
 
             // Adding Event Listeners
-            eventService.OnBuyItemEvent.AddListener(AddOrIncrementItems);
+            eventService.OnInventoryAddItemEvent.AddListener(AddOrIncrementItems);
         }
         ~InventoryController()
         {
             // Removing Event Listeners
-            eventService.OnBuyItemEvent.RemoveListener(AddOrIncrementItems);
+            eventService.OnInventoryAddItemEvent.RemoveListener(AddOrIncrementItems);
         }
 
         public void AddButtonToPanel(string _menuButtonText)

@@ -6,6 +6,8 @@ namespace ServiceLocator.Item
 {
     public class ItemView : MonoBehaviour
     {
+        private GameObject menuButton;
+
         private Image iconImage;
 
         [Header("UI Components")]
@@ -14,9 +16,10 @@ namespace ServiceLocator.Item
         private ItemController itemController;
 
         // Sets the controller and initializes the view
-        public void SetController(ItemController _itemController)
+        public void SetView(ItemController _itemController, GameObject _menubutton)
         {
             itemController = _itemController;
+            menuButton = _menubutton;
 
             iconImage = GetComponent<Image>();
             if (iconImage == null)
@@ -52,6 +55,12 @@ namespace ServiceLocator.Item
             {
                 Object.Destroy(gameObject);
             }
+        }
+
+        // Getters
+        public GameObject GetMenuButton()
+        {
+            return menuButton;
         }
 
         // Setters

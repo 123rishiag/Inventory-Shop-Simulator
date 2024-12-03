@@ -1,6 +1,4 @@
 using ServiceLocator.Event;
-using ServiceLocator.Inventory;
-using ServiceLocator.Shop;
 using ServiceLocator.UI;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,20 +7,15 @@ namespace ServiceLocator.Item
 {
     public class ItemController
     {
-        private InventoryService inventoryService;
-        private ShopService shopService;
         private UIService uiService;
         private EventService eventService;
 
         private ItemModel itemModel;
         private ItemView itemView;
 
-        public ItemController(InventoryService _inventoryService, ShopService _shopService, UIService _uIService, EventService _eventService,
-            ItemScriptableObject _itemData, UISection _uiSection)
+        public ItemController(UIService _uIService, EventService _eventService, GameObject _menubutton, ItemScriptableObject _itemData, UISection _uiSection)
         {
             // Setting the services
-            inventoryService = _inventoryService;
-            shopService = _shopService;
             uiService = _uIService;
             eventService = _eventService;
 
@@ -31,7 +24,7 @@ namespace ServiceLocator.Item
 
             // Creating the View
             itemView = _eventService.OnCreateItemButtonViewEvent.Invoke<GameObject>(_uiSection).GetComponent<ItemView>();
-            SetListener();
+            SetListener(_menubutton);
 
             // Adding Event Listeners
             eventService.OnShowItemEvent.AddListener(ShowItem);
@@ -44,7 +37,7 @@ namespace ServiceLocator.Item
             eventService.OnDestroyItemEvent.RemoveListener(DestroyItem);
         }
 
-        private void SetListener()
+        private void SetListener(GameObject _menubutton)
         {
             if (itemView == null)
             {
@@ -52,7 +45,7 @@ namespace ServiceLocator.Item
                 return;
             }
 
-            itemView.SetController(this);
+            itemView.SetView(this, _menubutton);
 
             // Add OnClick listener
             Button button = itemView.GetComponent<Button>();
@@ -68,8 +61,8 @@ namespace ServiceLocator.Item
 
         private void ProcessItem()
         {
-            uiService.UpdateItemMenuUI(itemModel);
-            GameObject itemMenuButton = uiService.GetItemMenuButton();
+            GameObject itemMenuButton = itemView.GetMenuButton();
+            uiService.UpdateItemMenuUI(itemModel, itemMenuButton);
 
             Button button = itemMenuButton.GetComponent<Button>();
             if (button != null)
@@ -84,17 +77,16 @@ namespace ServiceLocator.Item
                             switch (itemModel.UISection)
                             {
                                 case UISection.Inventory:
-                                    inventoryService.SellItems(itemModel, quantity);
+                                    eventService.OnSellItemEvent.Invoke(itemModel, quantity);
                                     break;
                                 case UISection.Shop:
-                                    shopService.BuyItems(itemModel, quantity);
+                                    eventService.OnBuyItemEvent.Invoke(itemModel, quantity);
                                     break;
                                 default:
                                     break;
                             }
                         }
                     });
-                    uiService.HideItemPanel();
                 }));
             }
             else
