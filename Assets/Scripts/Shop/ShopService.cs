@@ -30,7 +30,7 @@ namespace ServiceLocator.Shop
 
         private void InitializeVariables()
         {
-            if (!ValidateReferences(shopScriptableObject.itemDatabase.allItems, "Shop"))
+            if (!ValidateReferences(shopScriptableObject.itemDatabase.itemList, "Shop"))
                 return;
 
             // Initializing ShopController
@@ -43,7 +43,7 @@ namespace ServiceLocator.Shop
             }
 
             // Populating Shop
-            foreach (var itemData in shopScriptableObject.itemDatabase.allItems)
+            foreach (var itemData in shopScriptableObject.itemDatabase.itemList)
             {
                 // Adding ItemControllers
                 shopController.AddNewItem(itemData);

@@ -197,15 +197,15 @@ namespace ServiceLocator.Inventory
             _transactionMessage = string.Empty;
 
             // Ensuring the item pool exists
-            if (inventoryScriptableObject.itemDatabase.allItems == null ||
-                inventoryScriptableObject.itemDatabase.allItems.Count == 0)
+            if (inventoryScriptableObject.itemDatabase.itemList == null ||
+                inventoryScriptableObject.itemDatabase.itemList.Count == 0)
             {
                 _transactionMessage = "No items available in the database to gather. \n\nGather Resource Disabled";
                 return false;
             }
 
             // Ensuring inventory has space
-            var items = inventoryScriptableObject.itemDatabase.allItems;
+            var items = inventoryScriptableObject.itemDatabase.itemList;
             var minWeightOfItems = items.Min(item => (float)item.weight);
 
             if ((inventoryModel.MaxWeight - inventoryModel.CurrentWeight)
@@ -266,7 +266,7 @@ namespace ServiceLocator.Inventory
         private ItemScriptableObject GetRandomItemDataBasedOnRarity()
         {
             // Fetching all items
-            var items = inventoryScriptableObject.itemDatabase.allItems;
+            var items = inventoryScriptableObject.itemDatabase.itemList;
 
             // Inverting rarity weights: Higher enum value -> Lower weight
             var maxRarityValue = Enum.GetValues(typeof(ItemRarity)).Cast<int>().Max() + 1;

@@ -3734,7 +3734,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2295310723518318749}
   m_HandleRect: {fileID: 8676048658477068877}
   m_Direction: 0
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -5293,7 +5293,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.00002002716, y: 0}
+  m_AnchoredPosition: {x: -0.000031471252, y: -0.000030517578}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &7034777515620251625
@@ -6564,7 +6564,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.000008583069, y: 0}
+  m_AnchoredPosition: {x: -0.0000009536743, y: -0.000030517578}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1650863275343736045
@@ -8595,7 +8595,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 6919492328536386598}
   m_HandleRect: {fileID: 6900323756553175146}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -8721,7 +8721,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 9108255985938106038}
   m_HandleRect: {fileID: 4719524713540225308}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -8849,6 +8849,7 @@ GameObject:
   - component: {fileID: 5910405039491883923}
   - component: {fileID: 7502247127917135218}
   - component: {fileID: 7184061026524961250}
+  - component: {fileID: 2812121556786652026}
   m_Layer: 5
   m_Name: GameScreenCanvas
   m_TagString: Untagged
@@ -8988,6 +8989,14 @@ MonoBehaviour:
   quantitySelectionDoneButton: {fileID: 9135497945176221791}
   notificationPopupPanel: {fileID: 7895458662164776792}
   notificationPopupText: {fileID: 4752808852243941648}
+--- !u!81 &2812121556786652026
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9106993207850332031}
+  m_Enabled: 1
 --- !u!1 &9107040225819220976
 GameObject:
   m_ObjectHideFlags: 0

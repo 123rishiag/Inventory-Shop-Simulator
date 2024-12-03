@@ -1,4 +1,5 @@
 using ServiceLocator.Item;
+using ServiceLocator.Sound;
 using System;
 using UnityEngine;
 using UnityEngine.UI;
@@ -22,6 +23,7 @@ namespace ServiceLocator.Event
         public EventController<Action<ItemModel, int>> OnBuyItemEvent {  get; private set; }
         public EventController<Action<ItemModel, GameObject>> OnItemClickEvent { get; private set; }
         public EventController<Action<ItemModel, Action<int, bool>>> OnBuySellButtonClickEvent { get; private set; }
+        public EventController<Action<SoundType, bool>> OnPlaySoundEffectEvent { get; private set; }
 
         public EventService()
         {
@@ -40,6 +42,7 @@ namespace ServiceLocator.Event
             OnBuyItemEvent = new EventController<Action<ItemModel, int>>();
             OnItemClickEvent = new EventController<Action<ItemModel, GameObject>>();
             OnBuySellButtonClickEvent = new EventController<Action<ItemModel, Action<int, bool>>>();
+            OnPlaySoundEffectEvent = new EventController<Action<SoundType, bool>>();
         }
     }
 }
