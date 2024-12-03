@@ -1,5 +1,6 @@
 using ServiceLocator.Event;
 using ServiceLocator.Item;
+using ServiceLocator.Sound;
 using System;
 using System.Collections;
 using TMPro;
@@ -324,6 +325,8 @@ namespace ServiceLocator.UI
             // Enabling Panel
             transactionConfirmationPanel.SetActive(true);
 
+            eventService.OnPlaySoundEffectEvent.Invoke(SoundType.ConfirmationPopup);
+
             // Setting Text
             string activity = string.Empty;
             int price = 0;
@@ -357,6 +360,7 @@ namespace ServiceLocator.UI
                 yesButton.onClick.AddListener(() =>
                 {
                     transactionConfirmationPanel.SetActive(false);
+                    eventService.OnPlaySoundEffectEvent.Invoke(SoundType.ButtonClick);
                     _callback.Invoke(true);
                 }
                 );
@@ -368,6 +372,7 @@ namespace ServiceLocator.UI
                 noButton.onClick.AddListener(() =>
                 {
                     transactionConfirmationPanel.SetActive(false);
+                    eventService.OnPlaySoundEffectEvent.Invoke(SoundType.ButtonClick);
                     _callback.Invoke(false);
                 }
                 );
@@ -442,6 +447,7 @@ namespace ServiceLocator.UI
 
             // Enabling Panel
             quantitySelectionPanel.SetActive(true);
+            eventService.OnPlaySoundEffectEvent.Invoke(SoundType.ConfirmationPopup);
 
             // Fetching buttons
             Button decrementbutton = quantitySelectionDecrementButton.GetComponent<Button>();
@@ -456,6 +462,7 @@ namespace ServiceLocator.UI
                 {
                     currentQuantity = OnQuantityDecrementButton(decrementbutton, incrementbutton,
                         minQuantity, currentQuantity);
+                    eventService.OnPlaySoundEffectEvent.Invoke(SoundType.QuantitySelect);
                 }
                 );
 
@@ -478,6 +485,7 @@ namespace ServiceLocator.UI
                 {
                     currentQuantity = OnQuantityIncrementButton(decrementbutton, incrementbutton,
                         maxQuantity, currentQuantity);
+                    eventService.OnPlaySoundEffectEvent.Invoke(SoundType.QuantitySelect);
                 }
                 );
 

@@ -1,5 +1,6 @@
 using ServiceLocator.Event;
 using ServiceLocator.Item;
+using ServiceLocator.Sound;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -58,6 +59,7 @@ namespace ServiceLocator.Inventory
             bool isTransacted = eventService.OnShopAddItemEvent.Invoke<bool>(_itemModel, _quantity);
             if (isTransacted)
             {
+                eventService.OnPlaySoundEffectEvent.Invoke(SoundType.ItemSold);
                 inventoryController.RemoveOrDecrementItems(_itemModel, _quantity);
             }
         }

@@ -1,4 +1,5 @@
 using ServiceLocator.Event;
+using ServiceLocator.Sound;
 using System;
 using UnityEngine;
 using UnityEngine.UI;
@@ -61,6 +62,7 @@ namespace ServiceLocator.Item
         {
             GameObject itemMenuButton = itemView.GetMenuButton();
             eventService.OnItemClickEvent.Invoke(itemModel, itemMenuButton);
+            eventService.OnPlaySoundEffectEvent.Invoke(SoundType.ButtonClick);
 
             Button button = itemMenuButton.GetComponent<Button>();
             if (button != null)

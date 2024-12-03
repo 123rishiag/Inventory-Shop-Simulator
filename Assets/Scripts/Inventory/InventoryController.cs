@@ -1,5 +1,6 @@
 using ServiceLocator.Event;
 using ServiceLocator.Item;
+using ServiceLocator.Sound;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -103,6 +104,7 @@ namespace ServiceLocator.Inventory
             {
                 // Displaying Unsuccessful Transaction Popup
                 eventService.OnPopupNotificationEvent.Invoke(transactionMessage);
+                eventService.OnPlaySoundEffectEvent.Invoke(SoundType.ErrorFeedback);
                 return false;
             }
 
@@ -228,10 +230,13 @@ namespace ServiceLocator.Inventory
 
         public void GatherResources()
         {
+            eventService.OnPlaySoundEffectEvent.Invoke(SoundType.GatherResource);
+
             string transactionMessage;
             if (!CheckGatherResources(out transactionMessage))
             {
                 eventService.OnPopupNotificationEvent.Invoke(transactionMessage);
+                eventService.OnPlaySoundEffectEvent.Invoke(SoundType.ErrorFeedback);
                 inventoryView.SetButtonInteractivity(eventService, false);
                 return;
             }
