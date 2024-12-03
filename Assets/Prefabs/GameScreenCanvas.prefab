@@ -3734,7 +3734,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2295310723518318749}
   m_HandleRect: {fileID: 8676048658477068877}
   m_Direction: 0
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -4193,7 +4193,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Items Count: 0'
+  m_text: 'Items Count: 4'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -5293,7 +5293,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.000019788742, y: -0.000030517578}
+  m_AnchoredPosition: {x: 0.00001168251, y: -0.000030517578}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &7034777515620251625
@@ -6244,7 +6244,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Weight: 0/0'
+  m_text: 'Weight: 0/100'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -6564,7 +6564,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.0000104904175, y: -0.000030517578}
+  m_AnchoredPosition: {x: 0.000011444092, y: -0.000030517578}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1650863275343736045
@@ -8848,8 +8848,8 @@ GameObject:
   - component: {fileID: 5112747288307320548}
   - component: {fileID: 5910405039491883923}
   - component: {fileID: 7502247127917135218}
-  - component: {fileID: 7184061026524961250}
   - component: {fileID: 2812121556786652026}
+  - component: {fileID: 6057290205239783904}
   m_Layer: 5
   m_Name: GameScreenCanvas
   m_TagString: Untagged
@@ -8943,7 +8943,15 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &7184061026524961250
+--- !u!81 &2812121556786652026
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9106993207850332031}
+  m_Enabled: 1
+--- !u!114 &6057290205239783904
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8952,7 +8960,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 9106993207850332031}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a28946ac7d351ae4ba44e0427df90934, type: 3}
+  m_Script: {fileID: 11500000, guid: 893836b69fd84254c937aa26fa72e2a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   itemPrefab: {fileID: 7103220825560255194, guid: e746c57d1d6071f49a8b322ecd71a158, type: 3}
@@ -8989,14 +8997,6 @@ MonoBehaviour:
   quantitySelectionDoneButton: {fileID: 9135497945176221791}
   notificationPopupPanel: {fileID: 7895458662164776792}
   notificationPopupText: {fileID: 4752808852243941648}
---- !u!81 &2812121556786652026
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9106993207850332031}
-  m_Enabled: 1
 --- !u!1 &9107040225819220976
 GameObject:
   m_ObjectHideFlags: 0
