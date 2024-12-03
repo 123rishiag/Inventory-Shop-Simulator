@@ -11,7 +11,7 @@ namespace ServiceLocator.Sound
 
         // Objects
         private SoundScriptableObject soundScriptableObject;
-        private AudioSource audioEffects;
+        private AudioSource soundEffect;
         private AudioSource backgroundMusic;
 
         public SoundService(EventService _eventService, SoundScriptableObject _soundData, AudioSource _soundEffect,
@@ -19,7 +19,7 @@ namespace ServiceLocator.Sound
         {
             eventService = _eventService;
             soundScriptableObject = _soundData;
-            audioEffects = _soundEffect;
+            soundEffect = _soundEffect;
             backgroundMusic = _backgroundMusic;
             PlayBackgroundMusic(SoundType.BackgroundMusic, true);
 
@@ -38,8 +38,8 @@ namespace ServiceLocator.Sound
             AudioClip clip = GetSoundClip(_soundType);
             if (clip != null)
             {
-                audioEffects.clip = clip;
-                audioEffects.PlayOneShot(clip);
+                soundEffect.clip = clip;
+                soundEffect.PlayOneShot(clip);
             }
             else
                 Debug.LogError("No Audio Clip selected.");
