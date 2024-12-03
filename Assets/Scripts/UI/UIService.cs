@@ -306,7 +306,7 @@ namespace ServiceLocator.UI
                 itemPanel.SetActive(false);
             }
         }
-        public void GetItemTransactionStatus(ItemModel _itemModel, Action<int, bool> _callback)
+        private void GetItemTransactionStatus(ItemModel _itemModel, Action<int, bool> _callback)
         {
             // Setting the item quantity first
             SetItemQuanity(_itemModel, _quantity =>

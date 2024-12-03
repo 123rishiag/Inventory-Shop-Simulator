@@ -29,7 +29,7 @@ namespace ServiceLocator.Inventory
 
         private void InitializeVariables()
         {
-            if (!ValidateReferences(inventoryScriptableObject.itemDatabase.allItems, "Inventory"))
+            if (!ValidateReferences(inventoryScriptableObject.itemDatabase.itemList, "Inventory"))
                 return;
 
             // Initializing InventoryController
