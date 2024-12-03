@@ -14,31 +14,30 @@ namespace ServiceLocator.Sound
         private AudioSource audioEffects;
         private AudioSource backgroundMusic;
 
-        public SoundService(EventService _eventService, SoundScriptableObject _soundData, AudioSource _soundEffect, 
+        public SoundService(EventService _eventService, SoundScriptableObject _soundData, AudioSource _soundEffect,
             AudioSource _backgroundMusic)
         {
             eventService = _eventService;
             soundScriptableObject = _soundData;
             audioEffects = _soundEffect;
             backgroundMusic = _backgroundMusic;
-            //PlayBackgroundMusic(SoundType.BackgroundMusic, true);
+            PlayBackgroundMusic(SoundType.BackgroundMusic, true);
 
             // Adding Event Listeners
             eventService.OnPlaySoundEffectEvent.AddListener(PlaySoundEffect);
         }
 
-        ~SoundService() 
+        ~SoundService()
         {
             // Removing Event Listeners
             eventService.OnPlaySoundEffectEvent.RemoveListener(PlaySoundEffect);
         }
 
-        private void PlaySoundEffect(SoundType _soundType, bool _loopSound = false)
+        private void PlaySoundEffect(SoundType _soundType)
         {
             AudioClip clip = GetSoundClip(_soundType);
             if (clip != null)
             {
-                audioEffects.loop = _loopSound;
                 audioEffects.clip = clip;
                 audioEffects.PlayOneShot(clip);
             }
@@ -46,7 +45,7 @@ namespace ServiceLocator.Sound
                 Debug.LogError("No Audio Clip selected.");
         }
 
-        private void PlayBackgroundMusic(SoundType _soundType, bool _loopSound = false)
+        private void PlayBackgroundMusic(SoundType _soundType, bool _loopSound = true)
         {
             AudioClip clip = GetSoundClip(_soundType);
             if (clip != null)

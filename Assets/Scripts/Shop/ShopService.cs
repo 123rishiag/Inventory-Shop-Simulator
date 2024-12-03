@@ -1,5 +1,6 @@
 using ServiceLocator.Event;
 using ServiceLocator.Item;
+using ServiceLocator.Sound;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,7 +23,7 @@ namespace ServiceLocator.Shop
             eventService.OnBuyItemEvent.AddListener(BuyItems);
         }
 
-        ~ShopService() 
+        ~ShopService()
         {
             // Removing Event Listeners
             eventService.OnBuyItemEvent.RemoveListener(BuyItems);
@@ -69,6 +70,7 @@ namespace ServiceLocator.Shop
             bool isTransacted = eventService.OnInventoryAddItemEvent.Invoke<bool>(_itemModel, _quantity);
             if (isTransacted)
             {
+                eventService.OnPlaySoundEffectEvent.Invoke(SoundType.ItemBought);
                 shopController.RemoveOrDecrementItems(_itemModel, _quantity);
             }
         }

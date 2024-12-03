@@ -1,5 +1,6 @@
 using ServiceLocator.Event;
 using ServiceLocator.Item;
+using ServiceLocator.Sound;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -57,6 +58,7 @@ namespace ServiceLocator.Shop
         private void OnButtonClicked(ItemType _selectedItemType)
         {
             shopModel.SelectedItemType = _selectedItemType;
+            eventService.OnPlaySoundEffectEvent.Invoke(SoundType.TabSwitch);
             UpdateUI();
         }
 
@@ -91,6 +93,7 @@ namespace ServiceLocator.Shop
             {
                 // Displaying Unsuccessful Transaction Popup
                 eventService.OnPopupNotificationEvent.Invoke(transactionMessage);
+                eventService.OnPlaySoundEffectEvent.Invoke(SoundType.ErrorFeedback);
                 return false;
             }
 
