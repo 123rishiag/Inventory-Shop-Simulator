@@ -13,10 +13,10 @@ namespace ServiceLocator.Main
         // Services
         private EventService eventService;
         private SoundService soundService;
+        private UIService uiService;
+        private ItemService itemService;
         private InventoryService inventoryService;
         private ShopService shopService;
-        private ItemService itemService;
-        [SerializeField] private UIService uiService;
 
         // Scriptable Objects
         [SerializeField] private SoundScriptableObject soundScriptableObject;
@@ -27,6 +27,9 @@ namespace ServiceLocator.Main
         [SerializeField] private AudioSource SFXSource;
         [SerializeField] private AudioSource BGSource;
 
+        // UI Canvas
+        [SerializeField] private UIView uiCanvas;
+
         private void Start()
         {
             CreateServices();
@@ -36,7 +39,7 @@ namespace ServiceLocator.Main
         {
             eventService = new EventService();
             soundService = new SoundService(eventService, soundScriptableObject, SFXSource, BGSource);
-            uiService.Init(eventService);
+            uiService = new UIService(eventService, uiCanvas);
             itemService = new ItemService(eventService);
             inventoryService = new InventoryService(eventService, inventoryScriptableObject);
             shopService = new ShopService(eventService, shopScriptableObject);

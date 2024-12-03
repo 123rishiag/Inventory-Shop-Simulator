@@ -20,7 +20,7 @@ namespace ServiceLocator.Event
         public EventController<Func<ItemModel, int, bool>> OnShopAddItemEvent { get; private set; }
         public EventController<Func<ItemModel, int, bool>> OnInventoryAddItemEvent { get; private set; }
         public EventController<Action<ItemModel, int>> OnSellItemEvent { get; private set; }
-        public EventController<Action<ItemModel, int>> OnBuyItemEvent {  get; private set; }
+        public EventController<Action<ItemModel, int>> OnBuyItemEvent { get; private set; }
         public EventController<Action<ItemModel, GameObject>> OnItemClickEvent { get; private set; }
         public EventController<Action<ItemModel, Action<int, bool>>> OnBuySellButtonClickEvent { get; private set; }
         public EventController<Action<SoundType>> OnPlaySoundEffectEvent { get; private set; }
