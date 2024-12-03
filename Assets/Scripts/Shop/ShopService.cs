@@ -17,9 +17,19 @@ namespace ServiceLocator.Shop
             shopScriptableObject = _scriptableObject;
         }
 
+        ~ShopService() 
+        {
+            // Removing Event Listeners
+            eventService.OnBuyItemEvent.RemoveListener(BuyItems);
+        }
+
         public void Init(EventService _eventService)
         {
             eventService = _eventService;
+
+            // Adding Event Listeners
+            eventService.OnBuyItemEvent.AddListener(BuyItems);
+
             InitializeVariables();
         }
 
@@ -59,9 +69,9 @@ namespace ServiceLocator.Shop
             return true;
         }
 
-        public void BuyItems(ItemModel _itemModel, int _quantity)
+        private void BuyItems(ItemModel _itemModel, int _quantity)
         {
-            bool isTransacted = eventService.OnBuyItemEvent.Invoke<bool>(_itemModel, _quantity);
+            bool isTransacted = eventService.OnInventoryAddItemEvent.Invoke<bool>(_itemModel, _quantity);
             if (isTransacted)
             {
                 shopController.RemoveOrDecrementItems(_itemModel, _quantity);

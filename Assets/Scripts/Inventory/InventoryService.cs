@@ -16,9 +16,19 @@ namespace ServiceLocator.Inventory
             inventoryScriptableObject = _scriptableObject;
         }
 
+        ~InventoryService()
+        {
+            // Removing Event Listeners
+            eventService.OnSellItemEvent.RemoveListener(SellItems);
+        }
+
         public void Init(EventService _eventService)
         {
             eventService = _eventService;
+
+            // Adding Event Listeners
+            eventService.OnSellItemEvent.AddListener(SellItems);
+
             InitializeVariables();
         }
 
@@ -28,7 +38,7 @@ namespace ServiceLocator.Inventory
                 return;
 
             // Initializing InventoryController
-            inventoryController = new InventoryController(inventoryScriptableObject, eventService);
+            inventoryController = new InventoryController(eventService, inventoryScriptableObject);
 
             // Adding buttons dynamically
             inventoryController.AddButtonToPanel("Gather Resources");
@@ -48,9 +58,9 @@ namespace ServiceLocator.Inventory
             return true;
         }
 
-        public void SellItems(ItemModel _itemModel, int _quantity)
+        private void SellItems(ItemModel _itemModel, int _quantity)
         {
-            bool isTransacted = eventService.OnSellItemEvent.Invoke<bool>(_itemModel, _quantity);
+            bool isTransacted = eventService.OnShopAddItemEvent.Invoke<bool>(_itemModel, _quantity);
             if (isTransacted)
             {
                 inventoryController.RemoveOrDecrementItems(_itemModel, _quantity);

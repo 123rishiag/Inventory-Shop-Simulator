@@ -29,12 +29,12 @@ namespace ServiceLocator.Shop
             itemControllers = new List<ItemController>();
 
             // Adding Event Listeners
-            eventService.OnSellItemEvent.AddListener(AddOrIncrementItems);
+            eventService.OnShopAddItemEvent.AddListener(AddOrIncrementItems);
         }
         ~ShopController()
         {
             // Removing Event Listeners
-            eventService.OnSellItemEvent.RemoveListener(AddOrIncrementItems);
+            eventService.OnShopAddItemEvent.RemoveListener(AddOrIncrementItems);
         }
 
         public void AddButtonToPanel(ItemType _itemType)

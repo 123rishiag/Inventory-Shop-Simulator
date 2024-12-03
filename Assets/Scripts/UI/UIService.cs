@@ -15,9 +15,6 @@ namespace ServiceLocator.UI
         // Services
         private EventService eventService;
 
-        // ItemButton
-        private GameObject itemMenuButton;
-
         [Header("Prefabs")]
         [SerializeField] private GameObject itemPrefab;
         [SerializeField] private GameObject menuButtonPrefab;
@@ -67,6 +64,7 @@ namespace ServiceLocator.UI
         public UIService() { }
         ~UIService()
         {
+            // Removing Event Listeners
             eventService.OnPopupNotificationEvent.RemoveListener(PopupNotification);
             eventService.OnSetButtonInteractionEvent.RemoveListener(SetButtonInteractivity);
             eventService.OnCreateItemButtonViewEvent.RemoveListener(CreateItemButtonPrefab);
@@ -77,20 +75,14 @@ namespace ServiceLocator.UI
         public void Init(EventService _eventService)
         {
             eventService = _eventService;
+
+            // Adding Event Listeners
             eventService.OnPopupNotificationEvent.AddListener(PopupNotification);
             eventService.OnSetButtonInteractionEvent.AddListener(SetButtonInteractivity);
             eventService.OnCreateItemButtonViewEvent.AddListener(CreateItemButtonPrefab);
             eventService.OnCreateMenuButtonViewEvent.AddListener(CreateMenuButtonPrefab);
             eventService.OnShopUpdatedEvent.AddListener(UpdateShopUI);
             eventService.OnInventoryUpdatedEvent.AddListener(UpdateInventoryUI);
-
-            AddButtonToItemPanel();
-        }
-
-        private void AddButtonToItemPanel()
-        {
-            // Instantiating the button
-            itemMenuButton = eventService.OnCreateMenuButtonViewEvent.Invoke<GameObject>(UISection.Item, "");
         }
         private GameObject CreateMenuButtonPrefab(UISection _uISection, string _menuButtonText)
         {
@@ -162,14 +154,6 @@ namespace ServiceLocator.UI
                     return null;
             }
         }
-
-        // Getters
-        public Transform GetInventoryGrid() => inventoryGrid;
-        public Transform GetInventoryButtonPanel() => inventoryMenuButtonPanel;
-        public Transform GetShopGrid() => shopGrid;
-        public Transform GetShopButtonPanel() => shopMenuButtonPanel;
-        public Transform GetItemButtonPanel() => itemMenuButtonPanel;
-        public GameObject GetItemMenuButton() => itemMenuButton;
 
         // Setters
         private void UpdateInventoryEmptyText(bool _isEmpty)
@@ -255,7 +239,7 @@ namespace ServiceLocator.UI
         {
             itemQuantity.text = $"Quantity: {_value}x";
         }
-        public void UpdateItemMenuUI(ItemModel _itemModel)
+        public void UpdateItemMenuUI(ItemModel _itemModel, GameObject _menubutton)
         {
             StartCoroutine(ShowItemPanel(0.2f));
             UpdateItemUISection(_itemModel.UISection.ToString());
@@ -276,12 +260,12 @@ namespace ServiceLocator.UI
             UpdateItemType(_itemModel.Type.ToString());
             UpdateItemRarity(_itemModel.Rarity.ToString());
             UpdateItemQuantity(_itemModel.Quantity);
-            SetItemMenuButtonText(_itemModel);
+            SetItemMenuButtonText(_itemModel, _menubutton);
         }
-        private void SetItemMenuButtonText(ItemModel _itemModel)
+        private void SetItemMenuButtonText(ItemModel _itemModel, GameObject _menubutton)
         {
             // Fetching TMP_Text component in the button and setting its text
-            TMP_Text buttonText = itemMenuButton.GetComponentInChildren<TMP_Text>();
+            TMP_Text buttonText = _menubutton.GetComponentInChildren<TMP_Text>();
 
             if (buttonText != null)
             {
@@ -311,7 +295,7 @@ namespace ServiceLocator.UI
                 itemPanel.SetActive(true);
             }
         }
-        public void HideItemPanel()
+        private void HideItemPanel()
         {
             if (itemPanel != null)
             {
