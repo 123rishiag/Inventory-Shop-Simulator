@@ -4460,7 +4460,7 @@ MonoBehaviour:
   m_Content: {fileID: 2997965855556523982}
   m_Horizontal: 1
   m_Vertical: 1
-  m_MovementType: 0
+  m_MovementType: 2
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.135
@@ -8821,7 +8821,7 @@ MonoBehaviour:
   m_Content: {fileID: 841984578218086930}
   m_Horizontal: 1
   m_Vertical: 1
-  m_MovementType: 0
+  m_MovementType: 2
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.135
