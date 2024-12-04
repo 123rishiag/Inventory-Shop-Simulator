@@ -8,9 +8,9 @@ namespace ServiceLocator.Item
     {
         private GameObject menuButton;
 
-        private Image iconImage;
-
         [Header("UI Components")]
+        [SerializeField] private Image iconImage;
+        [SerializeField] private GameObject itemButton;
         [SerializeField] private TMP_Text quantityText;
 
         private ItemController itemController;
@@ -21,7 +21,6 @@ namespace ServiceLocator.Item
             itemController = _itemController;
             menuButton = _menubutton;
 
-            iconImage = GetComponent<Image>();
             if (iconImage == null)
             {
                 Debug.LogError("ItemView: No Image component found on this GameObject!");
@@ -58,6 +57,10 @@ namespace ServiceLocator.Item
         }
 
         // Getters
+        public GameObject GetItemButton()
+        {
+            return itemButton;
+        }
         public GameObject GetMenuButton()
         {
             return menuButton;
