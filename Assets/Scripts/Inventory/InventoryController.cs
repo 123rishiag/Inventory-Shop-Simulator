@@ -210,10 +210,16 @@ namespace ServiceLocator.Inventory
             var items = inventoryScriptableObject.itemDatabase.itemList;
             var minWeightOfItems = items.Min(item => (float)item.weight);
 
+            if ((inventoryModel.MaxWeight == inventoryModel.CurrentWeight))
+            {
+                _transactionMessage = "No Space Left!!!! \n\nGather Resource Disabled";
+                return false;
+            }
+
             if ((inventoryModel.MaxWeight - inventoryModel.CurrentWeight)
                 < minWeightOfItems)
             {
-                _transactionMessage = "Not Enough Space!!!! \n\nGather Resource Disabled";
+                _transactionMessage = "Not Enough Space for Lightest item to Gather!!!! \n\nGather Resource Disabled";
                 return false;
             }
 
