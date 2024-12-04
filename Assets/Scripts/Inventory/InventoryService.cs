@@ -1,6 +1,5 @@
 using ServiceLocator.Event;
 using ServiceLocator.Item;
-using ServiceLocator.Sound;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,32 +8,21 @@ namespace ServiceLocator.Inventory
     public class InventoryService
     {
         private InventoryScriptableObject inventoryScriptableObject;
-        private EventService eventService;
         private InventoryController inventoryController;
 
         public InventoryService(EventService _eventService, InventoryScriptableObject _scriptableObject)
         {
-            eventService = _eventService;
             inventoryScriptableObject = _scriptableObject;
-            InitializeVariables();
-
-            // Adding Event Listeners
-            eventService.OnSellItemEvent.AddListener(SellItems);
+            InitializeVariables(_eventService);
         }
 
-        ~InventoryService()
-        {
-            // Removing Event Listeners
-            eventService.OnSellItemEvent.RemoveListener(SellItems);
-        }
-
-        private void InitializeVariables()
+        private void InitializeVariables(EventService _eventService)
         {
             if (!ValidateReferences(inventoryScriptableObject.itemDatabase.itemList, "Inventory"))
                 return;
 
             // Initializing InventoryController
-            inventoryController = new InventoryController(eventService, inventoryScriptableObject);
+            inventoryController = new InventoryController(_eventService, inventoryScriptableObject);
 
             // Adding buttons dynamically
             inventoryController.AddButtonToPanel("Gather Resources");
@@ -52,16 +40,6 @@ namespace ServiceLocator.Inventory
             }
 
             return true;
-        }
-
-        private void SellItems(ItemModel _itemModel, int _quantity)
-        {
-            bool isTransacted = eventService.OnShopAddItemEvent.Invoke<bool>(_itemModel, _quantity);
-            if (isTransacted)
-            {
-                eventService.OnPlaySoundEffectEvent.Invoke(SoundType.ItemSold);
-                inventoryController.RemoveOrDecrementItems(_itemModel, _quantity);
-            }
         }
     }
 }

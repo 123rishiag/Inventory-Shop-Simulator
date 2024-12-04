@@ -30,11 +30,13 @@ namespace ServiceLocator.Shop
             itemControllers = new List<ItemController>();
 
             // Adding Event Listeners
+            eventService.OnBuyItemEvent.AddListener(BuyItems);
             eventService.OnShopAddItemEvent.AddListener(AddOrIncrementItems);
         }
         ~ShopController()
         {
             // Removing Event Listeners
+            eventService.OnBuyItemEvent.RemoveListener(BuyItems);
             eventService.OnShopAddItemEvent.RemoveListener(AddOrIncrementItems);
         }
 
@@ -62,6 +64,16 @@ namespace ServiceLocator.Shop
             UpdateUI();
         }
 
+        private void BuyItems(ItemModel _itemModel, int _quantity)
+        {
+            bool isTransacted = eventService.OnInventoryAddItemEvent.Invoke<bool>(_itemModel, _quantity);
+            if (isTransacted)
+            {
+                eventService.OnPlaySoundEffectEvent.Invoke(SoundType.ItemBought);
+                RemoveOrDecrementItems(_itemModel, _quantity);
+            }
+        }
+
         public void AddNewItem(ItemScriptableObject _itemData, int _quantity = -1)
         {
             var itemController = eventService.OnCreateItemEvent.Invoke<ItemController>(_itemData, shopModel.UISection);
@@ -86,7 +98,7 @@ namespace ServiceLocator.Shop
             }
         }
 
-        public bool AddOrIncrementItems(ItemModel _itemModel, int _quantity = 1)
+        private bool AddOrIncrementItems(ItemModel _itemModel, int _quantity = 1)
         {
             string transactionMessage = string.Empty;
             if (!CheckMetricConditions(_itemModel, out transactionMessage, _quantity))
@@ -122,7 +134,7 @@ namespace ServiceLocator.Shop
             return true;
         }
 
-        public void RemoveOrDecrementItems(ItemModel _itemModel, int _quantity = 1)
+        private void RemoveOrDecrementItems(ItemModel _itemModel, int _quantity = 1)
         {
             // Check if an item with the same ID already exists
             var existingItemController = itemControllers.Find(c => c.GetModel().Id == _itemModel.Id);
