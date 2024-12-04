@@ -123,7 +123,7 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1001 &319601162
+--- !u!1001 &814129475
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -660,10 +660,10 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 59ebfd3bd2af9f04ebd0fd713e89ef94, type: 3}
---- !u!114 &319601163 stripped
+--- !u!114 &814129476 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6057290205239783904, guid: 59ebfd3bd2af9f04ebd0fd713e89ef94, type: 3}
-  m_PrefabInstance: {fileID: 319601162}
+  m_PrefabInstance: {fileID: 814129475}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
@@ -1029,7 +1029,7 @@ MonoBehaviour:
   shopScriptableObject: {fileID: 11400000, guid: 6730ec9a14e25f94990c2777546b9485, type: 2}
   SFXSource: {fileID: 1860436697}
   BGSource: {fileID: 1776746612}
-  uiCanvas: {fileID: 319601163}
+  uiCanvas: {fileID: 814129476}
 --- !u!4 &2053956947
 Transform:
   m_ObjectHideFlags: 0
@@ -1049,7 +1049,7 @@ Transform:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 319601162}
+  - {fileID: 814129475}
   - {fileID: 1899366761}
   - {fileID: 2053956947}
   - {fileID: 1860436698}
