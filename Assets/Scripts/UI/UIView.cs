@@ -394,7 +394,7 @@ namespace ServiceLocator.UI
         }
         private void UpdateItemPrice(int _value)
         {
-            itemPrice.text = $"Price: {_value}";
+            itemPrice.text = $"Price: {_value}A";
         }
         private void UpdateItemWeight(float _value)
         {
