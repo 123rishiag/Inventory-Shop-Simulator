@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Silver Ingot
   m_EditorClassIdentifier: 
   id: 7
-  icon: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  icon: {fileID: 21300000, guid: 1b94f56aeee66b64490c639a811a9270, type: 3}
   description: A refined bar of silver used in crafting.
   buyingPrice: 250
   sellingPrice: 150
