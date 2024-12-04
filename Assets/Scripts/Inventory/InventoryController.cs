@@ -34,11 +34,13 @@ namespace ServiceLocator.Inventory
             itemControllers = new List<ItemController>();
 
             // Adding Event Listeners
+            eventService.OnSellItemEvent.AddListener(SellItems);
             eventService.OnInventoryAddItemEvent.AddListener(AddOrIncrementItems);
         }
         ~InventoryController()
         {
             // Removing Event Listeners
+            eventService.OnSellItemEvent.RemoveListener(SellItems);
             eventService.OnInventoryAddItemEvent.RemoveListener(AddOrIncrementItems);
         }
 
@@ -63,6 +65,16 @@ namespace ServiceLocator.Inventory
         private void OnButtonClicked()
         {
             GatherResources();
+        }
+
+        private void SellItems(ItemModel _itemModel, int _quantity)
+        {
+            bool isTransacted = eventService.OnShopAddItemEvent.Invoke<bool>(_itemModel, _quantity);
+            if (isTransacted)
+            {
+                eventService.OnPlaySoundEffectEvent.Invoke(SoundType.ItemSold);
+                RemoveOrDecrementItems(_itemModel, _quantity);
+            }
         }
 
         public void AddNewItem(ItemScriptableObject _itemData, int _quantity = -1)
@@ -97,7 +109,7 @@ namespace ServiceLocator.Inventory
             UpdateUI();
         }
 
-        public bool AddOrIncrementItems(ItemModel _itemModel, int _quantity = 1)
+        private bool AddOrIncrementItems(ItemModel _itemModel, int _quantity = 1)
         {
             string transactionMessage = string.Empty;
             if (!CheckMetricConditions(_itemModel, out transactionMessage, _quantity))
@@ -137,7 +149,7 @@ namespace ServiceLocator.Inventory
             return true;
         }
 
-        public void RemoveOrDecrementItems(ItemModel _itemModel, int _quantity = 1)
+        private void RemoveOrDecrementItems(ItemModel _itemModel, int _quantity = 1)
         {
             // Check if an item with the same ID already exists
             var existingItemController = itemControllers.Find(c => c.GetModel().Id == _itemModel.Id);
@@ -234,7 +246,7 @@ namespace ServiceLocator.Inventory
             return true;
         }
 
-        public void GatherResources()
+        private void GatherResources()
         {
             eventService.OnPlaySoundEffectEvent.Invoke(SoundType.GatherResource);
 
