@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Stamina Booster
   m_EditorClassIdentifier: 
   id: 18
-  icon: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  icon: {fileID: 21300000, guid: b2a3e82890c448c41a1143cd520a2e7b, type: 3}
   description: Temporarily increases stamina regeneration.
   buyingPrice: 300
   sellingPrice: 180

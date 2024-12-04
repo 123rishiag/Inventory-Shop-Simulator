@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Elixir of Strength
   m_EditorClassIdentifier: 
   id: 21
-  icon: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  icon: {fileID: 21300000, guid: 92fab215293d42d49b7448024df7ebcb, type: 3}
   description: Temporarily boosts attack power by 20%.
   buyingPrice: 400
   sellingPrice: 250

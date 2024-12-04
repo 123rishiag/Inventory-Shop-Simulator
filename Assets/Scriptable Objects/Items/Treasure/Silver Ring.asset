@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Silver Ring
   m_EditorClassIdentifier: 
   id: 22
-  icon: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  icon: {fileID: 21300000, guid: 6790fcad901342843ac89ffc33a718ae, type: 3}
   description: A simple silver ring.
   buyingPrice: 200
   sellingPrice: 120

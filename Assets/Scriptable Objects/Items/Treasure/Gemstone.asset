@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Gemstone
   m_EditorClassIdentifier: 
   id: 27
-  icon: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  icon: {fileID: 21300000, guid: 49e662dc13aa56d42992550bf42773f0, type: 3}
   description: A valuable multi-colored gem.
   buyingPrice: 1200
   sellingPrice: 900

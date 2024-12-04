@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Ruby Necklace
   m_EditorClassIdentifier: 
   id: 23
-  icon: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  icon: {fileID: 21300000, guid: 1118195efb1d05c4b9b7cb7faa089895, type: 3}
   description: A necklace adorned with rubies.
   buyingPrice: 1500
   sellingPrice: 1000

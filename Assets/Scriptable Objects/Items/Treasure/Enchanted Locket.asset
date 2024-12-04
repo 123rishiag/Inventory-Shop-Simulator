@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Enchanted Locket
   m_EditorClassIdentifier: 
   id: 28
-  icon: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  icon: {fileID: 21300000, guid: 82fd18312edce3c45b18dc6d74dbe878, type: 3}
   description: A magical locket that glows faintly, rumored to bring good luck.
   buyingPrice: 2000
   sellingPrice: 1500

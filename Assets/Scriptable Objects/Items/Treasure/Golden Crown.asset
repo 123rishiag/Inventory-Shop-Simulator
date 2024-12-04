@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Golden Crown
   m_EditorClassIdentifier: 
   id: 24
-  icon: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  icon: {fileID: 21300000, guid: 34503c1022bf39949b952c08f3223f4d, type: 3}
   description: A crown made of pure gold.
   buyingPrice: 3000
   sellingPrice: 2500
