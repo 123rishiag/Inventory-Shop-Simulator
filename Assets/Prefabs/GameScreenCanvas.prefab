@@ -8963,7 +8963,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 893836b69fd84254c937aa26fa72e2a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemPrefab: {fileID: 7103220825560255194, guid: e746c57d1d6071f49a8b322ecd71a158, type: 3}
+  itemPrefab: {fileID: 5083137859183230699, guid: e746c57d1d6071f49a8b322ecd71a158, type: 3}
   menuButtonPrefab: {fileID: 1412723424052507799, guid: 713818958f47a504da7963c027461d84, type: 3}
   inventoryGrid: {fileID: 841984578218086930}
   inventoryMenuButtonPanel: {fileID: 4094606298245074502}

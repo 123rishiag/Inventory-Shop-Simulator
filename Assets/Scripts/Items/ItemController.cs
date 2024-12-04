@@ -47,7 +47,7 @@ namespace ServiceLocator.Item
             itemView.SetView(this, _menubutton);
 
             // Add OnClick listener
-            Button button = itemView.GetComponent<Button>();
+            Button button = itemView.GetItemButton().GetComponent<Button>();
             if (button != null)
             {
                 button.onClick.AddListener(() => ProcessItem());
