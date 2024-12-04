@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Phoenix Feather
   m_EditorClassIdentifier: 
   id: 19
-  icon: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  icon: {fileID: 21300000, guid: 8a3b9d4046748b8408f37fe156f34e1c, type: 3}
   description: Revives a fallen ally.
   buyingPrice: 2000
   sellingPrice: 1500

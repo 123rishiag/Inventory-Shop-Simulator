@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Mana Elixir
   m_EditorClassIdentifier: 
   id: 16
-  icon: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  icon: {fileID: 21300000, guid: af440291d00e19b4892e14850705b9a1, type: 3}
   description: Restores 30 mana points.
   buyingPrice: 75
   sellingPrice: 40
