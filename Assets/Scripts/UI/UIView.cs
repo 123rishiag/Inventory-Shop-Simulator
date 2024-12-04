@@ -1,7 +1,4 @@
-using ServiceLocator.Event;
 using ServiceLocator.Item;
-using ServiceLocator.Sound;
-using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -13,9 +10,8 @@ namespace ServiceLocator.UI
 {
     public class UIView : MonoBehaviour
     {
-        // Services
-        private EventService eventService;
-
+        // Variables
+        #region Variables
         [Header("Prefabs")]
         [SerializeField] private GameObject itemPrefab;
         [SerializeField] private GameObject menuButtonPrefab;
@@ -61,35 +57,11 @@ namespace ServiceLocator.UI
         [Header("Notification Popup Elements")]
         [SerializeField] private GameObject notificationPopupPanel;
         [SerializeField] private TMP_Text notificationPopupText;
+        #endregion
 
-        ~UIView()
-        {
-            // Removing Event Listeners
-            eventService.OnPopupNotificationEvent.RemoveListener(PopupNotification);
-            eventService.OnSetButtonInteractionEvent.RemoveListener(SetButtonInteractivity);
-            eventService.OnCreateItemButtonViewEvent.RemoveListener(CreateItemButtonPrefab);
-            eventService.OnCreateMenuButtonViewEvent.RemoveListener(CreateMenuButtonPrefab);
-            eventService.OnShopUpdatedEvent.RemoveListener(UpdateShopUI);
-            eventService.OnInventoryUpdatedEvent.RemoveListener(UpdateInventoryUI);
-            eventService.OnItemClickEvent.RemoveListener(UpdateItemMenuUI);
-            eventService.OnBuySellButtonClickEvent.RemoveListener(GetItemTransactionStatus);
-        }
-        public void InitializeVariables(EventService _eventService)
-        {
-            eventService = _eventService;
-
-            // Adding Event Listeners
-            eventService.OnPopupNotificationEvent.AddListener(PopupNotification);
-            eventService.OnSetButtonInteractionEvent.AddListener(SetButtonInteractivity);
-            eventService.OnCreateItemButtonViewEvent.AddListener(CreateItemButtonPrefab);
-            eventService.OnCreateMenuButtonViewEvent.AddListener(CreateMenuButtonPrefab);
-            eventService.OnShopUpdatedEvent.AddListener(UpdateShopUI);
-            eventService.OnInventoryUpdatedEvent.AddListener(UpdateInventoryUI);
-            eventService.OnItemClickEvent.AddListener(UpdateItemMenuUI);
-            eventService.OnBuySellButtonClickEvent.AddListener(GetItemTransactionStatus);
-        }
-
-        private GameObject CreateMenuButtonPrefab(UISection _uISection, string _menuButtonText)
+        // General Functions
+        #region General Functions
+        public GameObject CreateMenuButtonPrefab(UISection _uISection, string _menuButtonText)
         {
             Transform menuButtonPanel = GetMenuButtonPanel(_uISection);
 
@@ -116,22 +88,7 @@ namespace ServiceLocator.UI
 
             return newButton;
         }
-        private Transform GetMenuButtonPanel(UISection _uiSection)
-        {
-            switch (_uiSection)
-            {
-                case UISection.Inventory:
-                    return inventoryMenuButtonPanel;
-                case UISection.Shop:
-                    return shopMenuButtonPanel;
-                case UISection.Item:
-                    return itemMenuButtonPanel;
-                default:
-                    return null;
-            }
-        }
-
-        private GameObject CreateItemButtonPrefab(UISection _uISection)
+        public GameObject CreateItemButtonPrefab(UISection _uISection)
         {
             Transform itemPanel = GetItemGridPanel(_uISection);
 
@@ -147,6 +104,170 @@ namespace ServiceLocator.UI
 
             return newObject;
         }
+        public (Button, Button, Button) CreateItemQuanityButtons(ItemModel _itemModel, int currentQuantity)
+        {
+            if (quantitySelectionText != null)
+            {
+                quantitySelectionText.text = currentQuantity.ToString();
+            }
+
+            // Enabling Panel
+            quantitySelectionPanel.SetActive(true);
+
+            // Fetching buttons
+            Button decrementbutton = quantitySelectionDecrementButton.GetComponent<Button>();
+            Button incrementbutton = quantitySelectionIncrementButton.GetComponent<Button>();
+            Button doneButton = quantitySelectionDoneButton.GetComponent<Button>();
+
+            return (decrementbutton, incrementbutton, doneButton);
+        }
+        public int OnQuantityDecrementButton(Button _decrementButton, Button _incrementButton,
+            int _minQuantity, int _quantity)
+        {
+            if (_quantity != _minQuantity)
+            {
+                _quantity -= 1;
+
+                // Updating Panel Text
+                if (quantitySelectionText != null)
+                {
+                    quantitySelectionText.text = _quantity.ToString();
+                }
+
+                // Disabling Decrement Button if quantity is minimum
+                if (_quantity == _minQuantity && _decrementButton != null)
+                {
+                    _decrementButton.interactable = false;
+                }
+
+                // If quantity decreases, enabling Increment Button
+                if (_incrementButton != null)
+                {
+                    _incrementButton.interactable = true;
+                }
+            }
+
+            return _quantity;
+        }
+        public int OnQuantityIncrementButton(Button _decrementButton, Button _incrementButton,
+            int _maxQuantity, int _quantity)
+        {
+            if (_quantity != _maxQuantity)
+            {
+                _quantity += 1;
+
+                // Updating Panel Text
+                if (quantitySelectionText != null)
+                {
+                    quantitySelectionText.text = _quantity.ToString();
+                }
+
+                // Disabling Increment Button if quantity is maximum
+                if (_quantity == _maxQuantity && _incrementButton != null)
+                {
+                    _incrementButton.interactable = false;
+                }
+
+                // If quantity increases, enabling Decrement Button
+                if (_decrementButton != null)
+                {
+                    _decrementButton.interactable = true;
+                }
+            }
+
+            return _quantity;
+        }
+        public (Button, Button) CreateTransactionConfirmationButtons(ItemModel _itemModel, int _quantity)
+        {
+            // Enabling Panel
+            transactionConfirmationPanel.SetActive(true);
+
+            // Setting Text
+            string activity = string.Empty;
+            int price = 0;
+            switch (_itemModel.UISection)
+            {
+                case UISection.Inventory:
+                    activity = "sell";
+                    price = _itemModel.SellingPrice;
+                    break;
+                case UISection.Shop:
+                    activity = "buy";
+                    price = _itemModel.BuyingPrice;
+                    break;
+                default:
+                    break;
+            }
+
+            if (transactionConfirmationText != null)
+            {
+                transactionConfirmationText.text = $"Do you really wanna {activity} {_quantity} {_itemModel.Name} for " +
+                    $"{_quantity * price}A.";
+            }
+
+            // Fetching UI Elements
+            Button yesButton = transactionConfirmationYesButton.GetComponent<Button>();
+            Button noButton = transactionConfirmationNoButton.GetComponent<Button>();
+
+            return (yesButton, noButton);
+        }
+        public void PopupNotification(string _text)
+        {
+            notificationPopupText.text = _text;
+            StartCoroutine(PopupNotificationCounter(3f));
+        }
+        private IEnumerator PopupNotificationCounter(float _timeInSeconds)
+        {
+            notificationPopupPanel.gameObject.SetActive(true);
+            yield return new WaitForSeconds(_timeInSeconds);
+            notificationPopupPanel.gameObject.SetActive(false);
+        }
+        private void HideItemPanel()
+        {
+            if (itemPanel != null)
+            {
+                itemPanel.SetActive(false);
+            }
+        }
+        private IEnumerator ShowItemPanel(float _timeInSeconds)
+        {
+            if (itemPanel != null)
+            {
+                itemPanel.SetActive(false);
+                yield return new WaitForSeconds(_timeInSeconds);
+                itemPanel.SetActive(true);
+            }
+        }
+        #endregion
+
+        // Getters
+        #region Getters
+        public GameObject GetTransactionConfirmationPanel()
+        {
+            return transactionConfirmationPanel;
+        }
+        public GameObject GetQuantitySelectionPanel()
+        {
+            return quantitySelectionPanel;
+        }
+        public GameObject GetNotificationPopupPanel()
+        {
+            return notificationPopupPanel;
+        }
+        private Transform GetMenuButtonPanel(UISection _uiSection)
+        {
+            switch (_uiSection)
+            {
+                case UISection.Inventory:
+                    return inventoryMenuButtonPanel;
+                case UISection.Shop:
+                    return shopMenuButtonPanel;
+                case UISection.Item:
+                    return itemMenuButtonPanel;
+                default:
+                    return null;
+            }
+        }
         private Transform GetItemGridPanel(UISection _uiSection)
         {
             switch (_uiSection)
@@ -159,8 +280,33 @@ namespace ServiceLocator.UI
                     return null;
             }
         }
+        #endregion
 
         // Setters
+        #region Setters
+
+        // General Setters
+        #region General Setters
+        public void SetButtonInteractivity(Button _button, bool _isInteractable)
+        {
+            if (_button != null)
+            {
+                _button.interactable = _isInteractable;
+            }
+        }
+        #endregion
+
+        // Inventory Setters
+        #region Inventory Setters
+        public void UpdateInventoryUI(int _itemCount, int _currency, float _currentWeight, float _totalWeight)
+        {
+            // Update UI texts based on items
+            UpdateInventoryEmptyText(_itemCount == 0);
+            UpdateInventoryCurrency(_currency);
+            UpdateInventoryWeight(_currentWeight, _totalWeight);
+
+            HideItemPanel();
+        }
         private void UpdateInventoryEmptyText(bool _isEmpty)
         {
             if (inventoryEmptyText != null)
@@ -176,12 +322,15 @@ namespace ServiceLocator.UI
         {
             inventoryWeightText.text = $"Weight: {_currentWeight}/{_maxWeight}";
         }
-        private void UpdateInventoryUI(int _itemCount, int _currency, float _currentWeight, float _totalWeight)
+        #endregion
+
+        // Shop Setters
+        #region Shop Setters
+        public void UpdateShopUI(ItemType _itemType, int _itemCount)
         {
-            // Update UI texts based on items
-            UpdateInventoryEmptyText(_itemCount == 0);
-            UpdateInventoryCurrency(_currency);
-            UpdateInventoryWeight(_currentWeight, _totalWeight);
+            UpdateShopEmptyText(_itemCount == 0);
+            UpdateShopItemTypeText(_itemType.ToString());
+            UpdateShopItemCount(_itemCount);
 
             HideItemPanel();
         }
@@ -200,13 +349,32 @@ namespace ServiceLocator.UI
         {
             shopItemsCountText.text = $"Items Count: {_itemCount}";
         }
-        private void UpdateShopUI(ItemType _itemType, int _itemCount)
-        {
-            UpdateShopEmptyText(_itemCount == 0);
-            UpdateShopItemTypeText(_itemType.ToString());
-            UpdateShopItemCount(_itemCount);
+        #endregion
 
-            HideItemPanel();
+        // Item Setters
+        #region Item Setters
+        public void UpdateItemMenuUI(ItemModel _itemModel, GameObject _menubutton)
+        {
+            StartCoroutine(ShowItemPanel(0.2f));
+            UpdateItemUISection(_itemModel.UISection.ToString());
+            UpdateItemName(_itemModel.Name);
+            UpdateItemImage(_itemModel.Icon);
+            UpdateItemDescription(_itemModel.Description);
+
+            if (_itemModel.UISection == UISection.Inventory)
+            {
+                UpdateItemPrice(_itemModel.SellingPrice);
+            }
+            else if (_itemModel.UISection == UISection.Shop)
+            {
+                UpdateItemPrice(_itemModel.BuyingPrice);
+            }
+
+            UpdateItemWeight(_itemModel.Weight);
+            UpdateItemType(_itemModel.Type.ToString());
+            UpdateItemRarity(_itemModel.Rarity.ToString());
+            UpdateItemQuantity(_itemModel.Quantity);
+            UpdateItemMenuButtonText(_itemModel, _menubutton);
         }
         private void UpdateItemUISection(string _text)
         {
@@ -244,30 +412,7 @@ namespace ServiceLocator.UI
         {
             itemQuantity.text = $"Quantity: {_value}x";
         }
-        private void UpdateItemMenuUI(ItemModel _itemModel, GameObject _menubutton)
-        {
-            StartCoroutine(ShowItemPanel(0.2f));
-            UpdateItemUISection(_itemModel.UISection.ToString());
-            UpdateItemName(_itemModel.Name);
-            UpdateItemImage(_itemModel.Icon);
-            UpdateItemDescription(_itemModel.Description);
-
-            if (_itemModel.UISection == UISection.Inventory)
-            {
-                UpdateItemPrice(_itemModel.SellingPrice);
-            }
-            else if (_itemModel.UISection == UISection.Shop)
-            {
-                UpdateItemPrice(_itemModel.BuyingPrice);
-            }
-
-            UpdateItemWeight(_itemModel.Weight);
-            UpdateItemType(_itemModel.Type.ToString());
-            UpdateItemRarity(_itemModel.Rarity.ToString());
-            UpdateItemQuantity(_itemModel.Quantity);
-            SetItemMenuButtonText(_itemModel, _menubutton);
-        }
-        private void SetItemMenuButtonText(ItemModel _itemModel, GameObject _menubutton)
+        private void UpdateItemMenuButtonText(ItemModel _itemModel, GameObject _menubutton)
         {
             // Fetching TMP_Text component in the button and setting its text
             TMP_Text buttonText = _menubutton.GetComponentInChildren<TMP_Text>();
@@ -291,244 +436,9 @@ namespace ServiceLocator.UI
                 Debug.LogWarning("Text component not found in button prefab.");
             }
         }
-        private IEnumerator ShowItemPanel(float _timeInSeconds)
-        {
-            if (itemPanel != null)
-            {
-                itemPanel.SetActive(false);
-                yield return new WaitForSeconds(_timeInSeconds);
-                itemPanel.SetActive(true);
-            }
-        }
-        private void HideItemPanel()
-        {
-            if (itemPanel != null)
-            {
-                itemPanel.SetActive(false);
-            }
-        }
-        private void GetItemTransactionStatus(ItemModel _itemModel, Action<int, bool> _callback)
-        {
-            // Setting the item quantity first
-            SetItemQuanity(_itemModel, _quantity =>
-            {
-                // After getting the quantity, proceeding to get transaction confirmation
-                GetTransactionConfirmation(_itemModel, _quantity, _isTransacted =>
-                {
-                    // Passing the result back through the callback
-                    _callback.Invoke(_quantity, _isTransacted);
-                });
-            });
-        }
-        private void GetTransactionConfirmation(ItemModel _itemModel, int _quantity, Action<bool> _callback)
-        {
-            // Enabling Panel
-            transactionConfirmationPanel.SetActive(true);
+        #endregion
 
-            eventService.OnPlaySoundEffectEvent.Invoke(SoundType.ConfirmationPopup);
-
-            // Setting Text
-            string activity = string.Empty;
-            int price = 0;
-            switch (_itemModel.UISection)
-            {
-                case UISection.Inventory:
-                    activity = "sell";
-                    price = _itemModel.SellingPrice;
-                    break;
-                case UISection.Shop:
-                    activity = "buy";
-                    price = _itemModel.BuyingPrice;
-                    break;
-                default:
-                    break;
-            }
-
-            if (transactionConfirmationText != null)
-            {
-                transactionConfirmationText.text = $"Do you really wanna {activity} {_quantity} {_itemModel.Name} for " +
-                    $"{_quantity * price}A.";
-            }
-
-            // Fetching UI Elements
-            Button yesButton = transactionConfirmationYesButton.GetComponent<Button>();
-            Button noButton = transactionConfirmationNoButton.GetComponent<Button>();
-
-            if (yesButton != null)
-            {
-                yesButton.onClick.RemoveAllListeners();
-                yesButton.onClick.AddListener(() =>
-                {
-                    transactionConfirmationPanel.SetActive(false);
-                    eventService.OnPlaySoundEffectEvent.Invoke(SoundType.ButtonClick);
-                    _callback.Invoke(true);
-                }
-                );
-            }
-
-            if (noButton != null)
-            {
-                noButton.onClick.RemoveAllListeners();
-                noButton.onClick.AddListener(() =>
-                {
-                    transactionConfirmationPanel.SetActive(false);
-                    eventService.OnPlaySoundEffectEvent.Invoke(SoundType.ButtonClick);
-                    _callback.Invoke(false);
-                }
-                );
-            }
-        }
-        private int OnQuantityDecrementButton(Button _decrementButton, Button _incrementButton,
-            int _minQuantity, int _quantity)
-        {
-            if (_quantity != _minQuantity)
-            {
-                _quantity -= 1;
-
-                // Updating Panel Text
-                if (quantitySelectionText != null)
-                {
-                    quantitySelectionText.text = _quantity.ToString();
-                }
-
-                // Disabling Decrement Button if quantity is minimum
-                if (_quantity == _minQuantity && _decrementButton != null)
-                {
-                    _decrementButton.interactable = false;
-                }
-
-                // If quantity decreases, enabling Increment Button
-                if (_incrementButton != null)
-                {
-                    _incrementButton.interactable = true;
-                }
-            }
-
-            return _quantity;
-        }
-        private int OnQuantityIncrementButton(Button _decrementButton, Button _incrementButton,
-            int _maxQuantity, int _quantity)
-        {
-            if (_quantity != _maxQuantity)
-            {
-                _quantity += 1;
-
-                // Updating Panel Text
-                if (quantitySelectionText != null)
-                {
-                    quantitySelectionText.text = _quantity.ToString();
-                }
-
-                // Disabling Increment Button if quantity is maximum
-                if (_quantity == _maxQuantity && _incrementButton != null)
-                {
-                    _incrementButton.interactable = false;
-                }
-
-                // If quantity increases, enabling Decrement Button
-                if (_decrementButton != null)
-                {
-                    _decrementButton.interactable = true;
-                }
-            }
-
-            return _quantity;
-        }
-        private void SetItemQuanity(ItemModel _itemModel, Action<int> _callback)
-        {
-            // Setting Initial Values
-            int minQuantity = 1;
-            int currentQuantity = minQuantity;
-            int maxQuantity = _itemModel.Quantity;
-            if (quantitySelectionText != null)
-            {
-                quantitySelectionText.text = currentQuantity.ToString();
-            }
-
-            // Enabling Panel
-            quantitySelectionPanel.SetActive(true);
-            eventService.OnPlaySoundEffectEvent.Invoke(SoundType.ConfirmationPopup);
-
-            // Fetching buttons
-            Button decrementbutton = quantitySelectionDecrementButton.GetComponent<Button>();
-            Button incrementbutton = quantitySelectionIncrementButton.GetComponent<Button>();
-            Button doneButton = quantitySelectionDoneButton.GetComponent<Button>();
-
-            // Decrement Button Setup
-            if (decrementbutton != null)
-            {
-                decrementbutton.onClick.RemoveAllListeners();
-                decrementbutton.onClick.AddListener(() =>
-                {
-                    currentQuantity = OnQuantityDecrementButton(decrementbutton, incrementbutton,
-                        minQuantity, currentQuantity);
-                    eventService.OnPlaySoundEffectEvent.Invoke(SoundType.QuantitySelect);
-                }
-                );
-
-                // Initial Button Status
-                if (currentQuantity == minQuantity)
-                {
-                    decrementbutton.interactable = false;
-                }
-                else
-                {
-                    decrementbutton.interactable = true;
-                }
-            }
-
-            // Increment Button Setup
-            if (incrementbutton != null)
-            {
-                incrementbutton.onClick.RemoveAllListeners();
-                incrementbutton.onClick.AddListener(() =>
-                {
-                    currentQuantity = OnQuantityIncrementButton(decrementbutton, incrementbutton,
-                        maxQuantity, currentQuantity);
-                    eventService.OnPlaySoundEffectEvent.Invoke(SoundType.QuantitySelect);
-                }
-                );
-
-                // Initial Button Status
-                if (currentQuantity == maxQuantity)
-                {
-                    incrementbutton.interactable = false;
-                }
-                else
-                {
-                    incrementbutton.interactable = true;
-                }
-            }
-
-            // Done Button Setup
-            if (doneButton != null)
-            {
-                doneButton.onClick.RemoveAllListeners();
-                doneButton.onClick.AddListener(() =>
-                {
-                    quantitySelectionPanel.SetActive(false);
-                    _callback.Invoke(currentQuantity);
-                }
-                );
-            }
-        }
-        private IEnumerator PopupNotificationCounter(float _timeInSeconds)
-        {
-            notificationPopupPanel.gameObject.SetActive(true);
-            yield return new WaitForSeconds(_timeInSeconds);
-            notificationPopupPanel.gameObject.SetActive(false);
-        }
-        private void PopupNotification(string _text)
-        {
-            notificationPopupText.text = _text;
-            StartCoroutine(PopupNotificationCounter(3f));
-        }
-        private void SetButtonInteractivity(Button _button, bool _isInteractable)
-        {
-            if (_button != null)
-            {
-                _button.interactable = _isInteractable;
-            }
-        }
+        // Ending Setters Region
+        #endregion
     }
 }
