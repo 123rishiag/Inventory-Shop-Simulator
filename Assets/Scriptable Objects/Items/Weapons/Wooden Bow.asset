@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Wooden Bow
   m_EditorClassIdentifier: 
   id: 9
-  icon: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  icon: {fileID: 21300000, guid: 7126945fd795dd94faeaf6282b01f7e4, type: 3}
   description: A basic bow for ranged attacks.
   buyingPrice: 250
   sellingPrice: 125

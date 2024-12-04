@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Magic Staff
   m_EditorClassIdentifier: 
   id: 10
-  icon: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  icon: {fileID: 21300000, guid: 748c13ad7f682b24abc21327db592100, type: 3}
   description: A staff imbued with magical properties
   buyingPrice: 1000
   sellingPrice: 700

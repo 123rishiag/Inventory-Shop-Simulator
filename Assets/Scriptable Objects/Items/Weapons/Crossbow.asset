@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Crossbow
   m_EditorClassIdentifier: 
   id: 14
-  icon: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  icon: {fileID: 21300000, guid: b572bbf9c8a655c4bb0173d5006aa89e, type: 3}
   description: A precision weapon for long-range attacks.
   buyingPrice: 700
   sellingPrice: 500

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Iron Ore
   m_EditorClassIdentifier: 
   id: 1
-  icon: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  icon: {fileID: 21300000, guid: e8c9b3681a471414baf1ccab5678bb57, type: 3}
   description: A chunk of raw iron used in crafting.
   buyingPrice: 100
   sellingPrice: 50

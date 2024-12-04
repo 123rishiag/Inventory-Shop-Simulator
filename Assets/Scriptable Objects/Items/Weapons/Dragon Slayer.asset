@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Dragon Slayer
   m_EditorClassIdentifier: 
   id: 12
-  icon: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  icon: {fileID: 21300000, guid: 12682f0862e146848ad0efff2d1c6f78, type: 3}
   description: A legendary sword capable of slaying dragons.
   buyingPrice: 5000
   sellingPrice: 4000

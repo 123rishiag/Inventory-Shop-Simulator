@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Copper Wire
   m_EditorClassIdentifier: 
   id: 2
-  icon: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  icon: {fileID: 21300000, guid: d1defdc427f00384e8b0bc6d9a323048, type: 3}
   description: A durable wire for electrical applications.
   buyingPrice: 75
   sellingPrice: 40

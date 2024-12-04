@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Throwing Knives
   m_EditorClassIdentifier: 
   id: 13
-  icon: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  icon: {fileID: 21300000, guid: f3dedd1dc3071ae469786e4daebff560, type: 3}
   description: A set of lightweight throwing knives.
   buyingPrice: 150
   sellingPrice: 80
