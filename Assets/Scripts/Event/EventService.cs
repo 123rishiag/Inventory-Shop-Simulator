@@ -23,10 +23,10 @@ namespace ServiceLocator.Event
         // To Add an Item in Inventory and return its success status when Buying from Shop - Inventory Controller
         public EventController<Func<ItemModel, int, bool>> OnInventoryAddItemEvent { get; private set; }
 
-        // To Trigger Sell Item - Inventory Service
+        // To Trigger Sell Item - Inventory Controller
         public EventController<Action<ItemModel, int>> OnSellItemEvent { get; private set; }
 
-        // To Trigger Buy Item - Shop Service
+        // To Trigger Buy Item - Shop Controller
         public EventController<Action<ItemModel, int>> OnBuyItemEvent { get; private set; }
 
         // To Peform their respective operations when Buy/Sell Button is clicked in Item Panel - UI Controller
