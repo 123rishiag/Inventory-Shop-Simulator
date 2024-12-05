@@ -1,4 +1,4 @@
-# Inventory-Shop-Simulator
+# Inventory-Shop Simulator
 
 This project is a shop and inventory management system with interactive gameplay mechanics. Players can trade items, gather resources. The system is designed using **Service Locator**, **Dependency Injection**, **Model-View-Controller (MVC)**, and the **Observer Pattern**, ensuring modularity and scalability.
 
@@ -56,7 +56,6 @@ This project is a shop and inventory management system with interactive gameplay
 | Inventory weight constraints   | Dynamic weight updates; maximum weight prevents further actions like buying/gathering.  |
 | Buy/Sell mechanics             | Transaction logic integrated with sound and UI feedback.                                |
 | Notifications                  | Popups for insufficient currency or weight limits.                                      |
-|--------------------------------|-----------------------------------------------------------------------------------------|
 
 ### **9. Item Properties**
 - **Icon**: Visual representation of the item.
@@ -88,7 +87,7 @@ This project is a shop and inventory management system with interactive gameplay
 - `EventService` acts as the mediator for communication between all services using events that leads to decoupled services, enabling event-driven updates.
 
 ### 4. **Programming Principles**:
-- **Dependency Injection**: All services are passed as parameters, ensuring flexibility and reducing coupling.
+- **Dependency Injection**: Event service is passed in all services as parameter, ensuring flexibility and reducing coupling.
 - **Single Responsibility Principle (SRP)**: Every file has one defined responsibility for clarity and maintainability.
 
 ---
@@ -150,7 +149,7 @@ Here are the key events used in the system and their descriptions:
    - `OnCreateItemEvent`: Creates and returns an item controller for the specified section.
 
 2. **Item Controller**:
-   - `OnShowItemEvent`: Displays items of a specific type in a section (Shop/Inventory).
+   - `OnShowItemEvent`: Displays items of a specific type (Materials etc.) in a section (Shop/Inventory).
    - `OnDestroyItemEvent`: Removes an item from a section (Shop/Inventory).
 
 3. **Shop Controller**:
@@ -164,8 +163,8 @@ Here are the key events used in the system and their descriptions:
 5. **UI Controller**:
    - `OnBuySellButtonClickEvent`: Handles buy/sell button clicks and their respective actions.
    - `OnShopUpdatedEvent`: Updates the Shop UI dynamically.
-   - `OnInventoryUpdatedEvent`: Updates the Inventory UI dynamically with weight and slots.
-   - `OnItemClickEvent`: Displays an item’s UI details when clicked.
+   - `OnInventoryUpdatedEvent`: Updates the Inventory UI dynamically.
+   - `OnItemClickEvent`: Displays an item’s UI details when clicked in Item Panel.
    - `OnPopupNotificationEvent`: Triggers popups for notifications.
    - `OnSetButtonInteractionEvent`: Enables/disables buttons dynamically.
    - `OnCreateItemButtonViewEvent`: Instantiates and returns an item button prefab.
@@ -194,19 +193,19 @@ Here are the key events used in the system and their descriptions:
 
 ### Branches
 1. **feature/game-screen-ui**: Initial UI framework for Inventory and Shop panels.
-2. **feature/item-properties**: Created Scriptable Objects for item configurations.
+2. **feature/item-properties**: Created Scriptable Objects for item configurations and created basic structure of item, inventory and shop.
 3. **feature/item-mvc**: Modularized item logic into MVC.
 4. **feature/inventory-mvc**: Implemented MVC for inventory management.
-5. **feature/shop-mvc**: Developed shop system with categorized navigation.
-6. **feature/service-locator-di**: Centralized services with Dependency Injection.
+5. **feature/shop-mvc**: Implemented MVC for shop management.
+6. **feature/service-locator-di**: Created Service Locator, and services for Item, Inventory and Shop. Centralized services with Dependency Injection.
 7. **feature/buying-selling-items**: Integrated buying/selling mechanics.
 8. **feature/gather-resources**: Added dynamic resource gathering mechanics.
-9. **feature/item-ui-enhancements**: Improved UI clarity with detailed feedback.
+9. **feature/item-ui-enhancements**: Created Item Panel to show item details and improved UI clarity with detailed feedbacks and popups.
 10. **feature/event-service**: Implemented the Observer Pattern for communication.
 11. **feature/sound-service**: Added sound effects for gameplay immersion.
-12. **feature/ui-mvc**: Enhanced UI structure using MVC.
-13. **feature/gameplay-enhancements**: Polished gameplay with additional features.
-14. **feature/documentation**: Prepared the README and added Block diagrams.
+12. **feature/ui-mvc**: Modularized and Enhanced UI structure using MVC.
+13. **feature/gameplay-enhancements**: Polished gameplay UI Panels, beautified Icon UI and added icons for them.
+14. **feature/documentation**: Prepared the README and added Block diagram.
 
 ---
 

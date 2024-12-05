@@ -57,6 +57,11 @@ namespace ServiceLocator.UI
         [Header("Notification Popup Elements")]
         [SerializeField] private GameObject notificationPopupPanel;
         [SerializeField] private TMP_Text notificationPopupText;
+
+        [Header("Main Menu Elements")]
+        [SerializeField] private GameObject mainMenuPanel;
+        [SerializeField] private GameObject mainMenuStartButton;
+        [SerializeField] private GameObject mainMenuQuitButton;
         #endregion
 
         // General Functions
@@ -222,6 +227,14 @@ namespace ServiceLocator.UI
             yield return new WaitForSeconds(_timeInSeconds);
             notificationPopupPanel.gameObject.SetActive(false);
         }
+        public (Button, Button) CreateMainMenuButtons()
+        {
+            // Fetching UI Elements
+            Button startButton = mainMenuStartButton.GetComponent<Button>();
+            Button quitButton = mainMenuQuitButton.GetComponent<Button>();
+
+            return (startButton, quitButton);
+        }
         private void HideItemPanel()
         {
             if (itemPanel != null)
@@ -253,6 +266,10 @@ namespace ServiceLocator.UI
         public GameObject GetNotificationPopupPanel()
         {
             return notificationPopupPanel;
+        }
+        public GameObject GetMainMenuPanel()
+        {
+            return mainMenuPanel;
         }
         private Transform GetMenuButtonPanel(UISection _uiSection)
         {

@@ -20,6 +20,8 @@ namespace ServiceLocator.UI
             uiModel = new UIModel();
             uiView = _uiCanvas.GetComponent<UIView>();
 
+            SetMainMenuButtons();
+
             // Adding Event Listeners
             eventService.OnCreateMenuButtonViewEvent.AddListener(CreateMenuButtonPrefab);
             eventService.OnCreateItemButtonViewEvent.AddListener(CreateItemButtonPrefab);
@@ -174,6 +176,36 @@ namespace ServiceLocator.UI
         private void PopupNotification(string _text)
         {
             uiView.PopupNotification(_text);
+        }
+        private void SetMainMenuButtons()
+        {
+            // Fetching UI Elements
+            Button startButton;
+            Button quitButton;
+
+            (startButton, quitButton) = uiView.CreateMainMenuButtons();
+
+            if (startButton != null)
+            {
+                startButton.onClick.RemoveAllListeners();
+                startButton.onClick.AddListener(() =>
+                {
+                    eventService.OnPlaySoundEffectEvent.Invoke(SoundType.ButtonClick);
+                    uiView.GetMainMenuPanel().SetActive(false);
+                }
+                );
+            }
+
+            if (quitButton != null)
+            {
+                quitButton.onClick.RemoveAllListeners();
+                quitButton.onClick.AddListener(() =>
+                {
+                    eventService.OnPlaySoundEffectEvent.Invoke(SoundType.ButtonClick);
+                    Application.Quit();
+                }
+                );
+            }
         }
         private void SetButtonInteractivity(Button _button, bool _isInteractable)
         {
