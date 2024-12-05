@@ -22,7 +22,7 @@ This project is a shop and inventory management system with interactive gameplay
 ### **3. Inventory Constraints**
 - **Maximum Weight**: The cumulative weight of items in the inventory must not exceed the player's capacity.
 - **Dynamic Weight Updates**: Inventory weight updates dynamically with every item added or removed.
-- **Weight-Dependent Gameplay**: Certain actions, like resource gathering or buying items, are disabled when the inventory is full.
+- **Weight-Dependent Gameplay**: Actions like resource gathering are disabled when the inventory is full.
 
 ### **4. Currency System**
 - Players start with no money.
@@ -41,7 +41,7 @@ This project is a shop and inventory management system with interactive gameplay
 
 ### **6. UI Components**
 - **Shop Tabs**: All, Materials, Weapons, Consumables, and Treasure.
-- **Inventory Panel**: Shows item details like icon, description, rarity, weight, and value.
+- **Item Panel**: Shows item details like icon, description, rarity, type, weight, quantity and price.
 - **Notifications**: Popups for insufficient currency, full inventory, or successful transactions.
 
 ### **7. Sound and Feedback**
@@ -49,21 +49,22 @@ This project is a shop and inventory management system with interactive gameplay
 - Temporary overlays for actions like "You bought [Item Name]" or "You sold [Item Name]" improve clarity.
 
 ### **8. Requirements to Features Mapping**
-| **Requirement**               | **Implemented Feature**                                                                 |
+| **Requirement**               | **Implemented Feature**                                                                  |
 |--------------------------------|-----------------------------------------------------------------------------------------|
-| Item types (Materials, etc.)   | Shop and Inventory tabs categorized by item type.                                       |
-| Rarity system                  | Randomized resource gathering based on rarity proportional to inventory value.          |
+| Item types (Materials, etc.)   | Shop tabs categorized by item type.                                                     |
+| Rarity system                  | Randomized resource gathering based on rarity proportional to inventory weight.         |
 | Inventory weight constraints   | Dynamic weight updates; maximum weight prevents further actions like buying/gathering.  |
 | Buy/Sell mechanics             | Transaction logic integrated with sound and UI feedback.                                |
 | Notifications                  | Popups for insufficient currency or weight limits.                                      |
+|--------------------------------|-----------------------------------------------------------------------------------------|
 
 ### **9. Item Properties**
 - **Icon**: Visual representation of the item.
 - **Description**: Text detailing the item's purpose.
 - **Buying Price**: Cost of the item in the shop.
-- **Selling Price**: Value of the item when sold.
-- **Weight**: Affects inventory constraints.
-- **Type**: Type of the item.
+- **Selling Price**: Price of the item when sold.
+- **Weight**: Weight of one quantity of the item.
+- **Type**: Type of the item (Materials, etc.).
 - **Rarity**: Determines availability and gameplay impact.
 - **Quantity**: Number of items owned or available.
 
@@ -75,9 +76,26 @@ This project is a shop and inventory management system with interactive gameplay
 
 ---
 
+## Design Patterns and Programming Principles
+
+### 1. **Service Locator**: 
+- A private service locator in `GameService` is responsible for instantiating and managing all other services which centralizes service access, reducing dependencies and increasing modularity.
+
+### 2. **Model-View-Controller (MVC)**:
+- Each service (`UIService`, `ItemService`, `InventoryService`, `ShopService`) is structured into MVC components which promotes separation of concerns, making the system modular and scalable.
+
+### 3. **Observer Pattern**:
+- `EventService` acts as the mediator for communication between all services using events that leads to decoupled services, enabling event-driven updates.
+
+### 4. **Programming Principles**:
+- **Dependency Injection**: All services are passed as parameters, ensuring flexibility and reducing coupling.
+- **Single Responsibility Principle (SRP)**: Every file has one defined responsibility for clarity and maintainability.
+
+---
+
 ## Architectural Overview
 
-The system uses **Service Locator**, **Dependency Injection**,  **MVC**, and the **Observer Pattern**. Below is the block diagram illustrating the architecture:
+Below is the block diagram illustrating the architecture:
 
 ![Architectural Overview](Documents/block_diagram.png)
 
@@ -107,19 +125,19 @@ The system uses **Service Locator**, **Dependency Injection**,  **MVC**, and the
      - `ItemScriptableObject`: Centralized data for item properties.
      - `ItemDatabaseScriptableObject`: Manages a collection of items for use in the game.
 
-6. **Inventory Service**: Controls inventory constraints like weight and item slots, while providing real-time updates.
-   - **Controller**: Handles inventory constraints like weight and slots.
+6. **Inventory Service**: Initializes inventory panel.
+   - **Controller**: Handles inventory constraints like weight, currency and manages selling logic.
    - **Model**: Tracks inventory contents and runtime updates.
    - **View**: Displays inventory items dynamically.
    - **Scriptable Object**: `InventoryScriptableObject` for inventory-specific configurations.
 
-7. **Shop Service**: Manages shop functionalities like categorized navigation and buying/selling items.
-   - **Controller**: Manages buying/selling logic and navigation.
+7. **Shop Service**: Initializes shop panel.
+   - **Controller**: Manages buying logic and navigation among Item Types.
    - **Model**: Tracks shop inventory and item availability.
-   - **View**: Dynamically renders shop items.
+   - **View**: Displays shop items dynamically.
    - **Scriptable Object**: `ShopScriptableObject` for shop data.
 
-8. **Utilities**:
+8. **Editor Tools**:
    - `ReadOnlyDrawer`: Custom inspector drawer for readonly properties in the Unity Editor.
 
 ---
@@ -130,18 +148,20 @@ Here are the key events used in the system and their descriptions:
 
 1. **Item Service**:
    - `OnCreateItemEvent`: Creates and returns an item controller for the specified section.
+
+2. **Item Controller**:
    - `OnShowItemEvent`: Displays items of a specific type in a section (Shop/Inventory).
    - `OnDestroyItemEvent`: Removes an item from a section (Shop/Inventory).
 
-2. **Shop Controller**:
+3. **Shop Controller**:
    - `OnShopAddItemEvent`: Adds an item to the shop when selling from inventory.
    - `OnBuyItemEvent`: Triggers the item-buying logic.
 
-3. **Inventory Controller**:
+4. **Inventory Controller**:
    - `OnInventoryAddItemEvent`: Adds an item to inventory when buying from the shop.
    - `OnSellItemEvent`: Triggers the item-selling logic.
 
-4. **UI Controller**:
+5. **UI Controller**:
    - `OnBuySellButtonClickEvent`: Handles buy/sell button clicks and their respective actions.
    - `OnShopUpdatedEvent`: Updates the Shop UI dynamically.
    - `OnInventoryUpdatedEvent`: Updates the Inventory UI dynamically with weight and slots.
@@ -151,7 +171,7 @@ Here are the key events used in the system and their descriptions:
    - `OnCreateItemButtonViewEvent`: Instantiates and returns an item button prefab.
    - `OnCreateMenuButtonViewEvent`: Instantiates and returns a menu button prefab.
 
-5. **Sound Service**:
+6. **Sound Service**:
    - `OnPlaySoundEffectEvent`: Plays a specific sound effect (e.g., transaction, error).
 
 ---
