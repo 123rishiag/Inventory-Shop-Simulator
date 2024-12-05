@@ -1,27 +1,77 @@
 # Inventory-Shop-Simulator
 
-This project is a shop and inventory management system with interactive gameplay mechanics. Players can trade items, gather resources, and manage inventory constraints like weight and rarity. The system is designed using **Service Locator**, **Dependency Injection**, **Model-View-Controller (MVC)**, and the **Observer Pattern**, ensuring modularity and scalability.
+This project is a shop and inventory management system with interactive gameplay mechanics. Players can trade items, gather resources. The system is designed using **Service Locator**, **Dependency Injection**, **Model-View-Controller (MVC)**, and the **Observer Pattern**, ensuring modularity and scalability.
 
 ---
 
-## Features
+## Gameplay Elements
 
-- **Shop System**:
-  - Tabs for Materials, Weapons, Consumables, and Treasure.
-  - Dynamic display of item buying/selling prices.
-  - Confirmation popups to prevent accidental purchases.
+### **1. Item Types**
+- **Materials**: Resources used for crafting or trading.
+- **Weapons**: Combat-related items for attack or defense.
+- **Consumables**: Items that provide temporary boosts or effects (e.g., potions).
+- **Treasure**: Rare and valuable items that can significantly increase the player's currency.
 
-- **Inventory Management**:
-  - Weight limit dynamically updates as items are added/removed.
-  - Tracks attributes like rarity, value, and type for all items.
+### **2. Rarity Types**
+- **Very Common**: Frequently found items with low value and minimal impact.
+- **Common**: Standard items with moderate value.
+- **Rare**: Valuable items that are less frequently available.
+- **Epic**: High-value items with significant gameplay effects.
+- **Legendary**: Extremely rare and valuable items with unique properties.
 
-- **Dynamic Resource Gathering**:
-  - Items are randomly generated based on inventory value and rarity.
-  - Resource gathering is disabled when the inventory is full.
+### **3. Inventory Constraints**
+- **Maximum Weight**: The cumulative weight of items in the inventory must not exceed the player's capacity.
+- **Dynamic Weight Updates**: Inventory weight updates dynamically with every item added or removed.
+- **Weight-Dependent Gameplay**: Certain actions, like resource gathering or buying items, are disabled when the inventory is full.
 
-- **Gameplay Enhancements**:
-  - Immersive sound effects for actions like buying and selling.
-  - Smooth transitions between UI panels and updates.
+### **4. Currency System**
+- Players start with no money.
+- Currency increases when items are sold.
+- Currency decreases when items are bought.
+- Displayed dynamically in the UI for real-time feedback.
+
+### **5. Gameplay Enhancements**
+- **Gather Resources**:
+  - Button allows players to collect random resources based on rarity.
+  - Disabled when the inventory reaches maximum weight.
+
+- **Buy/Sell Mechanics**:
+  - **Buying**: Requires sufficient currency and available weight in the inventory.
+  - **Selling**: Adds currency and frees up inventory weight.
+
+### **6. UI Components**
+- **Shop Tabs**: All, Materials, Weapons, Consumables, and Treasure.
+- **Inventory Panel**: Shows item details like icon, description, rarity, weight, and value.
+- **Notifications**: Popups for insufficient currency, full inventory, or successful transactions.
+
+### **7. Sound and Feedback**
+- Sounds are triggered during transactions, errors, and resource gathering.
+- Temporary overlays for actions like "You bought [Item Name]" or "You sold [Item Name]" improve clarity.
+
+### **8. Requirements to Features Mapping**
+| **Requirement**               | **Implemented Feature**                                                                 |
+|--------------------------------|-----------------------------------------------------------------------------------------|
+| Item types (Materials, etc.)   | Shop and Inventory tabs categorized by item type.                                       |
+| Rarity system                  | Randomized resource gathering based on rarity proportional to inventory value.          |
+| Inventory weight constraints   | Dynamic weight updates; maximum weight prevents further actions like buying/gathering.  |
+| Buy/Sell mechanics             | Transaction logic integrated with sound and UI feedback.                                |
+| Notifications                  | Popups for insufficient currency or weight limits.                                      |
+
+### **9. Item Properties**
+- **Icon**: Visual representation of the item.
+- **Description**: Text detailing the item's purpose.
+- **Buying Price**: Cost of the item in the shop.
+- **Selling Price**: Value of the item when sold.
+- **Weight**: Affects inventory constraints.
+- **Type**: Type of the item.
+- **Rarity**: Determines availability and gameplay impact.
+- **Quantity**: Number of items owned or available.
+
+### **10. Player Progression**
+- Start with an empty inventory and no money.
+- Gather resources to build inventory and earn currency.
+- Buy rare or useful items to maximize value and efficiency.
+- Sell less valuable items to manage inventory weight and increase currency.
 
 ---
 
@@ -29,7 +79,7 @@ This project is a shop and inventory management system with interactive gameplay
 
 The system uses **Service Locator**, **Dependency Injection**,  **MVC**, and the **Observer Pattern**. Below is the block diagram illustrating the architecture:
 
-![Architectural Overview](Documents\block_diagram.png)
+![Architectural Overview](Documents/block_diagram.png)
 
 ---
 
@@ -49,7 +99,7 @@ The system uses **Service Locator**, **Dependency Injection**,  **MVC**, and the
    - **Model**: Placeholder for future enhancements.
    - **View**: Handles rendering of UI panels dynamically.
 
-5. **Item Service**: Manages item-related data and logic, including creation, deletion, and UI updates.
+5. **Item Service**: Manages item-related data and logic, including creation of Item Controllers.
    - **Controller**: Handles item-related actions (e.g., create, delete).
    - **Model**: Stores runtime item data (e.g., weight, rarity).
    - **View**: Manages item visual representation in the UI.
