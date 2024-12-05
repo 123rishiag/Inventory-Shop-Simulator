@@ -209,9 +209,18 @@ Here are the key events used in the system and their descriptions:
 
 ---
 
+## Setting Up the Project
+1. Clone the Repository:
+   ```bash
+   git clone https://github.com/123rishiag/Inventory-Shop-Simulator.git
+   ```
+2. Open the project in Unity.
+
+---
+
 ## Video Demo
 
-[Watch the Gameplay Demo](https://www.loom.com/share/demo-link)
+[Watch the Gameplay Demo](https://www.loom.com/share/1c24c5a8887e487e86d69d0b01691989?sid=4a64e16b-c638-4888-8039-1c8194d7056c)
 
 ---
 
