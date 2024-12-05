@@ -1,6 +1,6 @@
 # Inventory-Shop Simulator
 
-This project is a shop and inventory management system with interactive gameplay mechanics. Players can trade items, gather resources. The system is designed using **Service Locator**, **Dependency Injection**, **Model-View-Controller (MVC)**, and the **Observer Pattern**, ensuring modularity and scalability.
+A shop and inventory management system with interactive gameplay mechanics. Players can trade items, gather resources. The system is designed using **Service Locator**, **Dependency Injection**, **Model-View-Controller (MVC)**, and the **Observer Pattern**, ensuring modularity and scalability.
 
 ---
 
@@ -221,11 +221,12 @@ Here are the key events used in the system and their descriptions:
 ## Video Demo
 
 [Watch the Gameplay Demo](https://www.loom.com/share/1c24c5a8887e487e86d69d0b01691989?sid=4a64e16b-c638-4888-8039-1c8194d7056c)
+[Watch the Architecture Explanation](https://www.loom.com/share/83014ee8c95a47a0b73f32bb6b4d0712?sid=3e926414-5b8d-4d4c-83fe-3564c9e474f0)
 
 ---
 
 ## Play Link
 
-[Play the Game](https://outscal.com/narishabhgarg/game/play-shop-inventory)
+[Play the Game](https://outscal.com/narishabhgarg/game/play-inventory-shop-simulator-game)
 
 ---
