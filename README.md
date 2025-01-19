@@ -4,6 +4,14 @@ A shop and inventory management system with interactive gameplay mechanics. Play
 
 ---
 
+## Architectural Overview
+
+Below is the block diagram illustrating the architecture:
+
+![Architectural Overview](Documents/block_diagram.png)
+
+---
+
 ## Gameplay Elements
 
 ### **1. Item Types**
@@ -89,14 +97,6 @@ A shop and inventory management system with interactive gameplay mechanics. Play
 ### 4. **Programming Principles**:
 - **Dependency Injection**: Event service is passed in all services as parameter, ensuring flexibility and reducing coupling.
 - **Single Responsibility Principle (SRP)**: Every file has one defined responsibility for clarity and maintainability.
-
----
-
-## Architectural Overview
-
-Below is the block diagram illustrating the architecture:
-
-![Architectural Overview](Documents/block_diagram.png)
 
 ---
 
